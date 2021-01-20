@@ -12,9 +12,7 @@ class Field extends React.Component {
       this.newRequest();
     }
   
-    getCommentsByKey = (i) => {
-      return this.state.issues[i].comments;
-    }
+    
   
     newRequest = () => {
       var data; 
@@ -28,24 +26,17 @@ class Field extends React.Component {
         //accept: "application/json"
       }).then(response => {
         data = response.data;
-        console.log('data: ', data); //тут он выводиться
+        console.log('data: ', data);
         console.log('responce.data: ', response.data);
         this.setState({issues: data});
       }).catch(error => {
           console.log("request error: ", error)
       });
-      console.log('issues data: ', this.state.issues); //тут он НЕ выводиться
     }
 
     eachIssue = (item, i) => {
       return (
-        <div key={i} >
-          <h1><p>{item.issueKey}</p></h1>
-          <h2><p>{item.title}</p></h2>
-          <h3><p>{item.body}</p></h3>
-          <p></p>
-          <p>{item.comments.map((comment, i) => <p key={i}>{comment.description}</p>)}</p>
-        </div>
+        <Issue key={i} issue={item} index={i} />
       );
     }
   

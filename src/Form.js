@@ -14,10 +14,6 @@ class Form extends React.Component{
         };
     }
     
-    handleChange = (event) => {
-        this.setState({value: event.target.value});
-    }
-
     email = () => {
         return(
             <div>
@@ -33,7 +29,7 @@ class Form extends React.Component{
         return(
             <div>
                 <label className="label-email">
-                    <input type="url" onChange={((event)=> this.setState({url: event.target.value}))} className="text" name="email" placeholder="Email" tabIndex="1" required />
+                    <input type="url" onChange={((event)=> this.setState({url: event.target.value}))} className="text" name="email" placeholder="URL" tabIndex="1" required />
                     <span className="required">URL</span>
                 </label>
             </div>
@@ -44,7 +40,7 @@ class Form extends React.Component{
         return(
             <div>
               <label className="label-email">
-                <input type="text" onChange={((event)=> this.setState({ticketSystem: event.target.value}))} className="text" name="email" placeholder="Email" tabIndex="1" required />
+                <input type="text" onChange={((event)=> this.setState({ticketSystem: event.target.value}))} className="text" name="email" placeholder="Ticket System" tabIndex="1" required />
                 <span className="required">Ticket System</span>
               </label>
             </div>
@@ -55,8 +51,8 @@ class Form extends React.Component{
         return(
             <div>
               <label className="label-password">
-                <input type="text" onChange={((event)=> this.setState({tocken: event.target.value}))} className="text" name="password" placeholder="Password" tabIndex="2" required />
-                <span className="required">Tocken</span>
+                <input type="text" onChange={((event)=> this.setState({tocken: event.target.value}))} className="text" name="password" placeholder="Token" tabIndex="2" required />
+                <span className="required">Token</span>
               </label>
             </div>
         );
@@ -64,7 +60,7 @@ class Form extends React.Component{
     
     render() {
         return (
-            <form method="get" onSubmit={alert(this.state.email)} action={void(0)} id="login-form" className="login-form" autoComplete="off" role="main">
+            <form method="get" action={void(0)} id="login-form" className="login-form" autoComplete="off" role="main">
             <h1 className="a11y-hidden">Login Form</h1>
 
             {this.ticketSystem()}

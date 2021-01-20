@@ -1,7 +1,6 @@
 import './App.css';
 import './Main.css';
 import './List.css';
-import axios from 'axios';
 import React from 'react';
 
 class Issue extends React.Component {
@@ -27,7 +26,7 @@ class Issue extends React.Component {
       <fieldset>
        
           <div className="text">
-            <p />{this.props.issue.issueKey}: {this.props.issue.title}
+            <p /><h2>{this.props.issue.issueKey}: {this.props.issue.title} </h2>
             <p />{this.props.issue.body}
             {this.renderComments()}
           </div>

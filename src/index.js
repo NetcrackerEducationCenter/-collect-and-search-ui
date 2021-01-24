@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+//import './index.css';
 import App from './App';
-import Field from './Field';
-import Form from './Form';
+//import Field from './Field';
+//import Form from './Form';
 import reportWebVitals from './reportWebVitals';
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <Form />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

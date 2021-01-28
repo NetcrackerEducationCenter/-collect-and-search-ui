@@ -1,12 +1,15 @@
 import React, { Component } from "react";
-import { Container, FormControl, Nav, Navbar, Button, Form } from "react-bootstrap";
+import { Container, Navbar, Button } from "react-bootstrap";
 import logo from './logo192.png';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import StatusButton from '../Components/StatusButton'
 
 import Home from '../Pages/Home';
 import About from '../Pages/About';
 import History from '../Pages/History';
 import Profile from '../Pages/Profile';
+import WorkPage from '../Pages/WorkPage'
+
 
 export default class Header extends Component {
     render() {
@@ -14,7 +17,7 @@ export default class Header extends Component {
             <>
                 <Navbar fixed="top" collapseOnSelect expand="md" bg="dark" variant="dark">
                     <Container>
-                        <Navbar.Brand href="/">
+                        <Navbar.Brand href="/workpage">
                             <img
                                 src={logo}
                                 height="30"
@@ -23,23 +26,17 @@ export default class Header extends Component {
                                 alt="Logo"
                             />Collect and Search
                         </Navbar.Brand>
-                        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                        <Button variant="outline-info"><StatusButton isEmpty={true}/></Button>
+                        {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                         <Navbar.Collapse id="responsive-navbar-nav">
                             <Nav className="mr-auto">
-                                <Nav.Link href="/">Home</Nav.Link>
-                                <Nav.Link href="/history">History</Nav.Link>
-                                <Nav.Link href="/profile">Profile</Nav.Link>
-                                <Nav.Link href="/about">About us</Nav.Link>
+                                
                             </Nav>
-                            <Form inline>
-                                <FormControl
-                                    type="text"
-                                    placeholder="Search"
-                                    className="mr-sm-2"
-                                />
-                                <Button variant="outline-info">Search</Button>
-                            </Form>
-                        </Navbar.Collapse>
+                            
+                                
+                                
+                            
+                        </Navbar.Collapse> */}
                     </Container>
                 </Navbar>
 
@@ -49,6 +46,7 @@ export default class Header extends Component {
                         <Route exact path="/history" component={History} />
                         <Route exact path="/profile" component={Profile} />
                         <Route exact path="/about" component={About} />
+                        <Route exact path="/workpage" component={WorkPage} />
                     </Switch>
                 </Router>
             </>

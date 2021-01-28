@@ -3,7 +3,6 @@ import Carousel from 'react-bootstrap/Carousel';
 import analytics from '../assets/analytics.jpg';
 import komp from '../assets/komp.jpg';
 import lupa from '../assets/lupa.jpg';
-import vkomp from '../assets/v-komp.jpg';
 
 export default class CarouselBox extends Component {
     render() {

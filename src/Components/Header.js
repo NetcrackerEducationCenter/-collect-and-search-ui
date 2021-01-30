@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Navbar, Button } from "react-bootstrap";
+import { Container, Navbar, Nav, Button } from "react-bootstrap";
 import logo from './logo192.png';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import StatusButton from '../Components/StatusButton'
@@ -17,7 +17,7 @@ export default class Header extends Component {
             <>
                 <Navbar fixed="top" collapseOnSelect expand="md" bg="dark" variant="dark">
                     <Container>
-                        <Navbar.Brand href="/workpage">
+                        <Navbar.Brand href="/">
                             <img
                                 src={logo}
                                 height="30"
@@ -26,17 +26,18 @@ export default class Header extends Component {
                                 alt="Logo"
                             />Collect and Search
                         </Navbar.Brand>
-                        <Button variant="outline-info"><StatusButton isEmpty={true}/></Button>
+                        
+                        <Nav className="mr-auto">
+                            <Nav.Link href='/workpage'>Workpage</Nav.Link>
+                        </Nav>
                         {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                         <Navbar.Collapse id="responsive-navbar-nav">
                             <Nav className="mr-auto">
-                                
+                                <Nav.Link href='/workpage'>Workpage</Nav.Link>
                             </Nav>
-                            
-                                
-                                
-                            
-                        </Navbar.Collapse> */}
+                    
+                        </Navbar.Collapse>  */}
+                        <Button variant="outline-info"><StatusButton isEmpty={true} /></Button>
                     </Container>
                 </Navbar>
 

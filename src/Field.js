@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React from 'react';
 import Issue from './Issue';
 
@@ -26,7 +25,7 @@ class Field extends React.Component {
     if (this.props.shawIssues) {
       return (
         <div className="field">
-          {this.prop.issues.map(this.eachIssue)}
+          {this.props.issues.map(this.eachIssue)}
         </div>
       );
     }

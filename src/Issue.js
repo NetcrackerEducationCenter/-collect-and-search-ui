@@ -10,7 +10,7 @@ class Issue extends React.Component {
     this.state = {
       comments: commentsArr
     }
-    console.log(this.state.comments);
+    //console.log(this.state.comments);
   }
 
   renderComments = () => {

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Button } from 'react-bootstrap'
 import Modal from '../Components/Modal'
-import axios from 'axios';
 import Field from '../Field';
 
 export default class WorkPage extends Component {
@@ -18,25 +17,15 @@ export default class WorkPage extends Component {
         this.setState({ modalActive: activeted })
     }
 
-    newRequest = (ts, lg, ps, ur) => {
-        var data;
-        axios.post("http://localhost:9090/tickets/find", {
-            //body: {
-            ticketSystem: ts, //"JIRA",
-            login: lg, //"kakashka_am@mail.ru",
-            password: ps, //'IdBigXbJL2aIgrJhGGg2B1A8',
-            url: ur //"https://netcrackereducation.atlassian.net"
-            //}
-            //accept: "application/json"
-        }).then(response => {
-            data = response.data;
-            console.log('data: ', data);
-            console.log('responce.data: ', response.data);
-            this.setState({ issues: data, shawIssues: true });
-        }).catch(error => {
-            console.log("request error: ", error)
-        });
+    setIssuesActive = (activeted) => {
+        this.setState({ shawIssues: activeted })
     }
+
+    setIssues = (newIssues) => {
+        this.setState({issues: newIssues});
+    }
+
+    
 
     render() {
         return (
@@ -49,7 +38,8 @@ export default class WorkPage extends Component {
 
                 <Modal active={this.state.modalActive}
                     setActive={this.setActive}
-                    newRequest={this.newRequest}
+                    setIssues={this.setIssues}
+                    setIssuesActive={this.setIssuesActive}
                 />
 
                 <Field shawIssues={this.state.shawIssues} issues={this.state.issues} />

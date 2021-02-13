@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Button } from 'react-bootstrap'
-import Modal from '../Components/Modal'
+import { Button, Modal } from 'react-bootstrap'
+import NewModal from '../Components/Modal'
 import Field from '../Field';
 import logo from '../assets/logo512.png';
 
@@ -16,8 +16,8 @@ export default class WorkPage extends Component {
         }
     }
 
-    setActive = (activeted) => {
-        this.setState(() => {return{ modalActive: activeted }})
+    shawModal = (activeted) => {
+        this.setState(() => { return { modalActive: activeted } })
     }
 
     setIssuesActive = (activeted) => {
@@ -29,8 +29,10 @@ export default class WorkPage extends Component {
     }
 
     setDownload = (value) => {
-        this.setState(() => { return {download: value}});
+        this.setState(() => { return { download: value } });
     }
+
+
 
 
 
@@ -46,23 +48,53 @@ export default class WorkPage extends Component {
 
 
                 <Button className='btn-success   boto'
-                    onClick={() => this.setState({ modalActive: true })}
+                    onClick={() => this.shawModal(true)}
                 >
                     +
                 </Button>
 
-                <Modal active={this.state.modalActive}
-                    setActive={this.setActive}
+                <NewModal show={this.state.modalActive}
+                    shawModal={this.shawModal}
                     setIssues={this.setIssues}
                     setIssuesActive={this.setIssuesActive}
                     setDownload={this.setDownload}
+                    onHide={() => this.shawModal(false)}
                 />
+
+                {/* <MyVerticallyCenteredModal show={this.state.modalActive} onHide= {()=> this.shawModal(false)} /> */}
 
             </div>
         )
     }
 }
 
+function MyVerticallyCenteredModal(props) {
+    return (
+        <Modal
+            {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    Modal heading
+          </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <h4>Centered Modal</h4>
+                <p>
+                    Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
+                    dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
+                    consectetur ac, vestibulum at eros.
+          </p>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button onClick={props.onHide}>Close</Button>
+            </Modal.Footer>
+        </Modal>
+    );
+}
 // const styles = {
 //     fixed_button: {
 //         position: 'fixed', /*задаём тип позиции, в нашем случае - фиксированная*/

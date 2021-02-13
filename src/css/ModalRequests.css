@@ -1,0 +1,59 @@
+.mymodalR {
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(255, 255, 255, 0);
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    transform: scale(0);
+    margin-top: 56px;
+    /* margin: right; */
+    margin-left: -100px;
+    z-index: 9999;
+}
+
+.mymodalR.active {
+    transform: scale(1);
+}
+
+.modalR__content {
+    padding: 20px;
+    border-radius: 12px;
+    background-color: rgb(214, 214, 214);
+    text-emphasis-color: rgb(214, 214, 214);
+}
+
+[data-tooltip] {
+    position: relative;
+}
+
+[data-tooltip]:hover::before {
+    content: "";
+    position: absolute;
+    top: 1.4em;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #3989c9;
+}
+
+[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    width: 400px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: 2em;
+    background: #3989c9;
+    color: #fff;
+    padding: 0.5em;
+    border-radius: 5px;
+}

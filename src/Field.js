@@ -12,9 +12,6 @@ class Field extends React.Component {
   }
 
 
-
-  
-
   eachIssue = (item, i) => {
     return (
       <Issue key={i} issue={item} index={i} />

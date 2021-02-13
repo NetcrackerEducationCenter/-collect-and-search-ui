@@ -10,19 +10,30 @@ class Modal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      request: '',
+
+      jiraChecked: false,
       ticketSystem: 'JIRA',
       url: 'https://netcrackereducation.atlassian.net/',
       email: 'kakashka_am@mail.ru',
-      tocken: 'IdBigXbJL2aIgrJhGGg2B1A8'
+      tocken: 'IdBigXbJL2aIgrJhGGg2B1A8',
+
+      ftpChecked: false,
+      ftpLogin: '',
+      ftpPassword: '',
+      ftpServer: '',
+      ftpDirPath: '',
+      ftpExtention: '',
+
     };
   }
 
-  email = () => {
+  search = () => {
     return (
       <div>
         <label className="label-email">
-          <span className="required">Email</span>
-          <input type="email" defaultValue="kakashka_am@mail.ru" onChange={((event) => this.setState({ email: event.target.value }))} className="text" name="email" placeholder="Email" tabIndex="1" required />
+          <span className="required">Search</span>
+          <input type="text" onChange={((event) => this.setState({ request: event.target.value }))} className="text" name="email" placeholder="Type your request" tabIndex="1" required />
 
         </label>
       </div>
@@ -41,91 +52,37 @@ class Modal extends React.Component {
     );
   }
 
-  ticketSystem = () => {
-
-    // return (
-    //   <form id="app-cover">
-    //     <div id="select-box">
-    //       <input type="checkbox" id="options-view-button" />
-    //       <div id="select-button" class="brd">
-    //         <div id="selected-value">
-    //           <span>Select a platform</span>
-    //         </div>
-    //         <div id="chevrons">
-    //           <i class="fas fa-chevron-up"></i>
-    //           <i class="fas fa-chevron-down"></i>
-    //         </div>
-    //       </div>
-    //       <div id="options">
-    //         <div class="option">
-    //           <input class="s-c top" type="radio" name="platform" value="codepen" />
-    //           <input class="s-c bottom" type="radio" name="platform" value="codepen" />
-    //           <i class="fab fa-codepen"></i>
-    //           <span class="label">CodePen</span>
-    //           <span class="opt-val">CodePen</span>
-    //         </div>
-    //         <div class="option">
-    //           <input class="s-c top" type="radio" name="platform" value="dribbble" />
-    //           <input class="s-c bottom" type="radio" name="platform" value="dribbble" />
-    //           <i class="fab fa-dribbble"></i>
-    //           <span class="label">Dribbble</span>
-    //           <span class="opt-val">Dribbble</span>
-    //         </div>
-    //         <div class="option">
-    //           <input class="s-c top" type="radio" name="platform" value="behance" />
-    //           <input class="s-c bottom" type="radio" name="platform" value="behance" />
-    //           <i class="fab fa-behance"></i>
-    //           <span class="label">Behance</span>
-    //           <span class="opt-val">Behance</span>
-    //         </div>
-    //         <div class="option">
-    //           <input class="s-c top" type="radio" name="platform" value="hackerrank" />
-    //           <input class="s-c bottom" type="radio" name="platform" value="hackerrank" />
-    //           <i class="fab fa-hackerrank"></i>
-    //           <span class="label">HackerRank</span>
-    //           <span class="opt-val">HackerRank</span>
-    //         </div>
-    //         <div class="option">
-    //           <input class="s-c top" type="radio" name="platform" value="stackoverflow" />
-    //           <input class="s-c bottom" type="radio" name="platform" value="stackoverflow" />
-    //           <i class="fab fa-stack-overflow"></i>
-    //           <span class="label">StackOverflow</span>
-    //           <span class="opt-val">StackOverflow</span>
-    //         </div>
-    //         <div class="option">
-    //           <input class="s-c top" type="radio" name="platform" value="freecodecamp" />
-    //           <input class="s-c bottom" type="radio" name="platform" value="freecodecamp" />
-    //           <i class="fab fa-free-code-camp"></i>
-    //           <span class="label">FreeCodeCamp</span>
-    //           <span class="opt-val">FreeCodeCamp</span>
-    //         </div>
-    //         <div id="option-bg"></div>
-    //       </div>
-    //     </div>
-    //   </form>
-    // );
-
+  selector = () => {
     return (
       <>
         <label className="label-email">
-          <span className="required">Ticket System</span>
-          <select className="custom-select table-hover" onChange={(event)=>this.setState({ticketSystem: event.target.value})}>
-            <option selected value="JIRA">JIRA (new)</option>
-            <option value="lime">YouTrack (new)</option>
+          <span className="">Filters</span>
+          <select className="custom-select table-hover" onChange={(event) => this.setState({ ticketSystem: event.target.value })}>
+
+            <option onClick={() => {
+              if (this.state.jiraChecked) {
+                this.setState({ jiraChecked: false })
+              } else {
+                this.setState({ jiraChecked: true })
+              }
+            }}
+              value="JIRA"> Add JIRA filters
+            </option>
+
+            <option onClick={() => {
+              if (this.state.ftpChecked) {
+                this.setState(() => { return { ftpChecked: false } })
+              } else {
+                this.setState(() => { return { ftpChecked: true } })
+              }
+            }}
+              value="FTP"> Add FTP filters
+            </option>
+
           </select>
         </label>
       </>
     );
-
-    // return (
-    //   <div>
-    //    <label className="label-email">
-    //       <span className="required">Ticket System</span>
-    //       <input type="text" defaultValue="JIRA" onChange={((event) => this.setState({ ticketSystem: event.target.value }))} className="text" name="email" placeholder="Ticket System" tabIndex="1" required />
-
-    //     </label>
-    //   </div>
-    // );
   }
 
   tocken = () => {
@@ -160,6 +117,9 @@ class Modal extends React.Component {
   newRequest = (e) => {
     e.preventDefault();
 
+    this.props.setActive(false);
+    this.props.setDownload(true);
+
     var data;
     axios.post("http://142.93.122.167:9090/tickets/find", {
       //body: {
@@ -181,6 +141,38 @@ class Modal extends React.Component {
     });
   }
 
+  ftpFilters = () => {
+    return (
+      <div>
+        <div>
+          <div>
+
+            <label className="label-email">
+              <span className="required">Directory path</span>
+              <input type="text"
+                onChange={(event) => this.setState(() => { return { request: event.target.value } })}
+                className="text"
+                name="email"
+                placeholder="Type your request"
+                tabIndex="1" required
+
+              />
+            </label>
+
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  jiraFilters = () => {
+    return (
+      <div>
+        JIRA FILTERS
+      </div>
+    )
+  }
+
   render() {
     return (
       <div className={this.props.active ? "mymodal active" : "mymodal"} onClick={() => this.props.setActive(false)}>
@@ -189,16 +181,31 @@ class Modal extends React.Component {
           <form method="get" action={void (0)} id="login-form" className="login-form" autoComplete="off" role="main">
             <h1 className="a11y-hidden">Login Form</h1>
 
-            {this.ticketSystem()}
-            {this.url()}
-            {this.email()}
+            {this.search()}
 
+            {this.selector()}
+
+            {() => {
+              if (this.state.jiraChecked) {
+                this.jiraFilters();
+              }
+            }}
+
+            {() => {
+              if (this.state.ftpChecked) {
+                this.ftpFilters();
+              }
+            }}
+
+            {/* {this.url()} */}
+
+            {/* 
             <input type="checkbox" name="show-password" className="show-password a11y-hidden" id="show-password" tabIndex="3" />
             <label className="label-show-password" htmlFor="show-password">
               <span>Show Tocken</span>
-            </label>
+            </label> */}
 
-            {this.tocken()}
+            {/* {this.tocken()} */}
 
             <input type="submit" value="Find all issues" onClick={e => this.newRequest(e)} />
             <div className="email">

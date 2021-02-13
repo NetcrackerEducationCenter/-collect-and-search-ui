@@ -2,10 +2,10 @@ body {
     background-color: #ffffff;
   }
   
-  .field {
+  /* .field {
     display: flex;
     padding: 10px;
-    width: 25%;
+    width: auto;
     margin-left: 37.5%;
     color: #fff;
     font-size: 1.3em;
@@ -53,8 +53,20 @@ body {
   .btn.red:hover {
     background-color: #b6821a;
     border-color: #946912;
-  }
+  } */
 
+ .field {
+    display: flex;
+    padding: 10px;
+    width: auto;
+    /* margin-left: 37.5%; */
+    color: #fff;
+    font-size: 1.3em;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  
   .text {
     color: black
   }
@@ -110,7 +122,7 @@ legend {
   text-shadow: #fff 1px 1px 1px; }
 fieldset {
   background-color: #f7f7f7;
-  width: 360px;
+  /* width: 360px; */
   -moz-border-radius-bottomleft: 5px;
   border-bottom-left-radius: 5px;
   -moz-border-radius-bottomright: 5px;

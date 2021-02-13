@@ -2,20 +2,40 @@ import React, { Component } from "react";
 import { Container, Navbar, Nav, Button } from "react-bootstrap";
 import logo from './logo192.png';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import StatusButton from '../Components/StatusButton'
+import StatusButton from '../Components/StatusButton';
+import ModalRequests from './ModalRequests';
 
 import Home from '../Pages/Home';
 import About from '../Pages/About';
 import History from '../Pages/History';
 import Profile from '../Pages/Profile';
-import WorkPage from '../Pages/WorkPage'
+import WorkPage from '../Pages/WorkPage';
 
 
 export default class Header extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            modalActive: false
+        }
+    }
+
+    changeState = () => {
+        if (this.state.modalActive) {
+            this.setState(() => { return { modalActive: false } });
+        } else {
+            this.setState(() => { return { modalActive: true } });
+        }
+    }
+
+    setActive = (activeted) => {
+        this.setState(() => { return { modalActive: activeted } })
+    }
+
     render() {
         return (
-            <>
-                <Navbar fixed="top" collapseOnSelect expand="md" bg="dark" variant="dark">
+            <div style={{ position: "relative" }}>
+                <Navbar fixed="top" expand="md" bg="dark" variant="dark">
                     <Container>
                         <Navbar.Brand href="/">
                             <img
@@ -26,7 +46,7 @@ export default class Header extends Component {
                                 alt="Logo"
                             />Collect and Search
                         </Navbar.Brand>
-                        
+
                         <Nav className="mr-auto">
                             <Nav.Link href='/workpage'>Workpage</Nav.Link>
                         </Nav>
@@ -37,9 +57,18 @@ export default class Header extends Component {
                             </Nav>
                     
                         </Navbar.Collapse>  */}
-                        <Button variant="outline-info"><StatusButton isEmpty={true} /></Button>
+                        <Button variant="outline-info" onClick={() => this.changeState()} ><StatusButton isEmpty={true} /></Button>
                     </Container>
+
+                    <Button variant="outline-info" href="/profile" ><img
+                        src="https://pngshare.com/wp-content/uploads/2020/06/font-awesome_4-7-0_user_1024_0_00aeef_none-3.png"
+                        alt="user"
+                        height="30"
+                        width="30"
+                    />
+                    </Button>
                 </Navbar>
+
 
                 <Router>
                     <Switch>
@@ -50,7 +79,13 @@ export default class Header extends Component {
                         <Route exact path="/workpage" component={WorkPage} />
                     </Switch>
                 </Router>
-            </>
+
+                <Container >
+                    <ModalRequests active={this.state.modalActive}
+                        setActive={this.setActive}
+                    />
+                </Container>
+            </div>
         );
     }
 }

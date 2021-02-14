@@ -113,72 +113,39 @@ class NewModal extends React.Component {
         />
       </Form.Group>
     );
-
-
-    // return (
-    //   <>
-    //     <label className="label-email">
-    //       <span className="">Filters</span>
-    //       <select className="custom-select table-hover" select="multiple" onChange={(event) => this.setState({ ticketSystem: event.target.value })}>
-
-    //         <option onClick={() => {
-    //           if (this.state.jiraChecked) {
-    //             this.setState({ jiraChecked: false })
-    //           } else {
-    //             this.setState({ jiraChecked: true })
-    //           }
-    //         }}
-    //           value="JIRA"> Add JIRA filters
-    //         </option>
-    //         <option onClick={() => {
-    //           if (this.state.ftpChecked) {
-    //             this.setState(() => { return { ftpChecked: false } })
-    //           } else {
-    //             this.setState(() => { return { ftpChecked: true } })
-    //           }
-    //         }}
-    //           value="FTP"> Add FTP filters
-    //         </option>
-    //       </select>
-    //     </label>
-    //   </>
-    // );
   }
 
 
   newRequest = (e) => {
     e.preventDefault();
 
-    this.props.setActive(false);
-    this.props.setDownload(true);
+    // this.props.shawModal(false);
+    this.props.shawDownload(true);
 
     var data;
     axios.post("http://142.93.122.167:9090/tickets/find", {
-      //body: {
       ticketSystem: this.state.ticketSystem, //"JIRA",
       login: this.state.email, //"kakashka_am@mail.ru",
       password: this.state.tocken, //'IdBigXbJL2aIgrJhGGg2B1A8',
       url: this.state.url //"https://netcrackereducation.atlassian.net"
-      //}
-      //accept: "application/json"
     }).then(response => {
       data = response.data;
       console.log('data: ', data);
       console.log('responce.data: ', response.data);
       this.props.setIssues(data);
-      this.props.setActive(false);
-      this.props.setIssuesActive(true);
+      this.props.shawIssuesActive(true);
     }).catch(error => {
       console.log("request error: ", error)
     });
   }
 
+  
   ftpFilters = () => {
     const pp = [
       { value: 'txt', label: '.txt' },
       { value: 'pdf', label: '.pdf' },
       { value: 'doc', label: '.doc' }
-    ]
+    ];
 
     return (
 
@@ -187,7 +154,7 @@ class NewModal extends React.Component {
         <Form.Label>FTP filters</Form.Label>
 
         <Form.Group>
-        <Form.Text className='text-muted'>Select file extention</Form.Text>
+          <Form.Text className='text-muted'>Select file extention</Form.Text>
           <Select
             closeMenuOnSelect={false}
             options={pp}
@@ -198,7 +165,7 @@ class NewModal extends React.Component {
         </Form.Group>
 
         <Form.Group>
-        <Form.Text className='text-muted'>Choose file date</Form.Text>
+          <Form.Text className='text-muted'>Choose file date</Form.Text>
           <Form.Control type='date' placeholder='Enter date...' />
         </Form.Group>
 
@@ -254,6 +221,11 @@ class NewModal extends React.Component {
     }
   }
 
+  doRequestAndHide = (e) => {
+    this.newRequest(e);
+    this.props.onHide();
+  }
+
   render() {
 
     return (
@@ -293,7 +265,7 @@ class NewModal extends React.Component {
 
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={this.props.onHide}>Add</Button>
+          <Button onClick={this.doRequestAndHide}>Add</Button>
         </Modal.Footer>
       </Modal>
     );

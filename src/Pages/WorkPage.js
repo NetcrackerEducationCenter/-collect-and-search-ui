@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Modal } from 'react-bootstrap'
+import { Button, Table } from 'react-bootstrap'
 import NewModal from '../Components/Modal'
 import Field from '../Field';
 import logo from '../assets/logo512.png';
@@ -20,7 +20,7 @@ export default class WorkPage extends Component {
         this.setState(() => { return { modalActive: activeted } })
     }
 
-    setIssuesActive = (activeted) => {
+    shawIssuesActive = (activeted) => {
         this.setState({ shawIssues: activeted })
     }
 
@@ -28,11 +28,43 @@ export default class WorkPage extends Component {
         this.setState({ issues: newIssues });
     }
 
-    setDownload = (value) => {
+    shawDownload = (value) => {
         this.setState(() => { return { download: value } });
     }
 
 
+    requestHistoryTable = () => {
+        return (
+            <Table striped border hover>
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Request</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>REQUEST 1</td>
+                        <td>Done</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>REQUEST 2</td>
+                        <td>In process</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>REQUEST 3</td>
+                        <td>Faild</td>
+                    </tr>
+                </tbody>
+
+            </Table>
+        );
+    }
 
 
 
@@ -46,7 +78,6 @@ export default class WorkPage extends Component {
                     <img className="App-logo" src={logo} alt="download" />
                 </div> */}
 
-
                 <Button className='btn-success   boto'
                     onClick={() => this.shawModal(true)}
                 >
@@ -54,10 +85,10 @@ export default class WorkPage extends Component {
                 </Button>
 
                 <NewModal show={this.state.modalActive}
-                    shawModal={this.shawModal}
+                    // shawModal={this.shawModal}
                     setIssues={this.setIssues}
-                    setIssuesActive={this.setIssuesActive}
-                    setDownload={this.setDownload}
+                    shawIssuesActive={this.shawIssuesActive}
+                    shawDownload={this.shawDownload}
                     onHide={() => this.shawModal(false)}
                 />
 
@@ -67,41 +98,3 @@ export default class WorkPage extends Component {
         )
     }
 }
-
-function MyVerticallyCenteredModal(props) {
-    return (
-        <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header closeButton>
-                <Modal.Title id="contained-modal-title-vcenter">
-                    Modal heading
-          </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <h4>Centered Modal</h4>
-                <p>
-                    Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
-                    dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
-                    consectetur ac, vestibulum at eros.
-          </p>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={props.onHide}>Close</Button>
-            </Modal.Footer>
-        </Modal>
-    );
-}
-// const styles = {
-//     fixed_button: {
-//         position: 'fixed', /*задаём тип позиции, в нашем случае - фиксированная*/
-//         top: '100px',     /* отступ сверху*/
-//         left: '0px',       /* отступ слева*/
-//         width: '100px',    /* ширина кнопки*/
-//         height: '35px',    /* высота кнопки*/
-//         'z-index': '999'    /*позиция относительно дальности*/
-//     }
-// }

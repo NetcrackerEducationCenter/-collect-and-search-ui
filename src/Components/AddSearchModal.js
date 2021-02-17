@@ -10,9 +10,6 @@ import '../css/Form.css';
 import "react-datepicker/dist/react-datepicker.css";
 
 
-// import '../css/select.css';
-
-
 const animatedComponents = makeAnimated();
 
 class AddSearchModal extends React.Component {
@@ -46,60 +43,6 @@ class AddSearchModal extends React.Component {
       checkedExtensions: []
     };
   }
-
-  // search = () => {
-  //   return (
-  //     <div>
-  //       <label className="label-email">
-  //         <span className="required">Search</span>
-  //         <input type="text" onChange={((event) => this.setState({ request: event.target.value }))} className="text" name="email" placeholder="Type your request" tabIndex="1" required />
-
-  //       </label>
-  //     </div>
-  //   );
-  // }
-
-  // url = () => {
-  //   return (
-  //     <div>
-  //       <label className="label-email">
-  //         <span className="required">URL</span>
-  //         <input type="url" defaultValue="https://netcrackereducation.atlassian.net/" onChange={((event) => this.setState({ url: event.target.value }))} className="text" name="email" placeholder="URL" tabIndex="1" required />
-
-  //       </label>
-  //     </div>
-  //   );
-  // }
-
-  // tocken = () => {
-  //   return (
-  //     <div>
-  //       <label className="label-password">
-  //         <span className="required">Token</span>
-  //         <input type="text" defaultValue="IdBigXbJL2aIgrJhGGg2B1A8" onChange={((event) => this.setState({ tocken: event.target.value }))} className="text" name="password" placeholder="Token" tabIndex="2" required />
-
-  //       </label>
-  //     </div>
-  //   );
-  // }
-
-  // drawFigure = () => {
-  //   return (
-  //     <figure aria-hidden="true">
-  //       <div className="person-body"></div>
-  //       <div className="neck skin"></div>
-  //       <div className="head skin">
-  //         <div className="eyes"></div>
-  //         <div className="mouth"></div>
-  //       </div>
-  //       <div className="hair"></div>
-  //       <div className="ears"></div>
-  //       <div className="shirt-1"></div>
-  //       <div className="shirt-2"></div>
-  //     </figure>
-  //   );
-  // }
-
 
   handleChange(e) {
     this.setState({ checkedFilters: e })
@@ -182,7 +125,6 @@ class AddSearchModal extends React.Component {
   }
 
   jiraFilters = () => {
-    // let checkboxChecked = false;
 
     if (this.state.checkboxChecked) {
       return (
@@ -251,35 +193,6 @@ class AddSearchModal extends React.Component {
         </Form.Group>
       );
     }
-
-
-    return (
-
-
-      <Form.Group>
-
-
-        <Form.Label>JIRA filters</Form.Label>
-
-        <Form.Group>
-
-          <Form.Check
-            type='switch'
-            id="custom-switch"
-            label='Use JQL'
-            className='left'
-            controlId="formBasicCheckbox"
-            onChange={(e) => {
-              this.setState({ checkboxChecked: e.target.checked })
-            }}
-
-          />
-
-        </Form.Group>
-
-      </Form.Group>
-
-    )
   }
 
   shawFilters = (filter) => {
@@ -293,7 +206,6 @@ class AddSearchModal extends React.Component {
   }
 
   doRequestAndHide = (e) => {
-    // this.newRequest(e);
     this.props.onHide();
   }
 
@@ -301,15 +213,9 @@ class AddSearchModal extends React.Component {
     return (
       <Modal
         {...this.props}
-        // size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        {/* <Modal.Header closeButton>
-          {/* <Modal.Title id="contained-modal-title-vcenter">
-            New request
-          </Modal.Title> 
-        </Modal.Header> */}
         <Modal.Body>
           <Form>
 
@@ -339,51 +245,6 @@ class AddSearchModal extends React.Component {
         </Modal.Footer>
       </Modal>
     );
-
-    // return (
-    //   <div className={this.props.active ? "mymodal active" : "mymodal"} onClick={() => this.props.setActive(false)}>
-    //     <div className="modal__content" onClick={e => e.stopPropagation()}>
-
-    //       <form method="get" action={void (0)} id="login-form" className="login-form" autoComplete="off" role="main">
-    //         <h1 className="a11y-hidden">Login Form</h1>
-
-    //         {this.search()}
-
-    //         {this.selector()}
-
-    //         {() => {
-    //           if (this.state.jiraChecked) {
-    //             this.jiraFilters();
-    //           }
-    //         }}
-
-    //         {() => {
-    //           if (this.state.ftpChecked) {
-    //             this.ftpFilters();
-    //           }
-    //         }}
-
-    //         {/* {this.url()} */}
-
-    //         {/* 
-    //         <input type="checkbox" name="show-password" className="show-password a11y-hidden" id="show-password" tabIndex="3" />
-    //         <label className="label-show-password" htmlFor="show-password">
-    //           <span>Show Tocken</span>
-    //         </label> */}
-
-    //         {/* {this.tocken()} */}
-
-    //         <input type="submit" value="Find all issues" onClick={e => this.newRequest(e)} />
-    //         <div className="email">
-    //           {/* forgot password */}
-    //         </div>
-
-    //         {/* {this.drawFigure()} */}
-
-    //       </form>
-    //     </div>
-    //   </div>
-    // );
   }
 }
 

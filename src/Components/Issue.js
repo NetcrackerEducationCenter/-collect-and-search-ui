@@ -1,6 +1,6 @@
-import './App.css';
-import './Main.css';
-import './List.css';
+import '../App.css';
+import '../css/Main.css';
+import '../css/List.css';
 import React from 'react';
 
 class Issue extends React.Component {
@@ -10,7 +10,6 @@ class Issue extends React.Component {
     this.state = {
       comments: commentsArr
     }
-    //console.log(this.state.comments);
   }
 
   renderComments = () => {

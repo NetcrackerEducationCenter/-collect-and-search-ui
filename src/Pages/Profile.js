@@ -4,14 +4,12 @@ import UserInfo from '../Components/ForProfile/UserInfo';
 import Sources from '../Components/ForProfile/Sources';
 import Users from '../Components/ForProfile/Users';
 
-// import '../css/Profile.css'
 import { Col, Container, Row } from 'react-bootstrap';
 
 export default class Profile extends Component {
     render() {
         return (
             <Container fluid className='mt-sm-2 mt-lg-5'>
-                {/* <div className='app-wrapper'> */}
                 <Row className='mt-sm-5'></Row>
                 <Row className='mt-sm-5 mt-lg-5'>
                     <Col ms={6} lg={4} className="bg-success">
@@ -29,7 +27,6 @@ export default class Profile extends Component {
                         <Users />
                     </Col>
                 </Row>
-                {/* </div> */}
             </Container>
         )
     }

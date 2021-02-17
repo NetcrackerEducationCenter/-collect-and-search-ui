@@ -8,7 +8,6 @@ class Field extends React.Component {
     this.state = {
       issues: []
     }
-    //this.newRequest();
   }
 
 

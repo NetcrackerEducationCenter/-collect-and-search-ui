@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Table } from 'react-bootstrap'
 import AddSearchModal from '../Components/AddSearchModal'
-import Field from '../Field';
+import Field from '../Components/Field';
 
 
 export default class WorkPage extends Component {
@@ -73,10 +73,6 @@ export default class WorkPage extends Component {
 
                 <Field shawIssues={this.state.shawIssues} issues={this.state.issues} setDownload={this.setDownload} />
 
-                {/* <div className={this.state.download ? "logo active" : "logo"}>
-                    <img className="App-logo" src={logo} alt="download" />
-                </div> */}
-
                 <Button className='btn-success   boto'
                     onClick={() => this.shawModal(true)}
                 >
@@ -84,15 +80,12 @@ export default class WorkPage extends Component {
                 </Button>
 
                 <AddSearchModal show={this.state.modalActive}
-                    // shawModal={this.shawModal}
                     setIssues={this.setIssues}
                     shawIssuesActive={this.shawIssuesActive}
                     shawDownload={this.shawDownload}
                     onHide={() => this.shawModal(false)}
                 />
-
-                {/* <MyVerticallyCenteredModal show={this.state.modalActive} onHide= {()=> this.shawModal(false)} /> */}
-
+                
             </div>
         )
     }

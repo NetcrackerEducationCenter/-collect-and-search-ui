@@ -2,17 +2,20 @@ import React from 'react';
 import axios from 'axios';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated'
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Button, Form } from 'react-bootstrap';
+import DatePicker from 'react-datepicker';
 
 import '../css/Modal.css';
 import '../css/Form.css';
+import "react-datepicker/dist/react-datepicker.css";
+
 
 // import '../css/select.css';
 
 
 const animatedComponents = makeAnimated();
 
-class NewModal extends React.Component {
+class AddSearchModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,6 +39,8 @@ class NewModal extends React.Component {
         { value: 'ftp', label: 'FTP' }
 
       ],
+
+      checkboxChecked: false,
 
       checkedFilters: [],
       checkedExtensions: []
@@ -139,7 +144,7 @@ class NewModal extends React.Component {
     });
   }
 
-  
+
   ftpFilters = () => {
     const pp = [
       { value: 'txt', label: '.txt' },
@@ -164,9 +169,10 @@ class NewModal extends React.Component {
           />
         </Form.Group>
 
-        <Form.Group>
+        <Form.Group className='required'>
           <Form.Text className='text-muted'>Choose file date</Form.Text>
           <Form.Control type='date' placeholder='Enter date...' />
+          <DatePicker  />
         </Form.Group>
 
       </Form.Group>
@@ -176,6 +182,77 @@ class NewModal extends React.Component {
   }
 
   jiraFilters = () => {
+    // let checkboxChecked = false;
+
+    if (this.state.checkboxChecked) {
+      return (
+        <Form.Group>
+
+          <Form.Group>
+            <Form.Label>JIRA filters</Form.Label>
+            <Form.Group>
+              <Form.Check
+                type='switch'
+                id="custom-switch"
+                defaultChecked={this.state.checkboxChecked}
+                label='Use JQL'
+                className='left'
+                controlId="formBasicCheckbox"
+                onChange={(e) => {
+                  this.setState({ checkboxChecked: e.target.checked })
+                }}
+
+              />
+            </Form.Group>
+          </Form.Group>
+
+          <Form.Text className='text-muted'>JQL request</Form.Text>
+          <Form.Control type='text' placeholder='Enter JQL ...' />
+        </Form.Group>);
+    }
+    else {
+      return (
+
+        <Form.Group>
+          <Form.Group>
+            <Form.Label>JIRA filters</Form.Label>
+
+            <Form.Group>
+
+              <Form.Check
+                type='switch'
+                id="custom-switch"
+                label='Use JQL'
+                className='left'
+                controlId="formBasicCheckbox"
+                onChange={(e) => {
+                  this.setState({ checkboxChecked: e.target.checked })
+                }}
+
+              />
+
+            </Form.Group>
+
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Text className='text-muted'>Date of issue</Form.Text>
+            <Form.Control type='date' language='en' value='DD/MM/YYYY' placeholder='DD.MM.YYYY' />
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Text className='text-muted'>Status of issue</Form.Text>
+            <Form.Control as='select'>
+              <option>None</option>
+              <option>Done</option>
+              <option>In process</option>
+            </Form.Control>
+          </Form.Group>
+        </Form.Group>
+      );
+    }
+
+
     return (
 
 
@@ -185,28 +262,22 @@ class NewModal extends React.Component {
         <Form.Label>JIRA filters</Form.Label>
 
         <Form.Group>
-          <Form.Text className='text-muted'>Date of issue</Form.Text>
-          <Form.Control type='date' placeholder='Enter date...' />
-        </Form.Group>
 
-        <Form.Group>
-          <Form.Text className='text-muted'>Status of issue</Form.Text>
-          <Form.Control as='select'>
-            <option>None</option>
-            <option>Done</option>
-            <option>In process</option>
-          </Form.Control>
-        </Form.Group>
+          <Form.Check
+            type='switch'
+            id="custom-switch"
+            label='Use JQL'
+            className='left'
+            controlId="formBasicCheckbox"
+            onChange={(e) => {
+              this.setState({ checkboxChecked: e.target.checked })
+            }}
 
-        <Form.Group>
-          <Form.Text className='text-muted'>JQL request</Form.Text>
-          <Form.Control type='text' placeholder='Enter JQL ...' />
+          />
+
         </Form.Group>
 
       </Form.Group>
-
-
-
 
     )
   }
@@ -222,16 +293,15 @@ class NewModal extends React.Component {
   }
 
   doRequestAndHide = (e) => {
-    this.newRequest(e);
+    // this.newRequest(e);
     this.props.onHide();
   }
 
   render() {
-
     return (
       <Modal
         {...this.props}
-        size="lg"
+        // size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
@@ -317,4 +387,4 @@ class NewModal extends React.Component {
   }
 }
 
-export default NewModal;
+export default AddSearchModal;

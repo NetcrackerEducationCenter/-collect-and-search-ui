@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Table } from 'react-bootstrap'
-import NewModal from '../Components/Modal'
+import AddSearchModal from '../Components/AddSearchModal'
 import Field from '../Field';
-import logo from '../assets/logo512.png';
 
 
 export default class WorkPage extends Component {
@@ -84,7 +83,7 @@ export default class WorkPage extends Component {
                     +
                 </Button>
 
-                <NewModal show={this.state.modalActive}
+                <AddSearchModal show={this.state.modalActive}
                     // shawModal={this.shawModal}
                     setIssues={this.setIssues}
                     shawIssuesActive={this.shawIssuesActive}

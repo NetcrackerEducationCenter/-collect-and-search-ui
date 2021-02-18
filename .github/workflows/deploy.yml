@@ -11,10 +11,10 @@ jobs:
     name: Save prodaction build in Docker to GitHub packages
     steps:
     - uses: actions/checkout@v1
-    - name: Use Node.js 17.00
+    - name: Use Node.js 16.00
       uses: actions/setup-node@v1
       with:
-        node-version: '17.00'
+        node-version: '16.00'
     - name: Install npm
       run: |
         npm install

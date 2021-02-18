@@ -1,7 +1,7 @@
 ### STAGE 1: Build ###
 FROM node:alpine as build
 WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
+# ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app
 RUN npm install --legacy-peer-deps
 # RUN npm install react-scripts -g 

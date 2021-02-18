@@ -11,10 +11,10 @@ jobs:
     name: Save prodaction build in Docker to GitHub packages
     steps:
     - uses: actions/checkout@v1
-    - name: Use Node.js 13.10
+    - name: Use Node.js 17.00
       uses: actions/setup-node@v1
       with:
-        node-version: '13.10'
+        node-version: '17.00'
     - name: Install npm
       run: |
         npm install
@@ -43,7 +43,7 @@ jobs:
           username: ${{secrets.SSH_USERNAME}}
           passphrase: ${{secrets.PASSPHRASE}}
           script: |
-            cd netcracker/education-center/collect-and-search/collect-and-search-ui
+            cd netcracker-education-center/collect-and-search/collect-and-search-ui
             docker login https://docker.pkg.github.com -u ${{github.repository_owner}} -p ${{secrets.GITHUB_TOKEN}}
             docker container stop $(docker ps -aqf "name=reactimage")
             docker container rm $(docker ps -aqf "name=reactimage")

@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: Save prodaction build in Docker to GitHub packages
     steps:
     - uses: actions/checkout@v1
     - name: Use Node.js 13.10
@@ -27,4 +28,29 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
         dockerfile: Dockerfile
-        tags: latest
+        tags: latest 
+        
+  deploy:
+    runs-on: ubuntu-latest
+    name: Run image as a container
+    needs: build
+    steps:
+      - name: Install Docker image from Github Packages and Run
+        uses: appleboy/ssh-action@v0.1.2
+        with:
+          host: ${{secrets.SSH_HOST}}
+          ##key: ${{secrets.SSH_KEY}}
+          username: ${{secrets.SSH_USERNAME}}
+          passphrase: ${{secrets.PASSPHRASE}}
+          script: |
+            cd netcracker/education-center/collect-and-search/collect-and-search-ui
+            docker login https://docker.pkg.github.com -u ${{github.repository_owner}} -p ${{secrets.GITHUB_TOKEN}}
+            docker container stop $(docker ps -aqf "name=collect_and_search_ui")
+            docker container rm $(docker ps -aqf "name=collect_and_search_ui")
+            docker image rm netcracker/collect_and_search_ui
+            docker image rm docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/collect_and_search_ui
+            docker pull docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/collect_and_search_ui:latest
+            docker tag docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/collect_and_search_ui:latest netcracker/collect_and_search_ui:latest
+            # -d means that container starts in detached mode or in the background
+            docker run -d --name collect_and_search_ui -p 8000:8000 -p 9090:9090 netcracker/collect_and_search_ui:latest -v netcracker/education-center/collect-and-search/collect-and-search-ui/log:/log
+  

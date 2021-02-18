@@ -1,0 +1,34 @@
+@keyframes rotation {
+    0% {
+        transform:rotate(0deg);
+    }
+    100% {
+        transform:rotate(360deg);
+    }
+}
+
+.rotate-img {
+    width: 200px;
+    animation-name: rotation;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    transform: scale(0);
+}
+
+.logo.active {
+    transform: scale(1);
+}
+
+.logo {
+    height: 40vmin;
+    pointer-events: none;
+    transform: scale(0);
+  }
+  
+  @media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+      animation: App-logo-spin infinite 20s linear;
+    }
+  }
+  

@@ -1,0 +1,37 @@
+.app-wrapper {
+    margin-top: 4%;
+
+    display: grid;
+
+    grid-template-areas: 
+    "a ui s"
+    "u u u";
+
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 4fr 4fr 4fr;
+    grid-gap: 10px;
+}
+
+.avatar-wrapper{
+    grid-area: a;
+    background-color: aquamarine;
+}
+
+.avatar-wrapper img {
+    width: 100%;
+}
+
+.users-wrapper{
+    grid-area: u;
+    background-color: blueviolet;
+}
+
+.userInfo-wrapper{
+    grid-area: ui;
+    background-color: chocolate;
+}
+
+.sources-wrapper{
+    grid-area: s;
+    background-color: darkcyan;
+}

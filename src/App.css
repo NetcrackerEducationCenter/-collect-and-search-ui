@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+body {
+  /* height: 20000px; */
+  margin-top: 25px;
+}
+
+.boto {
+  right: 25px;
+  position: fixed;
+  bottom: 25px;
+  transform: scale(1.5);
+}

@@ -1,14 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 import App from './App';
-import Field from './Field';
 import reportWebVitals from './reportWebVitals';
 
 
 ReactDOM.render(
   <React.StrictMode>
-    <Field />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );

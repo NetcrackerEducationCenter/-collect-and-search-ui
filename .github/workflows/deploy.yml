@@ -23,7 +23,7 @@ jobs:
     - name: Publish to Github Packages Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: netcracker-education-center/collect-and-search-ui/reactimage
+        name: netcracker/education-center/collect-and-search-ui/reactimage
         registry: docker.pkg.github.com
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -43,7 +43,8 @@ jobs:
           username: ${{secrets.SSH_USERNAME}}
           passphrase: ${{secrets.PASSPHRASE}}
           script: |
-            cd netcracker-education-center/collect-and-search/collect-and-search-ui
+            mkdir netcracker/education-center/collect-and-search/collect-and-search-ui
+            cd netcracker/education-center/collect-and-search/collect-and-search-ui
             docker login https://docker.pkg.github.com -u ${{github.repository_owner}} -p ${{secrets.GITHUB_TOKEN}}
             docker container stop $(docker ps -aqf "name=reactimage")
             docker container rm $(docker ps -aqf "name=reactimage")

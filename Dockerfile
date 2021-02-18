@@ -1,15 +1,16 @@
-# Берем в качестве родительского образа node:8-apline и назовем эту ступень сборки "build-stage"
-FROM node:alpine as build-stage
-# Устанавливаем рабочую директорию
-WORKDIR /app
-# Копируем файлы package.json yarn.lock в рабочую директорию
-COPY package*.json ./
-# Устаналиваем зависимости
-RUN npm install
-# Копируем исходники в рабочую директорию
-COPY . ./
-# Собираем проект
+### STAGE 1: Build ###
+FROM node:alpine as build
+RUN mkdir /usr/src/app
+WORKDIR /usr/src/app
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+COPY package.json /usr/src/app/package.json
+RUN npm install --silent
+RUN npm install react-scripts -g --silent
+COPY . /usr/src/app
 RUN npm run build
 
-# Открываем 8080 порт
+### STAGE 2: Production Environment ###
+FROM nginx:1.13.12-alpine
+COPY --from=build /usr/src/app/build /usr/share/nginx/html
 EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]

@@ -25,7 +25,7 @@ jobs:
       with:
         name: netcracker-education-center/collect-and-search-ui/reactimage
         registry: docker.pkg.github.com
-        username: ${{ github.actor }}
+        username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
         dockerfile: Dockerfile
         tags: latest 

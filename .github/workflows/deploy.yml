@@ -43,17 +43,20 @@ jobs:
           username: ${{secrets.SSH_USERNAME}}
           passphrase: ${{secrets.PASSPHRASE}}
           script: |
-            docker ps
-            mkdir netcracker/education-center/collect-and-search/collect-and-search-ui
-            cd netcracker/education-center/collect-and-search/collect-and-search-ui
-            docker login https://docker.pkg.github.com -u ${{github.repository_owner}} -p ${{secrets.GITHUB_TOKEN}}
-            docker container stop $(docker ps -aqf "name=reactimage")
-            docker container rm $(docker ps -aqf "name=reactimage")
-            docker ps
-            docker image rm netcracker/reactimage
-            docker image rm docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage
-            docker pull docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest
-            docker tag docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest netcracker/reactimage:latest
-            # -d means that container starts in detached mode or in the background
-            docker run -d --name reactimage -p 3000:3000 -p 7070:7070 netcracker/reactimage:latest -v netcracker/education-center/collect-and-search/collect-and-search-ui/log:/log
+          
+           docker stop $(docker ps -a -q)
+           docker login docker.pkg.github.com -u $GITHUB_USERNAME -p $GITHUB_TOKEN --password-stdin
+           docker pull docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest
+           docker run -dit -p 8080:8080 docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest
+          
+#             cd netcracker/education-center/collect-and-search/collect-and-search-ui
+#             docker login https://docker.pkg.github.com -u ${{github.repository_owner}} -p ${{secrets.GITHUB_TOKEN}} --password-stdin
+#             docker container stop $(docker ps -aqf "name=reactimage")
+#             docker container rm $(docker ps -aqf "name=reactimage")
+#             docker image rm netcracker/reactimage
+#             docker image rm docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage
+#             docker pull docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest
+#             docker tag docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest netcracker/reactimage:latest
+#             # -d means that container starts in detached mode or in the background
+#             docker run -d --name reactimage -p 3000:3000 -p 7070:7070 netcracker/reactimage:latest -v netcracker/education-center/collect-and-search/collect-and-search-ui/log:/log
   

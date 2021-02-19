@@ -20,15 +20,24 @@ jobs:
         npm install
       env:
         CI: true
-    - name: Publish to Github Packages Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
+#     - name: Publish to Github Packages Registry
+#       uses: elgohr/Publish-Docker-Github-Action@master
+#       with:
+#         name: netcracker-education-center/collect-and-search-ui/reactimage
+#         registry: docker.pkg.github.com
+#         username: ${{ github.actor }}
+#         password: ${{ secrets.GITHUB_TOKEN }}
+#         dockerfile: Dockerfile
+#         tags: latest 
+    - name: Push to GitHub Packages
+      uses: docker/build-push-action@v1
       with:
-        name: netcracker-education-center/collect-and-search-ui/reactimage
-        registry: docker.pkg.github.com
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-        dockerfile: Dockerfile
-        tags: latest 
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+          tags: latest
+          registry: docker.pkg.github.com
+          repository: netcracker-education-center/collect-and-search-ui/reactimage
+          tag_with_ref: true
         
     - name: Deploy package to digitalocean        
       uses: appleboy/ssh-action@master
@@ -40,7 +49,7 @@ jobs:
           key: ${{secrets.SSH_KEY}}
           username: ${{secrets.SSH_USERNAME}}
           passphrase: ${{secrets.PASSPHRASE}}
-          
+          envs: GITHUB_USERNAME, GITHUB_TOKEN
           script: |
              docker login https://docker.pkg.github.com -u ${{github.actor}} -p ${{secrets.GITHUB_TOKEN}} --password-stdin
              docker container stop $(docker ps -aqf "name=reactimage")
@@ -50,7 +59,7 @@ jobs:
              docker pull docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest
              docker run -dit -p 4040:4040 docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest
 
-  #           envs: GITHUB_USERNAME, GITHUB_TOKEN
+  #           
   #             cd netcracker/education-center/collect-and-search/collect-and-search-ui
   #             docker login https://docker.pkg.github.com -u ${{github.repository_owner}} -p ${{secrets.GITHUB_TOKEN}} --password-stdin
   #             docker container stop $(docker ps -aqf "name=reactimage")

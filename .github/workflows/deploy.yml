@@ -17,33 +17,34 @@ jobs:
     - name: Install npm and run unittest
       run: |
         npm install --legacy-peer-deps
-      env:
-        CI: true
     - name: Publish to Github Packages Registry
-      uses: elgohr/Publish-Docker-Github-Action@master
+      uses: docker/build-push-action@v1
       with:
-        name: netcracker-education-center/collect-and-search-ui/reactimage
+        repository: netcracker-education-center/collect-and-search-ui/reactimage
         registry: docker.pkg.github.com
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-        dockerfile: Dockerfile-prod
+        dockerfile: Dockerfile.prod
         tags: latest
+        tag_with_ref: true
     - name: Deploy package to digitalocean
-      uses: appleboy/ssh-action@master
-      env:
-          GITHUB_USERNAME: ${{ github.actor }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: appleboy/ssh-action@v0.1.2
       with:
         host: ${{secrets.SSH_HOST}}
         key: ${{secrets.SSH_KEY}}
         username: ${{secrets.SSH_USERNAME}}
         passphrase: ${{secrets.PASSPHRASE}}
-        envs: GITHUB_USERNAME, GITHUB_TOKEN
         script: |
-          docker stop $(docker ps -a -q)
-          docker login docker.pkg.github.com -u $GITHUB_USERNAME -p $GITHUB_TOKEN
+          cd netcracker/education-center/collect-and-search/collect-and-search-ui
+          docker login https://docker.pkg.github.com -u ${{github.repository_owner}} -p ${{secrets.GITHUB_TOKEN}}
+          docker container stop $(docker ps -aqf "name=reactimage")
+          docker container rm $(docker ps -aqf "name=reactimage")
+          docker image rm netcracker/reactimage
+          docker image rm docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage
           docker pull docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest
-          docker run -dit -p 4100:4100 docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest
+          docker tag docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest netcracker/reactimage:latest
+          # -d means that container starts in detached mode or in the background
+          docker run -d --name reactimage -p 7070:7070 netcracker/reactimage:latest 
 
 
 # name: build

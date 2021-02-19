@@ -50,19 +50,20 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     name: Deploy Docker from Github packages to Digital Ocean
+    needs: build
     steps:
-      - name: Deploy package to digitalocean        
-        uses: appleboy/ssh-action@master
+    - name: Deploy package to digitalocean        
+      uses: appleboy/ssh-action@master
     #       env:
     #           GITHUB_USERNAME: ${{ github.actor }}
     #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-            host: ${{secrets.SSH_HOST}}
-            key: ${{secrets.SSH_KEY}}
-            username: ${{secrets.SSH_USERNAME}}
-            passphrase: ${{secrets.PASSPHRASE}}
+      with:
+          host: ${{secrets.SSH_HOST}}
+          key: ${{secrets.SSH_KEY}}
+          username: ${{secrets.SSH_USERNAME}}
+          passphrase: ${{secrets.PASSPHRASE}}
     #           envs: GITHUB_USERNAME, GITHUB_TOKEN
-            script: |
+          script: |
                  docker login https://docker.pkg.github.com -u ${{github.actor}} -p ${{secrets.GITHUB_TOKEN}} --password-stdin
                  docker container stop $(docker ps -aqf "name=reactimage")
                  docker container rm $(docker ps -aqf "name=reactimage")

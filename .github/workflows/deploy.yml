@@ -22,7 +22,7 @@ jobs:
     - name: Publish to Github Packages Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       with:
-        name: kenessajr/react-with-actions/react-with-actions
+        name: netcracker-education-center/collect-and-search-ui/reactimage
         registry: docker.pkg.github.com
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}

@@ -24,7 +24,7 @@ jobs:
         registry: docker.pkg.github.com
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-        dockerfile: Dockerfile.prod
+        dockerfile: Dockerfile
         tags: latest
         tag_with_ref: true
     - name: Deploy package to digitalocean

@@ -2,9 +2,10 @@ import React from 'react';
 import axios from 'axios';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated'
-import { Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Button, Form, FormGroup } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
-
+import './KafkaProducer'
+//CSS imports
 import '../css/Modal.css';
 import '../css/Form.css';
 import "react-datepicker/dist/react-datepicker.css";
@@ -42,6 +43,60 @@ class AddSearchModal extends React.Component {
       checkedFilters: [],
       checkedExtensions: []
     };
+
+
+    this.newRequest();
+  }
+
+  /**
+   * Send messages to kafka topic 'ui-search-requests'
+   */
+
+
+  /**
+   * Read kafka topic 'ui-search-results-topic'
+   */
+  componentDidMount() {
+    //this.getResponse();
+  }
+
+  getResponse = async () => {
+    let data;
+    axios.post("http://localhost:7071/api/kafkajs/get", {
+      "ticketSystem": "JIRA",
+      "login": "kakashka_am@mail.ru",
+      "password": 'IdBigXbJL2aIgrJhGGg2B1A8',
+      "url": "https://netcrackereducation.atlassian.net",
+      "userId": '123212321323'
+    }).then(res=>{
+      console.log(res.data);
+    })
+  }
+
+
+  newRequest = (e) => {
+    //e.preventDefault();
+
+    // this.props.shawModal(false);
+    this.props.shawDownload(true);
+
+    let data;
+    axios.post("http://localhost:7071/api/kafkajs/push", {
+      "ticketSystem": "JIRA",
+      "login": "kakashka_am@mail.ru",
+      "password": 'IdBigXbJL2aIgrJhGGg2B1A8',
+      "url": "https://netcrackereducation.atlassian.net",
+      "userId": '123212321323'
+
+    })//.then(response => {
+    //   data = response.data;
+    //   console.log('data: ', data);
+    //   console.log('responce.data: ', response.data);
+    //   this.props.setIssues(data);
+    //   this.props.shawIssuesActive(true);
+    // }).catch(error => {
+    //   console.log("request error: ", error)
+    // });
   }
 
   handleChange(e) {
@@ -64,28 +119,6 @@ class AddSearchModal extends React.Component {
   }
 
 
-  newRequest = (e) => {
-    e.preventDefault();
-
-    // this.props.shawModal(false);
-    this.props.shawDownload(true);
-
-    var data;
-    axios.post("http://142.93.122.167:9090/tickets/find", {
-      ticketSystem: this.state.ticketSystem, //"JIRA",
-      login: this.state.email, //"kakashka_am@mail.ru",
-      password: this.state.tocken, //'IdBigXbJL2aIgrJhGGg2B1A8',
-      url: this.state.url //"https://netcrackereducation.atlassian.net"
-    }).then(response => {
-      data = response.data;
-      console.log('data: ', data);
-      console.log('responce.data: ', response.data);
-      this.props.setIssues(data);
-      this.props.shawIssuesActive(true);
-    }).catch(error => {
-      console.log("request error: ", error)
-    });
-  }
 
 
   ftpFilters = () => {
@@ -115,7 +148,7 @@ class AddSearchModal extends React.Component {
         <Form.Group className='required'>
           <Form.Text className='text-muted'>Choose file date</Form.Text>
           <Form.Control type='date' placeholder='Enter date...' />
-          <DatePicker  />
+          <DatePicker />
         </Form.Group>
 
       </Form.Group>
@@ -210,6 +243,7 @@ class AddSearchModal extends React.Component {
   }
 
   render() {
+
     return (
       <Modal
         {...this.props}
@@ -218,6 +252,9 @@ class AddSearchModal extends React.Component {
       >
         <Modal.Body>
           <Form>
+          <Form.Group>
+            <Button onClick={this.getResponse }>send</Button>
+          </Form.Group>
 
             <Form.Group controlId='formBasicEmail'>
               <Form.Label>Add filters</Form.Label>

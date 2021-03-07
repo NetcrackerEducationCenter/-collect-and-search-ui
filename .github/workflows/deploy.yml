@@ -18,7 +18,6 @@ jobs:
         #key: ${{secrets.SSH_KEY}}
         username: netcracker
         password: NET21dc
-        port: 22
       with:
         source: "."
         target: "/ui"

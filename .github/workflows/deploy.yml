@@ -14,10 +14,11 @@ jobs:
     - name: Copu file via scrip
       uses: appleboy/scp-action@master
       env:
-        host: ${{secrets.SSH_HOST}}
-        key: ${{secrets.SSH_KEY}}
+        host: 142.93.122.167
+        #key: ${{secrets.SSH_KEY}}
         username: netcracker
         password: NET21dc
+        port: 22
       with:
         source: "."
         target: "/ui"

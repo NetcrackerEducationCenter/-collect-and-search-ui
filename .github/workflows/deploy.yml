@@ -1,7 +1,7 @@
 name: build
 
 on:
-  comit:
+  commit:
     branches: 
       - "kafka-using"
 
@@ -27,7 +27,19 @@ jobs:
         host: ${{secrets.SSH_HOST}}
         key: ${{secrets.SSH_KEY}}
         username: ${{secrets.SSH_USERNAME}}
-        script: docker-compose -f docker-compose.yml up        
+        script: |
+          cd ui
+
+          #stop containers
+          docker stop $(docker ps -aqf "name=frontend")
+          docker stop $(docker ps -aqf "name=backend")
+
+          #delete containers
+          docker rm $(docker ps -aqf "name=frontend")         
+          docker rm $(docker ps -aqf "name=backend")
+
+          #run docker-compose
+          docker-compose -f docker-compose.yml up        
     # - name: Use Node.js 13.10
     #   uses: actions/setup-node@v1
     #   with:

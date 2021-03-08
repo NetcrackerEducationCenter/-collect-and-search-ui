@@ -3,7 +3,7 @@ name: build
 on:
   push:
     branches: 
-      - "kafka-using"
+      - "master"
 
 jobs:
   build:
@@ -11,7 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Copu file via scrip
+    - name: Copy file via scrip
       uses: appleboy/scp-action@master
       with:
         host: ${{secrets.SSH_HOST}}
@@ -23,10 +23,10 @@ jobs:
         # username: netcracker
         # password: NET21dc
         source: "."
-        target: "/home/netcracker/ui"
+        target: "/home/netcracker/ui/collect-and-search-ui"
 
     - name: Executing remote command
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@v0.1.2
       with:
         host: ${{secrets.SSH_HOST}}
         key: ${{secrets.SSH_KEY}}
@@ -41,16 +41,15 @@ jobs:
 
 
 
-          # #stop containers
-          # docker stop $(docker ps -aqf "name=frontend")
-          # docker stop $(docker ps -aqf "name=backend")
+        # #stop containers
+        # docker stop $(docker ps -aqf "name=frontend")
+        # docker stop $(docker ps -aqf "name=backend")
+        # #delete containers
+        # docker rm $(docker ps -aqf "name=frontend")         
+        # docker rm $(docker ps -aqf "name=backend")
+        # #run docker-compose
+        # docker-compose -f docker-compose.yml up     
 
-          # #delete containers
-          # docker rm $(docker ps -aqf "name=frontend")         
-          # docker rm $(docker ps -aqf "name=backend")
-
-          # #run docker-compose
-          # docker-compose -f docker-compose.yml up        
     # - name: Use Node.js 13.10
     #   uses: actions/setup-node@v1
     #   with:

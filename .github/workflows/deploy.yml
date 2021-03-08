@@ -44,7 +44,7 @@ jobs:
         # #stop containers
         # docker stop $(docker ps -aqf "name=frontend")
         # docker stop $(docker ps -aqf "name=backend")
-        # #delete containers
+        # #delete containers s
         # docker rm $(docker ps -aqf "name=frontend")         
         # docker rm $(docker ps -aqf "name=backend")
         # #run docker-compose

@@ -73,11 +73,13 @@ class AddSearchModal extends React.Component {
     this.props.shawDownload(true);
 
     axios.post("http://localhost:7071/api/request/push", {
+      "jiraChecked": this.state.jiraChecked,
       "ticketSystem": this.state.ticketSystem,
       "login": this.state.email,
       "password": this.state.tocken,
       "url": this.state.url,
 
+      "ftpChecked": this.state.ftpChecked,
       "ftpLogin": this.state.ftpLogin,
       "ftpPassword": this.state.ftpPassword,
       "ftpPort": this.state.ftpPort,

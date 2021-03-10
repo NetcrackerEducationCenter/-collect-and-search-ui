@@ -92,7 +92,15 @@ class AddSearchModal extends React.Component {
 
       "userId": '123212321323'
 
-    })//.then(response => {
+    }).then(res => {
+      if (res.status === 200) {
+        alert('Request sended');
+      }
+      else {
+        alert('Anything went wrong!');
+      }
+    });
+    //.then(response => {
     //   data = response.data;
     //   console.log('data: ', data);
     //   console.log('responce.data: ', response.data);

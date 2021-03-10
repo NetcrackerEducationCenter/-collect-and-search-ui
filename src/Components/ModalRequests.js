@@ -18,7 +18,17 @@ export default class ModalRequests extends Component {
                 </thead>
 
                 <tbody>
-                    <tr>
+                    {this.props.statuses.map(v => {
+                        return (
+                            <tr>
+                                <td>{v.messages.requestId}</td>
+                                <td>{v.messages.keyWords}</td>
+                                <td>{v.messages.date}</td>
+                                <td>{v.messages.status}</td>
+                            </tr>
+                        )
+                    })}
+                    {/* <tr>
                         <td>1</td>
                         <td>REQUEST 1</td>
                         <td>12.12.2020</td>
@@ -35,7 +45,7 @@ export default class ModalRequests extends Component {
                         <td>REQUEST 3</td>
                         <td>12.12.2020</td>
                         <td>Faild</td>
-                    </tr>
+                    </tr> */}
                 </tbody>
 
             </Table>
@@ -43,14 +53,24 @@ export default class ModalRequests extends Component {
     }
 
     render() {
-        return (
-            <div className={this.props.active ? "mymodalR active" : "mymodalR"} onClick={() => this.props.setActive(false)}>
-                <div className="modalR__content" onClick={e => e.stopPropagation()}>
-                    Here will be requestes
-                    {this.requestHistoryTable()}
+        if (this.props.statuses.length <= 0) {
+            return (
+                <div className={this.props.active ? "mymodalR active" : "mymodalR"} onClick={() => this.props.setActive(false)}>
+                    <div className="modalR__content" onClick={e => e.stopPropagation()}>
+                        Here will be requestes
+                    </div>
                 </div>
-            </div>
-        )
+            )
+        } else {
+            return (
+                <div className={this.props.active ? "mymodalR active" : "mymodalR"} onClick={() => this.props.setActive(false)}>
+                    <div className="modalR__content" onClick={e => e.stopPropagation()}>
+                        {this.requestHistoryTable()}
+                    </div>
+                </div>
+            )
+        }
+
 
     }
 }

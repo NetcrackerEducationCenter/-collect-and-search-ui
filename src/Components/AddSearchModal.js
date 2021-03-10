@@ -21,16 +21,23 @@ class AddSearchModal extends React.Component {
 
       jiraChecked: false,
       ticketSystem: 'JIRA',
-      url: 'https://netcrackereducation.atlassian.net/',
+      url: 'https://netcrackereducation.atlassian.net',
       email: 'kakashka_am@mail.ru',
       tocken: 'IdBigXbJL2aIgrJhGGg2B1A8',
+      jiraIssuesDate: '',
+      jiraJQLRequest: '',
+      jiraIssuesStatus: '',
 
       ftpChecked: false,
-      ftpLogin: '',
-      ftpPassword: '',
-      ftpServer: '',
+      ftpLogin: 'ftptestusr',
+      ftpPassword: 'ftp123',
+      ftpPort: '21',
+      ftpServer: '142.93.122.167',
       ftpDirPath: '',
-      ftpExtention: '',
+      ftpExtention: [],
+      ftpDate: '',
+
+      keyWords: '',
 
       filters: [
         { value: 'jira', label: 'JIRA' },
@@ -43,49 +50,44 @@ class AddSearchModal extends React.Component {
       checkedFilters: [],
       checkedExtensions: []
     };
-
-
-    this.newRequest();
-  }
-
-  /**
-   * Send messages to kafka topic 'ui-search-requests'
-   */
-
-
-  /**
-   * Read kafka topic 'ui-search-results-topic'
-   */
-  componentDidMount() {
-    //this.getResponse();
   }
 
   getResponse = async () => {
     let data;
-    axios.post("http://localhost:7071/api/kafkajs/get", {
+    axios.post("http://localhost:7071/api/request/get", {
       "ticketSystem": "JIRA",
       "login": "kakashka_am@mail.ru",
       "password": 'IdBigXbJL2aIgrJhGGg2B1A8',
       "url": "https://netcrackereducation.atlassian.net",
       "userId": '123212321323'
-    }).then(res=>{
+    }).then(res => {
       console.log(res.data);
     })
   }
 
-
+  /**
+  * Send messages to kafka topic 'ui-search-requests'
+  */
   newRequest = (e) => {
-    //e.preventDefault();
-
     // this.props.shawModal(false);
     this.props.shawDownload(true);
 
-    let data;
-    axios.post("http://localhost:7071/api/kafkajs/push", {
-      "ticketSystem": "JIRA",
-      "login": "kakashka_am@mail.ru",
-      "password": 'IdBigXbJL2aIgrJhGGg2B1A8',
-      "url": "https://netcrackereducation.atlassian.net",
+    axios.post("http://localhost:7071/api/request/push", {
+      "ticketSystem": this.state.ticketSystem,
+      "login": this.state.email,
+      "password": this.state.tocken,
+      "url": this.state.url,
+
+      "ftpLogin": this.state.ftpLogin,
+      "ftpPassword": this.state.ftpPassword,
+      "ftpPort": this.state.ftpPort,
+      "ftpServer": this.state.ftpServer,
+      "ftpDirPath": this.state.ftpDirPath,
+      "ftpExtention": this.state.ftpExtention,
+      "ftpDate": this.state.ftpDate,
+
+      "keyWords": this.state.keyWords,
+
       "userId": '123212321323'
 
     })//.then(response => {
@@ -103,6 +105,10 @@ class AddSearchModal extends React.Component {
     this.setState({ checkedFilters: e })
   }
 
+  /**
+   * Selector for sources JIRA and FTP
+   * @returns JSX selector
+   */
   selector = () => {
 
     return (
@@ -120,7 +126,9 @@ class AddSearchModal extends React.Component {
 
 
 
-
+  /**
+   * @returns JSX for FTP filters
+   */
   ftpFilters = () => {
     const pp = [
       { value: 'txt', label: '.txt' },
@@ -141,13 +149,21 @@ class AddSearchModal extends React.Component {
             options={pp}
             isMulti
             components={animatedComponents}
-            onChange={(e) => this.setState({ checkedExtensions: e })}
+            onChange={(e) =>
+              this.setState({ checkedExtensions: e })
+            }
           />
         </Form.Group>
 
         <Form.Group className='required'>
           <Form.Text className='text-muted'>Choose file date</Form.Text>
-          <Form.Control type='date' placeholder='Enter date...' />
+          <Form.Control
+            type='date'
+            onChange={e => this.setState({
+              ftpDate: new Date(e.target.value).toLocaleDateString()
+            })}
+            placeholder='Enter date...'
+          />
           <DatePicker />
         </Form.Group>
 
@@ -157,6 +173,9 @@ class AddSearchModal extends React.Component {
     );
   }
 
+  /**
+   * @returns JSX for JIRA filters
+   */
   jiraFilters = () => {
 
     if (this.state.checkboxChecked) {
@@ -174,7 +193,10 @@ class AddSearchModal extends React.Component {
                 className='left'
                 controlId="formBasicCheckbox"
                 onChange={(e) => {
-                  this.setState({ checkboxChecked: e.target.checked })
+                  this.setState({
+                    jiraJQLRequest: '',
+                    checkboxChecked: e.target.checked
+                  })
                 }}
 
               />
@@ -182,45 +204,66 @@ class AddSearchModal extends React.Component {
           </Form.Group>
 
           <Form.Text className='text-muted'>JQL request</Form.Text>
-          <Form.Control type='text' placeholder='Enter JQL ...' />
+          <Form.Control
+            type='text'
+            placeholder='Enter JQL ...'
+            onChange={e => {
+              this.setState({ jiraJQLRequest: e.target.value });
+            }}
+          />
         </Form.Group>);
-    }
-    else {
+
+    } else {
+
       return (
-
         <Form.Group>
+
+          <Form.Label>JIRA filters</Form.Label>
+
           <Form.Group>
-            <Form.Label>JIRA filters</Form.Label>
-
-            <Form.Group>
-
-              <Form.Check
-                type='switch'
-                id="custom-switch"
-                label='Use JQL'
-                className='left'
-                controlId="formBasicCheckbox"
-                onChange={(e) => {
-                  this.setState({ checkboxChecked: e.target.checked })
-                }}
-
-              />
-
-            </Form.Group>
-
+            <Form.Check
+              type='switch'
+              id="custom-switch"
+              label='Use JQL'
+              className='left'
+              controlId="formBasicCheckbox"
+              onChange={(e) => {
+                this.setState({
+                  jiraIssuesStatus: '',
+                  jiraIssuesDate: '',
+                  checkboxChecked: e.target.checked
+                })
+              }}
+            />
           </Form.Group>
 
           <Form.Group>
             <Form.Text className='text-muted'>Date of issue</Form.Text>
-            <Form.Control type='date' language='en' value='DD/MM/YYYY' placeholder='DD.MM.YYYY' />
+            <Form.Control
+              type='date'
+              language='en'
+              value='DD/MM/YYYY'
+              onChange={e => {
+                this.setState({
+                  jiraIssuesDate: new Date(e.target.value).toLocaleDateString()
+                });
+              }}
+            />
           </Form.Group>
 
           <Form.Group>
             <Form.Text className='text-muted'>Status of issue</Form.Text>
-            <Form.Control as='select'>
-              <option>None</option>
-              <option>Done</option>
-              <option>In process</option>
+            <Form.Control
+              as='select'
+              onChange={e => {
+                this.setState({
+                  jiraIssuesStatus: e.target.value
+                });
+              }}
+            >
+              <option >None</option>
+              <option >Done</option>
+              <option >In process</option>
             </Form.Control>
           </Form.Group>
         </Form.Group>
@@ -228,6 +271,10 @@ class AddSearchModal extends React.Component {
     }
   }
 
+  /**
+   * @param {*} filter state
+   * @returns JSX filters
+   */
   shawFilters = (filter) => {
     if (filter === this.state.filters[0].value) {
       return this.jiraFilters();
@@ -238,7 +285,12 @@ class AddSearchModal extends React.Component {
     }
   }
 
+  /**
+   * This method should send request and hide this modal window
+   * @param {*} e 
+   */
   doRequestAndHide = (e) => {
+    this.newRequest();
     this.props.onHide();
   }
 
@@ -252,9 +304,9 @@ class AddSearchModal extends React.Component {
       >
         <Modal.Body>
           <Form>
-          <Form.Group>
-            <Button onClick={this.getResponse }>send</Button>
-          </Form.Group>
+            <Form.Group>
+              <Button onClick={this.getResponse}>send</Button>
+            </Form.Group>
 
             <Form.Group controlId='formBasicEmail'>
               <Form.Label>Add filters</Form.Label>
@@ -270,9 +322,16 @@ class AddSearchModal extends React.Component {
 
             <Form.Group>
               <Form.Label>Request</Form.Label>
-              <Form.Control type='text' placeholder='enter request' />
+              <Form.Control
+                type='text'
+                placeholder='enter request'
+                onChange={e => {
+                  this.setState({
+                    keyWords: e.target.value
+                  });
+                }}
+              />
             </Form.Group>
-
 
           </Form>
 

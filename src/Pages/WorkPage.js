@@ -31,42 +31,6 @@ export default class WorkPage extends Component {
         this.setState(() => { return { download: value } });
     }
 
-
-    requestHistoryTable = () => {
-        return (
-            <Table striped border hover>
-                <thead>
-                    <tr>
-                        <th>№</th>
-                        <th>Request</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>REQUEST 1</td>
-                        <td>Done</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>REQUEST 2</td>
-                        <td>In process</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>REQUEST 3</td>
-                        <td>Faild</td>
-                    </tr>
-                </tbody>
-
-            </Table>
-        );
-    }
-
-
-
     render() {
         return (
             <div>

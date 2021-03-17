@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 
 //Pictures
-import project_structure from './project-structure.png';
+import project_structure from '../assets/project-structure.png';
 import AddSearchModal from '../Components/AddSearchModal';
 
 //CSS
@@ -14,15 +14,15 @@ function Home(props) {
 
     return (
 
-        <Container fluid className="bg-success mh-100" >
+        <Container fluid>
             <Col>
 
                 <div className='text-center text-monospace font-weight-bold fs'
                     style={{ fontSize: 36 }}
                 >
-                    <br />
-                            Collect and Search
-                        </div>
+
+                    <h1>Collect and Search</h1>
+                </div>
 
                 <Row>
 
@@ -30,25 +30,30 @@ function Home(props) {
 
 
                         <br />
-                                    Collect and Search it's a project for Netcracker education center.
-                                    This project will help agile commands to find any information from the sources like JIRA or FTP.
-                                <br />
+                            Collect and Search it's a project for Netcracker education center.
+                            This project will help agile commands to find any information from the sources like JIRA or FTP.
+                        <br />
 
                         <br />
-                                    This project is created with a micro service architecture.
-                                    Microservices are shown in the picture below.
-                                <br />
+                            This project is created with a micro service architecture.
+                            Microservices are shown in the picture below.
+                        <br />
                         <br />
 
                         <img src={project_structure}
-                                className='img-fluid img-thumbnail shadow mx-auto d-block'
-                                alt='project structure'
-                                xs='auto'
-                            />
+                            className='img-fluid img-thumbnail shadow mx-auto d-block'
+                            alt='project structure'
+                            xs='auto'
+                        />
 
                         {/* <CarouselBox /> */}
                         <br />
-                        <Button onClick={() => setShowModal(true)}>Add new request</Button>
+                        <Button block onClick={() => setShowModal(true)}>
+                            Try to add new request
+                        </Button>
+                        <br />
+                        <br />
+
                     </Col>
 
                 </Row>

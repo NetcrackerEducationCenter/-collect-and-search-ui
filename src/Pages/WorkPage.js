@@ -3,6 +3,8 @@ import AddSearch from '../Components/ForWorkpage/AddSearch';
 import Report from '../Components/ForWorkpage/Report'
 import StatusTable from '../Components/StatusTable';
 
+import karandashi from '../assets/karandashi.jpg';
+
 
 export default class WorkPage extends Component {
     constructor(props) {
@@ -33,7 +35,7 @@ export default class WorkPage extends Component {
 
     render() {
         return (
-            <>
+            <div >
                 <StatusTable
                     statuses={this.props.statuses}
                     requestId={this.props.requestId}
@@ -41,7 +43,7 @@ export default class WorkPage extends Component {
                 />
                 <Report report={this.props.report} />
                 <AddSearch onHide={() => { }} />
-            </>
+            </div>
         );
 
     }

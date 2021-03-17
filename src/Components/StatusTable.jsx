@@ -19,7 +19,7 @@ function StatusTable(props) {
     return (
         <Container>
 
-            <Table hover responsive="sm">
+            <Table responsive="sm">
                 <thead>
                     <tr>
                         <th>№</th>

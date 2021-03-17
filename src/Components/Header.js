@@ -5,10 +5,10 @@ import StatusButton from '../Components/StatusButton';
 import ModalRequests from './ModalRequests';
 
 //Logos
-import logo from './logo192.png';
-import userLogo from './user-logo.png';
+import logo from '../assets/logo192.png';
+import userLogo from '../assets/user-logo.png';
 
-
+//Pages
 import Home from '../Pages/Home';
 import About from '../Pages/About';
 import History from '../Pages/History';
@@ -23,13 +23,15 @@ function HeaderFunc(props) {
     const [modalEmpty, setModalEmpty] = useState(true);
     const [report, setReport] = useState('');
 
+    const MINUTE_MS = 10000;
+
     useEffect(() => {
-        // const interval = setInterval(() => {
-        //     getRequestStatuses();
-        // }, MINUTE_MS);
         getRequestStatuses();
+        const interval = setInterval(() => {
+            getRequestStatuses();
+        }, MINUTE_MS);
         return () => {
-            // clearInterval(interval);
+            clearInterval(interval);
         }
     }, []);
 
@@ -70,7 +72,7 @@ function HeaderFunc(props) {
     }
 
     return (
-        <div style={{ position: "relative" }}>
+        <div>
             <Navbar expand="md" bg="dark" variant="dark"> {/* foxed='top' */}
                 <Container>
 

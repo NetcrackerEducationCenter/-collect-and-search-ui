@@ -1,16 +1,3 @@
-html, body {
-  align-items: center;
-  background: #f2f4f8;
-  border: 0;
-  /* display: flex; */
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  height: 100%;
-  justify-content: center;
-  margin: 0;
-  padding: 0;
-}
-
 form {
   --background: white;
   --border: rgba(0, 0, 0, 0.125);
@@ -36,4 +23,25 @@ form {
   padding: 1rem;
   position: relative;
   overflow: hidden;
+}
+
+p {
+  color: #131f25;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-size: 20px;
+  line-height: 26px;
+  text-indent: 30px;
+  margin: 0;
+}
+
+h1 {
+  color: #1b6fb4;
+  display: inline-block;
+  font-family: ‘Lato’ sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 12px;
+  letter-spacing: 1px;
+  margin: 0 0 30px;
+  padding: 10px 15px 8px;
 }

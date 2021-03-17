@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { Button, Table } from 'react-bootstrap'
-import AddSearchModal from '../Components/AddSearchModal'
-import Field from '../Components/Field';
+import AddSearch from '../Components/ForWorkpage/AddSearch';
+import Report from '../Components/ForWorkpage/Report'
+import StatusTable from '../Components/StatusTable';
 
 
 export default class WorkPage extends Component {
@@ -33,24 +33,16 @@ export default class WorkPage extends Component {
 
     render() {
         return (
-            <div>
-
-                <Field shawIssues={this.state.shawIssues} issues={this.state.issues} setDownload={this.setDownload} />
-
-                <Button className='btn-success   boto'
-                    onClick={() => this.shawModal(true)}
-                >
-                    +
-                </Button>
-
-                <AddSearchModal show={this.state.modalActive}
-                    setIssues={this.setIssues}
-                    shawIssuesActive={this.shawIssuesActive}
-                    shawDownload={this.shawDownload}
-                    onHide={() => this.shawModal(false)}
+            <>
+                <StatusTable
+                    statuses={this.props.statuses}
+                    requestId={this.props.requestId}
+                    setRequestId={this.props.setRequestId}
                 />
-                
-            </div>
-        )
+                <Report report={this.props.report} />
+                <AddSearch onHide={() => { }} />
+            </>
+        );
+
     }
 }

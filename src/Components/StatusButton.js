@@ -3,11 +3,11 @@ import React, { Component } from 'react'
 export default class StatusButton extends Component {
 
     notRequest = () => {
-        return <div className="right">• NO REQUESTS</div>
+        return <div className="right">○ NO REQUESTS</div>
     }
 
     hasRequest = () => {
-        return <div className="right">○ REQUESTS</div>
+        return <div className="right">• SHOW REQUESTS</div>
     }
 
     render() {

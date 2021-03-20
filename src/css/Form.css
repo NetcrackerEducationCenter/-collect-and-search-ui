@@ -27,21 +27,21 @@ form {
 
 p {
   color: #131f25;
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  font-family: cursive;
   font-size: 20px;
   line-height: 26px;
   text-indent: 30px;
   margin: 0;
 }
 
-h1 {
+.h11 {
   color: #1b6fb4;
   display: inline-block;
-  font-family: ‘Lato’ sans-serif;
-  font-size: 12px;
+  font-family:  cursive;
+  font-size: 50px;
   font-weight: bold;
-  line-height: 12px;
-  letter-spacing: 1px;
+  line-height: 40px;
+  letter-spacing: 2px;
   margin: 0 0 30px;
   padding: 10px 15px 8px;
 }

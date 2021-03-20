@@ -4,6 +4,8 @@ import { Button, Col, Container, Row } from 'react-bootstrap';
 //Pictures
 import project_structure from '../assets/project-structure.png';
 import AddSearchModal from '../Components/AddSearchModal';
+import jiraLogo from '../assets/jira.png';
+import ftpLogo from '../assets/ftp.png';
 
 //CSS
 import '../css/Form.css';
@@ -14,50 +16,62 @@ function Home(props) {
 
     return (
 
-        <Container fluid>
-            <Col>
-
-                <div className='text-center text-monospace font-weight-bold fs'
-                    style={{ fontSize: 36 }}
-                >
-
-                    <h1>Collect and Search</h1>
-                </div>
-
-                <Row>
-
-                    <Col style={{ fontSize: 20, textAlign: 'center' }}>
+        <Container fluid style={{ textAlign: 'center' }}>
 
 
-                        <br />
-                            Collect and Search it's a project for Netcracker education center.
-                            This project will help agile commands to find any information from the sources like JIRA or FTP.
-                        <br />
+            <div>
+                <div className='h1'>Collect and Search</div>
+                <br />
+                <br />
+            </div>
 
-                        <br />
-                            This project is created with a micro service architecture.
-                            Microservices are shown in the picture below.
-                        <br />
-                        <br />
+            <Row className='align-items-center mb-5'>
+                <Col sm={12} lg={6} >
+                    <p>
+                        Search information from your Jira issues. Register in our project, and you can add Jira as a search source. Then you can at any time search info from your all issues.
+                        </p>
+                    <p>
+                        While creating an request, you can use any filters for find out more accurate information.
+                        </p>
+                    <p>
+                        If you know jira very well, you can use JQL for find usless issues and analyse it.
+                    </p>
+                    <br />
+                    <Button block onClick={() => setShowModal(true)}>
+                        Try to add new request
+                    </Button>
 
-                        <img src={project_structure}
-                            className='img-fluid img-thumbnail shadow mx-auto d-block'
-                            alt='project structure'
-                            xs='auto'
-                        />
+                </Col>
+                <Col >
+                    <img src={jiraLogo}
+                        className='img-fluid img-thumbnail shadow mx-auto d-block'
+                        alt='Jira logo'
+                        xs='auto'
+                    />
+                </Col>
+            </Row>
 
-                        {/* <CarouselBox /> */}
-                        <br />
-                        <Button block onClick={() => setShowModal(true)}>
-                            Try to add new request
-                        </Button>
-                        <br />
-                        <br />
+            <Row className='align-items-center mb-2'>
+                <Col sm={12} lg={6}>
+                    <img src={ftpLogo}
+                        className='img-fluid img-thumbnail shadow mx-auto d-block '
+                        alt='FTP logo'
+                        xs='auto'
+                    />
+                </Col>
+                <Col>
+                    <p>
+                        Add as source your FTP server, and we can use it to find any documents like *.txt *.doc *.pdf.
+</p>
+                    <p> Use date or extensions filters for more accurate searching. </p>
+                    <br />
+                    <Button block onClick={() => setShowModal(true)}>
+                        Try to add new request
+                    </Button>
 
-                    </Col>
+                </Col>
+            </Row>
 
-                </Row>
-            </Col>
             <AddSearchModal show={shawModal}
                 onHide={() => setShowModal(false)}
             />

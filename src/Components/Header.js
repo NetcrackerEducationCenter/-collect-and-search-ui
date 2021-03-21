@@ -51,7 +51,7 @@ function HeaderFunc(props) {
     }
 
     const getRequestStatuses = async () => {
-        axios.post('http://localhost:7071/api/status/getSimpleStatus').then((res) => {
+        axios.post('http://localhost:7071/api/status/get').then((res) => {
             console.log('getRequestStatuses(): ' + JSON.parse(JSON.stringify(res.data)));
             setReqStatuses(res.data);
             setModalEmpty(false);

@@ -41,7 +41,7 @@ function HeaderFunc(props) {
      */
     const getReport = (id) => {
         console.log(id);
-        axios.post('http://localhost:7071/api/report/get', {
+        axios.post('http://206.81.22.187:7071/api/report/get', {
 
             requestId: id
 
@@ -51,7 +51,7 @@ function HeaderFunc(props) {
     }
 
     const getRequestStatuses = async () => {
-        axios.post('http://localhost:7071/api/status/get').then((res) => {
+        axios.post('http://206.81.22.187:7071/api/status/get').then((res) => {
             console.log('getRequestStatuses(): ' + JSON.parse(JSON.stringify(res.data)));
             setReqStatuses(res.data);
             setModalEmpty(false);

@@ -46,14 +46,14 @@ function HeaderFunc(props) {
             requestId: id
 
         }).then(res => {
-            setReport(res.data);
+            setReport(JSON.parse(JSON.stringify(res.data)));
         });
     }
 
     const getRequestStatuses = async () => {
         axios.post('http://206.81.22.187:7071/api/status/get').then((res) => {
             console.log('getRequestStatuses(): ' + JSON.parse(JSON.stringify(res.data)));
-            setReqStatuses(res.data);
+            setReqStatuses(JSON.parse(JSON.stringify(res.data)));
             setModalEmpty(false);
         });
     }

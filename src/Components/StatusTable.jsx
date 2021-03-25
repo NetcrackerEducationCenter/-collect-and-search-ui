@@ -9,7 +9,7 @@ function StatusTable(props) {
         return (
             <>
                 <td>{v.requestId}</td>
-                <td>{v.keywords}</td>
+                <td>{v.keywords.map(e=>{return ' ' + e})}</td>
                 <td>{v.date}</td>
                 <td>{v.status}</td>
             </>

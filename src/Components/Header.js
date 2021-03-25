@@ -46,7 +46,11 @@ function HeaderFunc(props) {
             requestId: id
 
         }).then(res => {
-            setReport(JSON.parse(JSON.stringify(res.data)));
+            if (res.data < 0) {
+                getReport(id);
+            } else {
+                setReport(JSON.parse(JSON.stringify(res.data)));
+            }
         });
     }
 
@@ -122,14 +126,14 @@ function HeaderFunc(props) {
                     <Route exact path="/about" component={About} />
                     {/* <Route exact path="/workpage" component={WorkPage} /> */}
                     <Route path="/workpage" render={(props) =>
-                            <WorkPage
-                                {...props}
-                                report={report}
-                                statuses={reqStatuses}
-                                requestId={report.requestId}
-                                setRequestId={getReport}
-                            />
-                        }
+                        <WorkPage
+                            {...props}
+                            report={report}
+                            statuses={reqStatuses}
+                            requestId={report.requestId}
+                            setRequestId={getReport}
+                        />
+                    }
                     />
                 </Switch>
             </Router>

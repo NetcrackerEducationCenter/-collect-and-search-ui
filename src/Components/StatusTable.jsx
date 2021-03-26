@@ -9,7 +9,7 @@ function StatusTable(props) {
         return (
             <>
                 <td>{v.requestId}</td>
-                <td>{v.keywords}</td>
+                <td>{v.keywords.map(e=>{return ' ' + e})}</td>
                 <td>{v.date}</td>
                 <td>{v.status}</td>
             </>
@@ -31,30 +31,30 @@ function StatusTable(props) {
 
                 <tbody>
                     {props.statuses.map(v => {
-                        if (v.messages.status === statusList[2]) {
+                        if (v.message.status === statusList[2]) {
 
-                            if (props.requestId === v.messages.requestId) {
+                            if (props.requestId === v.message.requestId) {
                                 return (
-                                    <tr className='active' style={{ border: 4, borderColor: 'blue' }} key={v.messages.requestId}
-                                        onClick={() => { props.setRequestId(v.messages.requestId) }} >
-                                        {getContent(v.messages)}
+                                    <tr className='active' style={{ border: 4, borderColor: 'blue' }} key={v.message.requestId}
+                                        onClick={() => { props.setRequestId(v.message.requestId) }} >
+                                        {getContent(v.message)}
                                     </tr>
                                 );
                             }
 
                             else {
                                 return (
-                                    <tr style={{ backgroundColor: 'RGB(191, 253, 252)' }} key={v.messages.requestId}
-                                        onClick={() => { props.setRequestId(v.messages.requestId) }} >
-                                        {getContent(v.messages)}
+                                    <tr style={{ backgroundColor: 'RGB(191, 253, 252)' }} key={v.message.requestId}
+                                        onClick={() => { props.setRequestId(v.message.requestId) }} >
+                                        {getContent(v.message)}
                                     </tr>
                                 );
                             }
 
                         } else {
                             return (
-                                <tr className='table-borderless' key={v.messages.requestId} >
-                                    {getContent(v.messages)}
+                                <tr className='table-borderless' key={v.message.requestId} >
+                                    {getContent(v.message)}
                                 </tr>
                             );
                         }

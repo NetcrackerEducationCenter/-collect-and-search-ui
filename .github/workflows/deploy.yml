@@ -3,7 +3,7 @@ name: build
 on:
   push:
     branches: 
-      - master
+      - "master"
 
 jobs:
   build:
@@ -36,7 +36,7 @@ jobs:
         username: ${{secrets.SSH_USERNAME}}
         passphrase: ${{secrets.PASSPHRASE}}
         script: |
-          cd netcracker/education-center/collect-and-search/collect-and-search-ui
+          cd netcracker/collect-and-search/collect-and-search-ui
           docker login https://docker.pkg.github.com -u ${{github.repository_owner}} -p ${{secrets.GITHUB_TOKEN}}
           docker container stop $(docker ps -aqf "name=reactimage")
           docker container rm $(docker ps -aqf "name=reactimage")

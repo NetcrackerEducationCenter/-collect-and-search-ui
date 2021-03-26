@@ -3,6 +3,7 @@ import { Container, Navbar, Nav, Button } from "react-bootstrap";
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import StatusButton from '../Components/StatusButton';
 import ModalRequests from './ModalRequests';
+import { config } from '../Config.js';
 
 //Logos
 import logo from '../assets/logo192.png';
@@ -41,19 +42,23 @@ function HeaderFunc(props) {
      */
     const getReport = (id) => {
         console.log(id);
-        axios.post('http://localhost:7071/api/report/get', {
+        axios.post(`${config.url}/api/report/get`, {
 
             requestId: id
 
         }).then(res => {
-            setReport(res.data);
+            if (res.data < 0) {
+                getReport(id);
+            } else {
+                setReport(JSON.parse(JSON.stringify(res.data)));
+            }
         });
     }
 
     const getRequestStatuses = async () => {
-        axios.post('http://localhost:7071/api/status/get').then((res) => {
+        axios.post(`${config.url}/api/status/get`).then((res) => {
             console.log('getRequestStatuses(): ' + JSON.parse(JSON.stringify(res.data)));
-            setReqStatuses(res.data);
+            setReqStatuses(JSON.parse(JSON.stringify(res.data)));
             setModalEmpty(false);
         });
     }
@@ -122,14 +127,14 @@ function HeaderFunc(props) {
                     <Route exact path="/about" component={About} />
                     {/* <Route exact path="/workpage" component={WorkPage} /> */}
                     <Route path="/workpage" render={(props) =>
-                            <WorkPage
-                                {...props}
-                                report={report}
-                                statuses={reqStatuses}
-                                requestId={report.requestId}
-                                setRequestId={getReport}
-                            />
-                        }
+                        <WorkPage
+                            {...props}
+                            report={report}
+                            statuses={reqStatuses}
+                            requestId={report.requestId}
+                            setRequestId={getReport}
+                        />
+                    }
                     />
                 </Switch>
             </Router>

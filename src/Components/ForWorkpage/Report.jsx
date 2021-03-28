@@ -15,7 +15,7 @@ function Report(props) {
         return (
             <Container fluid>
                 {props.report.text}
-                <Button onClick={downloadTxtFile} />
+                <Button onClick={downloadTxtFile} >Download text</Button>
             </Container>
         );
     } else return (

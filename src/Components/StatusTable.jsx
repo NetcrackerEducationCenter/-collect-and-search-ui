@@ -35,8 +35,8 @@ function StatusTable(props) {
 
                             if (props.requestId === v.message.requestId) {
                                 return (
-                                    <tr className='active' style={{ border: 4, borderColor: 'blue' }} key={v.message.requestId}
-                                        onClick={() => { props.setRequestId(v.message.requestId) }} >
+                                    <tr style={{ border: 4, borderColor: 'blue',  backgroundColor: 'RGB(122, 255, 255)'  }} key={v.message.requestId}
+                                        onClick={async () => { props.setRequestId(v.message.requestId) }} >
                                         {getContent(v.message)}
                                     </tr>
                                 );
@@ -45,7 +45,7 @@ function StatusTable(props) {
                             else {
                                 return (
                                     <tr style={{ backgroundColor: 'RGB(191, 253, 252)' }} key={v.message.requestId}
-                                        onClick={() => { props.setRequestId(v.message.requestId) }} >
+                                        onClick={async () => { props.setRequestId(v.message.requestId) }} >
                                         {getContent(v.message)}
                                     </tr>
                                 );

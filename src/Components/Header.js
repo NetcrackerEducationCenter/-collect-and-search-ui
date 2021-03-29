@@ -23,6 +23,7 @@ function HeaderFunc(props) {
     const [reqStatuses, setReqStatuses] = useState([]);
     const [modalEmpty, setModalEmpty] = useState(true);
     const [report, setReport] = useState('');
+    const [reqId, setReqId] = useState('');
 
     const MINUTE_MS = 10000;
 
@@ -37,20 +38,19 @@ function HeaderFunc(props) {
     }, []);
 
     /**
-     * Find report from mongo
+     * Get report from kafka
      * @param {*} id report Id
      */
     const getReport = (id) => {
         console.log(id);
         axios.post(`${config.url}/api/report/get`, {
-
             requestId: id
-
         }).then(res => {
-            if (res.data < 0) {
+            if (!res.data) {
                 getReport(id);
             } else {
-                setReport(JSON.parse(JSON.stringify(res.data)));
+                setReqId(res.data.requestId);
+                setReport(res.data);
             }
         });
     }
@@ -131,7 +131,7 @@ function HeaderFunc(props) {
                             {...props}
                             report={report}
                             statuses={reqStatuses}
-                            requestId={report.requestId}
+                            requestId={reqId}
                             setRequestId={getReport}
                         />
                     }

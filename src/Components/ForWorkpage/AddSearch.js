@@ -3,6 +3,7 @@ import { Button, Form } from 'react-bootstrap'
 import axios from 'axios';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated'
+import { config } from '../../Config.js';
 
 
 const animatedComponents = makeAnimated();
@@ -42,7 +43,7 @@ class AddSearch extends Component {
     * Send messages to kafka topic 'ui-search-requests'
     */
     newRequest = (e) => {
-        axios.post("http://localhost:7071/api/request/push", {
+        axios.post(`${config.url}/api/request/push`, {
 
             "jiraChecked": this.state.jiraChecked,
             "jiraJQLRequest": this.state.jiraJQLRequest,

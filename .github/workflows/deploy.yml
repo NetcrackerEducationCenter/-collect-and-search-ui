@@ -3,7 +3,7 @@ name: build
 on:
   push:
     branches: 
-      - "master"
+      - "kafka-using"
 
 jobs:
   build:
@@ -45,4 +45,7 @@ jobs:
           docker pull docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest
           docker tag docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest netcracker/reactimage:latest
           # -d means that container starts in detached mode or in the background
-          docker run -d --name reactimage -p 7070:7070 netcracker/reactimage:latest 
+          docker run -d --name reactimage -p 7070:7070 --network=docker-network netcracker/reactimage:latest 
+
+
+

@@ -42,7 +42,7 @@ class AddSearch extends Component {
     /**
     * Send messages to kafka topic 'ui-search-requests'
     */
-    newRequest = (e) => {
+    newRequest = () => {
         axios.post(`${config.url}/api/request/push`, {
 
             "jiraChecked": this.state.jiraChecked,
@@ -78,7 +78,6 @@ class AddSearch extends Component {
                     checkedFilters: [],
                     checkedExtensions: []
                 })
-                alert('Request sended');
             }
             else {
                 alert('Anything went wrong!');
@@ -281,7 +280,7 @@ class AddSearch extends Component {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
             event.preventDefault();
-            event.stopPropagation();
+            // event.stopPropagation();
         } else {
             // event.preventDefault();
             // event.stopPropagation();
@@ -296,15 +295,15 @@ class AddSearch extends Component {
     render() {
 
         return (
-            <Form noValidate validated={this.state.validated} onSubmit={(event) => this.validation(event)}>
+            <Form noValidate validated={this.state.validated} on onSubmit={this.validation}>
 
-                <Form.Group controlId='formBasicEmail'>
+                <Form.Group>
                     <Form.Label>Add filters</Form.Label>
                     {this.selector()}
                 </Form.Group>
                 {this.state.checkedFilters === null ? '' : this.state.checkedFilters.map(v => this.shawFilters(v.value))}
 
-                <Form.Group>
+                <Form.Group controlId='formBasicEmail'>
                     <Form.Label>Request</Form.Label>
                     <Form.Control
                         required

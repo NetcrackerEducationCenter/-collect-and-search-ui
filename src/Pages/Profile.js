@@ -12,7 +12,7 @@ function Profile(props) {
     const [showModal, setShowModal] = useState(false);
     const [type, settype] = useState('add');
 
-    const handleChange = (type) =>{
+    const crud = (type)=>{
         settype(type);
         setShowModal(true);
     }
@@ -29,7 +29,7 @@ function Profile(props) {
                 </Col>
                 <Col lg={4} className="">
 
-                    <Sources handleChange={handleChange} />
+                    <Sources crud={crud}/>
 
                 </Col>
             </Row>

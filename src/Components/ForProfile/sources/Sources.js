@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { Component, useState } from 'react'
+import React, { useState } from 'react'
 import { Button, Dropdown, Modal } from 'react-bootstrap'
 import { config } from '../../../Config';
 import { keycloak } from '../../../index';
@@ -26,13 +26,13 @@ function Sources(props) {
         });
     }
 
-    const getSources = async () => {
-        await axios.post(config.url + '/api/sources/get', {
 
-        }).then(res => {
-            setsources(res.data);
-        });
-    }
+    axios.post(config.url + '/api/sources/get', {
+
+    }).then(res => {
+        setsources(res.data);
+    });
+
 
     return (
         <div className="d-flex align-items-center">
@@ -46,9 +46,17 @@ function Sources(props) {
                             </Dropdown.Toggle>
 
                             <Dropdown.Menu>
-                                <Dropdown.Item onClick={props.handleChange('update')}>Update</Dropdown.Item>
+                                <Dropdown.Item onClick={props.crud('update')}>Update</Dropdown.Item>
                                 <Dropdown.Item onClick={handleShow(s.id)}>Delete</Dropdown.Item>
                             </Dropdown.Menu>
+                        </Dropdown>
+                    );
+                } else {
+                    return (
+                        <Dropdown>
+                            <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                {s.id}
+                            </Dropdown.Toggle>
                         </Dropdown>
                     );
                 }
@@ -57,7 +65,7 @@ function Sources(props) {
             <Button
                 variant='success'
                 className='border border-darken-4'
-                onClick={() => props.setShowModal(true)}
+                onClick={() => props.crud('add')}
             >
                 + Add Source
             </Button>

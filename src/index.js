@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 import Keycloak from 'keycloak-js';
 
-let keycloak = Keycloak('./resources/keycloak.json');
+export let keycloak = Keycloak('./resources/keycloak.json');
 
 // Get the keycloak configuration instance
 keycloak.init({ onLoad: 'login-required' }).then((authenticated) => {
@@ -25,8 +25,9 @@ keycloak.init({ onLoad: 'login-required' }).then((authenticated) => {
   );
 
   // Store authentication tokens in sessionStorage for usage in app
-  sessionStorage.setItem('authentication', keycloak.token);
-  sessionStorage.setItem('refreshToken', keycloak.refreshToken);
+
+  sessionStorage.setItem('keycloakAuthentication', keycloak.token);
+  sessionStorage.setItem('keycloakAuthentication', keycloak.refreshToken);
 
   // To regenerate token on expiry
   setTimeout(() => {

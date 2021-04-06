@@ -1,3 +1,3 @@
 export const config = {
-     url: "http://206.81.22.187:7071"
+     url: "http://localhost:7071" //206.81.22.187
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Container } from 'react-bootstrap';
+import { Button, Container, OverlayTrigger, Popover, Spinner } from 'react-bootstrap';
 
 function Report(props) {
     const downloadTxtFile = () => {
@@ -11,17 +11,49 @@ function Report(props) {
         document.body.appendChild(element);
         element.click();
     }
+    console.log(props.requestId);
     if (!!props.report) {
         return (
             <Container fluid>
-                {props.report.text}
+                {props.report.dataModels.map(v => {
+                    return (
+
+                        <OverlayTrigger
+                            trigger="click"
+                            key='source'
+                            placement='top'
+                            overlay={
+                                <Popover id={v.requestId}>
+                                    <Popover.Title as="h3">Founded from</Popover.Title>
+                                    <Popover.Content>
+                                        {props.report.dataModels.dataSource}
+                                    </Popover.Content>
+                                </Popover>
+                            }
+                        >
+                            <p>
+                                {v.dataModels.dataSource}
+                            </p>
+
+                        </OverlayTrigger>
+                    );
+                })}
                 <Button onClick={downloadTxtFile} >Download text</Button>
             </Container>
         );
-    } else return (
-        <Container className='mb-3' fluid id='p'>
-        </Container>
-    );
+    } else if (!!props.requestId) {
+        return (
+            <div className="text-center" >
+                <Spinner animation='border' role='status' variant='primary'>
+                    <span className="sr-only">Loading...</span>
+                </Spinner>
+            </div>
+        );
+    } else {
+        return (
+            null
+        );
+    }
 }
 
 export default Report;

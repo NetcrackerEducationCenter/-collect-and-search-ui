@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 
 //Pictures
-import project_structure from '../assets/project-structure.png';
 import AddSearchModal from '../Components/AddSearchModal';
 import jiraLogo from '../assets/jira.png';
 import ftpLogo from '../assets/ftp.png';

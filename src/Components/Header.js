@@ -41,13 +41,13 @@ function HeaderFunc(props) {
      * Get report from kafka
      * @param {*} id report Id
      */
-    const getReport = (id) => {
-        console.log(id);
+    const getReport = (id, time) => {
         axios.post(`${config.url}/api/report/get`, {
-            requestId: id
+            requestId: id,
+            time: time
         }).then(res => {
             if (!res.data) {
-                getReport(id);
+                getReport(id, 'second');
             } else {
                 setReqId(res.data.requestId);
                 setReport(res.data);
@@ -94,13 +94,7 @@ function HeaderFunc(props) {
                     <Nav className="mr-auto">
                         <Nav.Link href='/workpage/'>Workpage</Nav.Link>
                     </Nav>
-                    {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                    <Navbar.Collapse id="responsive-navbar-nav">
-                        <Nav className="mr-auto">
-                            <Nav.Link href='/workpage'>Workpage</Nav.Link>
-                        </Nav>
-                
-                    </Navbar.Collapse>  */}
+
                     <Button variant="outline-info" onClick={changeState} >
                         <StatusButton isEmpty={modalEmpty} />
                     </Button>
@@ -125,8 +119,7 @@ function HeaderFunc(props) {
                     <Route exact path="/history" component={History} />
                     <Route exact path="/profile" component={Profile} />
                     <Route exact path="/about" component={About} />
-                    {/* <Route exact path="/workpage" component={WorkPage} /> */}
-                    <Route path="/workpage" render={(props) =>
+                    <Route exact path="/workpage" render={(props) =>
                         <WorkPage
                             {...props}
                             report={report}

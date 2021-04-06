@@ -280,12 +280,13 @@ class AddSearch extends Component {
     validation = (event) => {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
+
             event.preventDefault();
             event.stopPropagation();
+        
+            return null;
+            
         } else {
-            // event.preventDefault();
-            // event.stopPropagation();
-            // alert(`Request sended`);
             this.newRequest();
         }
 
@@ -296,7 +297,8 @@ class AddSearch extends Component {
     render() {
 
         return (
-            <Form noValidate validated={this.state.validated} onSubmit={(event) => this.validation(event)}>
+
+            <Form noValidate validated={this.state.validated} onSubmit={this.validation}>
 
                 <Form.Group controlId='formBasicEmail'>
                     <Form.Label>Add filters</Form.Label>
@@ -319,7 +321,7 @@ class AddSearch extends Component {
                     />
                     <Form.Control.Feedback type='invalid'>
                         Please write your request
-                            </Form.Control.Feedback>
+                    </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group>
                     <Button type='submit'>Add</Button>

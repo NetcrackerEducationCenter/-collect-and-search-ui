@@ -17,6 +17,8 @@ import Profile from '../Pages/Profile';
 import WorkPage from '../Pages/WorkPage';
 import axios from "axios";
 
+export let sources;
+
 function HeaderFunc(props) {
 
     const [modalActive, setModalActive] = useState(false);
@@ -25,17 +27,29 @@ function HeaderFunc(props) {
     const [report, setReport] = useState('');
     const [reqId, setReqId] = useState('');
 
+   
+
     const MINUTE_MS = 10000;
 
     useEffect(() => {
         getRequestStatuses();
+        getSources();
         const interval = setInterval(() => {
             getRequestStatuses();
+            getSources();
+            
         }, MINUTE_MS);
         return () => {
             clearInterval(interval);
         }
     }, []);
+
+    const getSources = async () => {
+        axios.post(config.url + '/api/sources/get').then(res => {
+            console.log(JSON.stringify(res.data));
+            sources=res.data;
+        })
+    }
 
     /**
      * Get report from kafka
@@ -92,7 +106,7 @@ function HeaderFunc(props) {
                     </Navbar.Brand>
 
                     <Nav className="mr-auto">
-                        <Nav.Link href='/workpage/'>Workpage</Nav.Link>
+                        <Nav.Link href='/workpage'>Workpage</Nav.Link>
                     </Nav>
 
                     <Button variant="outline-info" onClick={changeState} >
@@ -117,8 +131,15 @@ function HeaderFunc(props) {
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/history" component={History} />
-                    <Route exact path="/profile" component={Profile} />
                     <Route exact path="/about" component={About} />
+                    {/* <Route exact path="/profile" component={Profile} /> */}
+                    <Route exact path="/profile" render={(props) =>
+                        <Profile
+                            sources={sources}
+                        />
+                    }
+
+                    />
                     <Route exact path="/workpage" render={(props) =>
                         <WorkPage
                             {...props}
@@ -126,6 +147,7 @@ function HeaderFunc(props) {
                             statuses={reqStatuses}
                             requestId={reqId}
                             setRequestId={getReport}
+                            sources={sources}
                         />
                     }
                     />

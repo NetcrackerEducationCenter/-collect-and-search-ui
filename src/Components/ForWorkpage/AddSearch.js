@@ -291,7 +291,12 @@ class AddSearch extends Component {
         }
 
         this.setState({ validated: true });
-        this.props.onHide();
+        try{
+            this.props.onHide();
+
+        } catch(e){
+            console.log(`e: `, e)
+        }
     };
 
     render() {

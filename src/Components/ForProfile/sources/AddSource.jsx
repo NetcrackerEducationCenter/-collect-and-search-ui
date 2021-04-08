@@ -53,7 +53,7 @@ function AddSource(props) {
                     <Form.Group>
                         <Form.Label>URL</Form.Label>
                         <Form.Control type='text' required placeholder='URL'
-                            onChange={(e) => { jiraSource.url = e.target.value }}
+                            onChange={(e) => { jiraSource.id = e.target.value }}
                         />
                         <Form.Control.Feedback type='invalid'>
                             Please write your JIRA url
@@ -68,7 +68,7 @@ function AddSource(props) {
                     <Form.Group>
                         <Form.Label>Server</Form.Label>
                         <Form.Control type='text' required placeholder='Server'
-                            onChange={(e) => { ftpSource.server = e.target.value }}
+                            onChange={(e) => { ftpSource.id = e.target.value }}
                         />
                         <Form.Control.Feedback type='invalid'>
                             Please write your FTP server
@@ -128,7 +128,19 @@ function AddSource(props) {
     }
 
     const addSourceRequest = () => {
+        // if (sourceType === 'JIRA') {
+        //     // Send axios JIRA request
+        //     axios.post(`${config.url}/api/sources/push`, {
+        //         type: props.type,
+        //         source: sourceType
+
+        //     }).then(res => {
+        //         //TODO Написать обработчик или валидацию
+        //     });
+        // }
         axios.post(`${config.url}/api/sources/push`, {
+            type: props.type,
+            source: sourceType,
             ftpSource,
             jiraSource
         }).then(res => {

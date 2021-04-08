@@ -80,7 +80,7 @@ function StatusTable(props) {
                         <Nav variant="pills" className="flex-column">
                             {tabArray.map((item, index) => {
                                 return (
-                                    <Nav.Item>
+                                    <Nav.Item key={item}>
                                         <Nav.Link eventKey={item}>{item+1}</Nav.Link>
                                     </Nav.Item>
                                 );
@@ -91,7 +91,7 @@ function StatusTable(props) {
                         <Tab.Content>
                             {tabArray.map((item, index) => {
                                 return (
-                                    <Tab.Pane eventKey={item}>
+                                    <Tab.Pane key={item} eventKey={item}>
                                         {createTable(item * 5, item * 5 + 5)}
                                     </Tab.Pane>
                                 );

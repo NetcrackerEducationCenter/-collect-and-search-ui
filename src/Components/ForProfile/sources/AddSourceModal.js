@@ -1,7 +1,5 @@
-import React, { useState } from 'react'
-import { Button, Form, Modal } from 'react-bootstrap'
+import { Button, Modal } from 'react-bootstrap'
 import AddSource from './AddSource';
-import Sources from './Sources'
 
 function AddSourceModal(props) {
 

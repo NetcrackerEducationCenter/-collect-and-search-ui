@@ -17,12 +17,13 @@ import Profile from '../Pages/Profile';
 import WorkPage from '../Pages/WorkPage';
 import axios from "axios";
 
-export let sources;
+// export let sources;
 
 function HeaderFunc(props) {
 
     const [modalActive, setModalActive] = useState(false);
     const [reqStatuses, setReqStatuses] = useState([]);
+    const [sources, setSources] = useState([]);
     const [modalEmpty, setModalEmpty] = useState(true);
     const [report, setReport] = useState('');
     const [reqId, setReqId] = useState('');
@@ -47,7 +48,7 @@ function HeaderFunc(props) {
     const getSources = async () => {
         axios.post(config.url + '/api/sources/get').then(res => {
             console.log(JSON.stringify(res.data));
-            sources=res.data;
+            setSources(res.data);
         })
     }
 

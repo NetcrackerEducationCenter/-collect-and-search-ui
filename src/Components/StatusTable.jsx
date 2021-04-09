@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
-import { Col, Container, Nav, Row, Tab, Table } from 'react-bootstrap';
+import { Container, Nav, Pagination, Row, Tab, Table } from 'react-bootstrap';
 
 function StatusTable(props) {
 
     const statusList = ['NOT_STARTED', 'IN_PROCESS', 'COMPLETED'];
 
+    const [active, setactive] = useState(0);
+
     const getContent = (i, v) => {
         return (
             <>
-                <td>{i+1}</td>
+                <td>{i + 1}</td>
                 <td>{v.keywords.map(e => { return ' ' + e })}</td>
                 <td>{v.date}</td>
                 <td>{v.status}</td>
@@ -38,7 +40,7 @@ function StatusTable(props) {
                                     return (
                                         <tr style={{ border: 4, borderColor: 'blue', backgroundColor: 'RGB(122, 255, 255)' }} key={v.message.requestId}
                                             onClick={async () => { props.setRequestId(v.message.requestId, 'first') }} >
-                                            {getContent(i++,v.message)}
+                                            {getContent(i++, v.message)}
                                         </tr>
                                     );
                                 }
@@ -47,7 +49,7 @@ function StatusTable(props) {
                                     return (
                                         <tr style={{ backgroundColor: 'RGB(191, 253, 252)' }} key={v.message.requestId}
                                             onClick={async () => { props.setRequestId(v.message.requestId, 'first') }} >
-                                            {getContent(i++,v.message)}
+                                            {getContent(i++, v.message)}
                                         </tr>
                                     );
                                 }
@@ -55,7 +57,7 @@ function StatusTable(props) {
                             } else {
                                 return (
                                     <tr className='table-borderless' key={v.message.requestId} >
-                                        {getContent(i++,v.message)}
+                                        {getContent(i++, v.message)}
                                     </tr>
                                 );
                             }
@@ -68,36 +70,49 @@ function StatusTable(props) {
     }
 
     let tabCount = parseInt(props.statuses.length / 5) + 1;
-    let tabArray = [];
+    let items = [];
+    let tabItem = [];
     for (let i = 0; i < tabCount; i++) {
-        tabArray.push(i);
+        tabItem.push(i);
+    }
+    for (let i = 1; i <= tabCount; i++) {
+        items.push(
+            <Nav.Item>
+                <Nav.Link eventKey={i} onClick={()=>setactive(i)}>
+                    <Pagination.Item
+                        key={i}
+                        active={i === active}
+                    >
+                        {i}
+                    </Pagination.Item>
+                </Nav.Link>
+            </Nav.Item>
+        );
     }
     return (
-        <Container>
-            <Tab.Container id="left-tabs-example" defaultActiveKey="first">
-                <Row>
-                    <Col sm={3}>
-                        <Nav variant="pills" className="flex-column">
-                            {tabArray.map((item, index) => {
-                                return (
-                                    <Nav.Item key={item}>
-                                        <Nav.Link eventKey={item}>{item+1}</Nav.Link>
-                                    </Nav.Item>
-                                );
-                            })}
-                        </Nav>
-                    </Col>
-                    <Col sm={9}>
-                        <Tab.Content>
-                            {tabArray.map((item, index) => {
-                                return (
-                                    <Tab.Pane key={item} eventKey={item}>
-                                        {createTable(item * 5, item * 5 + 5)}
-                                    </Tab.Pane>
-                                );
-                            })}
-                        </Tab.Content>
-                    </Col>
+        <Container >
+            <Tab.Container id="left-tabs-example" defaultActiveKey="first" >
+
+                <Row className='justify-content-center'>
+
+                    <Tab.Content>
+                        {tabItem.map((item, index) => {
+                            return (
+                                <Tab.Pane eventKey={item+1}>
+                                    {createTable(item * 5, item * 5 + 5)}
+                                </Tab.Pane>
+                            );
+                        })}
+                    </Tab.Content>
+
+                </Row>
+                
+                <Row className='justify-content-center'>
+                    <Nav variant="tabs" className="flex-column">
+                        <Pagination>
+                            {items}
+                        </Pagination>
+                    </Nav>
                 </Row>
             </Tab.Container>
         </Container>

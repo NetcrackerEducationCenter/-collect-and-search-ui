@@ -1,6 +1,6 @@
 {
-    "realm": "master",
-    "auth-server-url": "http://localhost:8080/auth",
+    "realm": "ui",
+    "auth-server-url": "https://netcracker-collect-and-search.tk:8443/auth",
     "ssl-required": "none",
     "resource": "ui",
     "public-client": true,

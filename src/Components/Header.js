@@ -16,6 +16,7 @@ import History from '../Pages/History';
 import Profile from '../Pages/Profile';
 import WorkPage from '../Pages/WorkPage';
 import axios from "axios";
+import { keycloak } from "../index";
 
 // export let sources;
 
@@ -28,7 +29,7 @@ function HeaderFunc(props) {
     const [report, setReport] = useState('');
     const [reqId, setReqId] = useState('');
 
-   
+
 
     const MINUTE_MS = 10000;
 
@@ -38,7 +39,7 @@ function HeaderFunc(props) {
         const interval = setInterval(() => {
             getRequestStatuses();
             getSources();
-            
+
         }, MINUTE_MS);
         return () => {
             clearInterval(interval);
@@ -73,7 +74,8 @@ function HeaderFunc(props) {
     const getRequestStatuses = async () => {
         axios.post(`${config.url}/api/status/get`).then((res) => {
             console.log('getRequestStatuses(): ' + JSON.parse(JSON.stringify(res.data)));
-            setReqStatuses(JSON.parse(JSON.stringify(res.data)));
+            let st = JSON.parse(JSON.stringify(res.data));
+            setReqStatuses(st.reverse());
             setModalEmpty(false);
         });
     }
@@ -122,6 +124,13 @@ function HeaderFunc(props) {
                             width="30"
                         />
                     </Button>
+
+                    <Button className='bg-transparent border-3' variant="outline-info"
+                        onClick={() => keycloak.logout()}
+                    >
+                        Log Out
+                    </Button>
+
 
                 </Container>
 

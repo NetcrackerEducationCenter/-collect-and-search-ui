@@ -21,20 +21,23 @@ function Profile(props) {
 
     return (
         <Container fluid className='mt-sm-2 mt-lg-5'>
+
             <Row className='mt-sm-5'></Row>
+
             <Row className='mt-sm-5 mt-lg-5'>
                 <Col ms={6} lg={4} className="">
                     <Avatar />
                 </Col>
+
                 <Col ms={6} lg={4} className="">
                     <UserInfo />
                 </Col>
+
                 <Col lg={4} className="">
-
                     <Sources {...props} crud={crud}/>
-
                 </Col>
             </Row>
+
             <Row>
                 <Col className="">
                     <Users />
@@ -50,56 +53,5 @@ function Profile(props) {
         </Container>
     );
 }
-
-
-// class Profile extends Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = {
-//             showModal: false,
-//             type: 'add'
-//         }
-//     }
-
-//     crud = (type) => {
-//         this.setState({type});
-//         // setShowModal(true);
-//         this.setState({showModal: true});
-//     }
-
-//     render() {
-//         return (
-//             <Container fluid className='mt-sm-2 mt-lg-5'>
-//                 <Row className='mt-sm-5'></Row>
-//                 <Row className='mt-sm-5 mt-lg-5'>
-//                     <Col ms={6} lg={4} className="">
-//                         <Avatar />
-//                     </Col>
-//                     <Col ms={6} lg={4} className="">
-//                         <UserInfo />
-//                     </Col>
-//                     <Col lg={4} className="">
-
-//                         <Sources {...this.props} crud={this.crud} />
-
-//                     </Col>
-//                 </Row>
-//                 <Row>
-//                     <Col className="">
-//                         <Users />
-//                     </Col>
-//                 </Row>
-
-//                 <AddSourceModal
-//                     type={this.state.type}
-//                     show={this.state.showModal}
-//                     onHide={() => this.setState({showModal: false})}
-
-//                 />
-//             </Container>
-//         );
-//     }
-// }
-
 
 export default Profile;

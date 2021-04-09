@@ -17,6 +17,7 @@ function Sources(props) {
         setShow(true);
         setcurrentid(id);
     }
+
     const handleDelete = () => {
         axios.post(config.url + '/api/sources/push', {
             type: 'delete',
@@ -25,6 +26,20 @@ function Sources(props) {
             alert('Successfully deleted!');
         });
         handleClose();
+    }
+
+    const isAddSource = () => {
+        if (roles.includes('UIadminROLE')) {
+            return (
+                <Button
+                    variant='success'
+                    className='border border-darken-4'
+                    onClick={() => props.crud('add')}
+                >
+                    + Add Source
+                </Button>
+            );
+        }
     }
 
     console.log(roles.includes('UIadminROLE'));
@@ -36,35 +51,27 @@ function Sources(props) {
                     if (roles.includes('UIadminROLE')) {
                         return (
                             <Dropdown>
-                                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                                <Dropdown.Toggle variant="success" className='m-2' id="dropdown-basic">
                                     {s.credentials.id}
                                 </Dropdown.Toggle>
 
                                 <Dropdown.Menu>
-                                    <Dropdown.Item onClick={()=>props.crud('update')}>Update</Dropdown.Item>
-                                    <Dropdown.Item onClick={()=>handleShow(s.credentials.id)}>Delete</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => props.crud('update')}>Update</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => handleShow(s.credentials.id)}>Delete</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                         );
                     } else {
                         return (
-                            <Dropdown>
-                                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                    {s.credentials.id}
-                                </Dropdown.Toggle>
-                            </Dropdown>
+                            <Button variant='success' className='m-2'>
+                                {s.credentials.id}
+                            </Button>
                         );
                     }
                 })
                 }
 
-                <Button
-                    variant='success'
-                    className='border border-darken-4'
-                    onClick={() => props.crud('add')}
-                >
-                    + Add Source
-                </Button>
+                {isAddSource()}
 
                 <Modal
                     show={show}
@@ -81,10 +88,10 @@ function Sources(props) {
                     </Modal.Body>
 
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={()=>handleClose()}>
+                        <Button variant="secondary" onClick={() => handleClose()}>
                             Cancle
                         </Button>
-                        <Button variant="primary" onClick={()=>handleDelete()}>Yes</Button>
+                        <Button variant="primary" onClick={() => handleDelete()}>Yes</Button>
                     </Modal.Footer>
                 </Modal>
             </div>

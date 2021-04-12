@@ -1,109 +1,142 @@
+import { Table, Button, Space, Modal, message, Empty, Divider, Row, Col } from 'antd';
 import axios from 'axios';
 import React, { useState } from 'react'
-import { Button, Dropdown, Modal } from 'react-bootstrap'
 import { config } from '../../../Config';
 import { keycloak } from '../../../index';
 
-function Sources(props) {
+import { ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import AddSource from './AddSource';
 
-    const [show, setShow] = useState(false);
-    const [currentid, setcurrentid] = useState(null);
+const { confirm } = Modal;
+
+function Sources(props) {
 
     let roles = keycloak.tokenParsed.resource_access.ui.roles;
 
-    const handleClose = () => setShow(false);
+    const handleShow = (action) => {
+        props.crud(0, action);
+        // setcurrentid(id);
+    };
 
-    const handleShow = (id) => {
-        setShow(true);
-        setcurrentid(id);
-    }
-
-    const handleDelete = () => {
+    const handleDelete = (id) => {
         axios.post(config.url + '/api/sources/push', {
-            type: 'delete',
-            id: currentid
+            action: config.DELETE,
+            id
         }).then(res => {
             alert('Successfully deleted!');
         });
-        handleClose();
-    }
+        props.showDrawer(false);
+    };
 
-    const isAddSource = () => {
+    const isAdmin = () => {
         if (roles.includes('UIadminROLE')) {
             return (
-                <Button
-                    variant='success'
-                    className='border border-darken-4'
-                    onClick={() => props.crud('add')}
-                >
-                    + Add Source
-                </Button>
+                <Row>
+                    <Col xs={8} offset={4}>
+                        <Button
+                            block
+                            type='primary'
+                            ghost
+                        //     onClick={() => props.crud('add')}
+                            onClick={()=>handleShow(config.ADD)}
+                        >
+                            <PlusOutlined />Add Source
+                        </Button>
+                    </Col>
+
+                    <Col xs={8} >
+                        <Button
+                            block
+                            type='primary'
+                            ghost
+                            href='https://netcracker-collect-and-search.tk:8443/auth/'
+                        >
+                            Edit Users
+                        </Button>
+                    </Col>
+                    
+                </Row>
             );
         }
     }
 
-    console.log(roles.includes('UIadminROLE'));
+    console.log(roles.includes('UIadminROLE')+' !!!!!!!!!!!');
+
     if (Array.isArray(props.sources) && props.sources.length) {
-        return (
-            <div className="d-flex align-items-center">
 
-                {props.sources.map(s => {
-                    if (roles.includes('UIadminROLE')) {
-                        return (
-                            <Dropdown>
-                                <Dropdown.Toggle variant="success" className='m-2' id="dropdown-basic">
-                                    {s.credentials.id}
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    <Dropdown.Item onClick={() => props.crud('update')}>Update</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => handleShow(s.credentials.id)}>Delete</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                        );
-                    } else {
-                        return (
-                            <Button variant='success' className='m-2'>
-                                {s.credentials.id}
-                            </Button>
-                        );
-                    }
-                })
-                }
-
-                {isAddSource()}
-
-                <Modal
-                    show={show}
-                    onHide={handleClose}
-                    backdrop="static"
-                    keyboard={false}
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title>Delete source?</Modal.Title>
-                    </Modal.Header>
-
-                    <Modal.Body>
-                        Are you sure to delete this source? Current credentials will be forgotten
-                    </Modal.Body>
-
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => handleClose()}>
-                            Cancle
+        const columns = [
+            {
+                title: 'Source',
+                dataIndex: 'source',
+                width: 100,
+                key: 'source',
+                fixed: 'left',
+            },
+            {
+                title: 'Type',
+                width: 250,
+                dataIndex: 'type',
+                key: 'type',
+                fixed: 'left',
+            },
+            {
+                title: 'Actions',
+                width: 20,
+                fixed: 'right',
+                key: 'operations',
+                render: (text, record) =>
+                    <Space size='middle'>
+                        <Button type='primary' onClick={()=>{
+                            props.crud(record, config.UPDATE);
+                        }}> update </Button>
+                        <Button
+                            danger
+                            type='ghost'
+                            onClick={() => {
+                                confirm({
+                                    title: 'Are you sure delete ' + record.source,
+                                    icon: <ExclamationCircleOutlined />,
+                                    content: 'Some descriptions',
+                                    okText: 'Yes',
+                                    okType: 'danger',
+                                    cancelText: 'No',
+                                    onOk() {
+                                        handleDelete(record.source);
+                                    },
+                                    onCancel() {
+                                        message.info('Canceled');
+                                    },
+                                });
+                            }}
+                        >
+                            Delete
                         </Button>
-                        <Button variant="primary" onClick={() => handleDelete()}>Yes</Button>
-                    </Modal.Footer>
-                </Modal>
-            </div>
+                    </Space>
+
+            }
+        ];
+
+        const tableData = props.sources.map((s, i) => {
+            return {
+                key: i,
+                source: s.credentials.id,
+                type: s.source
+            }
+        });
+
+        return (
+            <div >
+                <Table columns={columns} dataSource={tableData} pagination={false} />
+                {isAdmin()}
+            </div >
         );
     } else return (
-        <Button
-            variant='success'
-            className='border border-darken-4'
-            onClick={() => props.crud('add')}
-        >
-            +++ Add Source
-        </Button>
+        <>
+            <Empty />
+            <Divider />
+            {isAdmin()}
+        </>
+
     );
 
 }

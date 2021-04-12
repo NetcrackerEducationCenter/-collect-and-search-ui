@@ -3,54 +3,84 @@ import Avatar from '../Components/ForProfile/Avatar';
 import UserInfo from '../Components/ForProfile/UserInfo';
 import Users from '../Components/ForProfile/Users';
 
-import { Col, Container, Row } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
+import { Button, Col, Drawer, Form, message, Row } from 'antd';
 import AddSourceModal from '../Components/ForProfile/sources/AddSourceModal';
 import Sources from '../Components/ForProfile/sources/Sources';
+import AddSource from '../Components/ForProfile/sources/AddSource';
+import { config } from '../Config';
 
 function Profile(props) {
 
-    const [showModal, setShowModal] = useState(false);
-    // let show = false;
-    const [type, settype] = useState('add');
+    const [showDrawer, setShowDrawer] = useState(false);
+    const [action, setAction] = useState(config.ADD);
+    const [sourceRecord, setSourceRecord] = useState({});
+    const [form] = Form.useForm();
 
-    const crud = (type)=>{
-        settype(type);
-        setShowModal(true);
-        // show=true;
+
+    const crud = (record, action) => {
+        message.info('CRUD operation >> ' + action);
+
+        if (action === config.ADD) {
+            setShowDrawer(true);
+            setAction(action);
+        } else {
+            setShowDrawer(true);
+            setAction(action);
+            setSourceRecord(record);
+        }
+    }
+
+    const onClose = () => {
+        form.resetFields();
+        setShowDrawer(false);
+    }
+
+    const doRequest = (action, id) => {
+
     }
 
     return (
-        <Container fluid className='mt-sm-2 mt-lg-5'>
+        < >
 
-            <Row className='mt-sm-5'></Row>
-
-            <Row className='mt-sm-5 mt-lg-5'>
-                <Col ms={6} lg={4} className="">
-                    <Avatar />
-                </Col>
-
-                <Col ms={6} lg={4} className="">
+            <Row >
+                <Col sm={12} xs={24} style={{ backgroundColor: 'blueviolet' }}>
                     <UserInfo />
-                </Col>
+                </Col >
 
-                <Col lg={4} className="">
-                    <Sources {...props} crud={crud}/>
+                {/* <Col md={12}>
+                    <Avatar />
+                </Col> */}
+
+
+                <Col sm={12} xs={24} style={{ backgroundColor: 'blue' }} >
+                    <Sources {...props} showDrawer={setShowDrawer} crud={crud} />
                 </Col>
             </Row>
 
-            <Row>
-                <Col className="">
-                    <Users />
-                </Col>
-            </Row>
-
-            <AddSourceModal
+            {/* <AddSourceModal
                 type={type}
                 show={showModal}
                 onHide={() => setShowModal(false)}
 
-            />
-        </Container>
+            /> */}
+
+            <Drawer
+                title="Create a new source"
+                width='70%'
+                onClose={onClose}
+                visible={showDrawer}
+                bodyStyle={{ paddingBottom: 80 }}
+            >
+                <AddSource
+                    form={form}
+                    showDrawer={setShowDrawer}
+                    action={action}
+                    sourceRecord={sourceRecord}
+                    doRequest={doRequest}
+                />
+            </Drawer>
+        </>
     );
 }
 

@@ -77,7 +77,7 @@ function StatusTable(props) {
     }
     for (let i = 1; i <= tabCount; i++) {
         items.push(
-            <Nav.Item>
+            <Nav.Item key={i}>
                 <Nav.Link eventKey={i} onClick={()=>setactive(i)}>
                     <Pagination.Item
                         key={i}
@@ -98,7 +98,7 @@ function StatusTable(props) {
                     <Tab.Content>
                         {tabItem.map((item, index) => {
                             return (
-                                <Tab.Pane eventKey={item+1}>
+                                <Tab.Pane key={index} eventKey={item+1}>
                                     {createTable(item * 5, item * 5 + 5)}
                                 </Tab.Pane>
                             );

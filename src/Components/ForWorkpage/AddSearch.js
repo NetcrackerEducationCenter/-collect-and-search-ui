@@ -1,48 +1,370 @@
-import React, { Component } from 'react'
-import { Button, Form } from 'react-bootstrap'
-import axios from 'axios';
-import Select from 'react-select';
-import makeAnimated from 'react-select/animated'
-import { config } from '../../Config.js';
+import React from "react";
+import { Form, Input, Button, Select, Switch, DatePicker, Divider } from "antd";
+import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
+import axios from "axios";
+import { config } from "../../Config";
 
+const { Option } = Select;
 
-const animatedComponents = makeAnimated();
-
-class AddSearch extends Component {
+class AddSearch extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-
             jiraChecked: false,
-            jiraIssuesDate: '',
-            jiraJQLRequest: '',
-            jiraIssuesStatus: '',
+            jiraBoxChecked: false,
+            jiraIssuesDate: "",
+            jiraJQLRequest: "",
+            jiraIssuesStatus: "",
 
             ftpChecked: false,
-            ftpDirPath: '',
+            ftpDirPath: "",
             ftpExtention: [],
-            ftpDate: '',
+            ftpDate: "",
+            checkedExtensions: [],
+
+            confChecked: false,
+            confBoxChecked: false,
+            confIssuesDate: "",
+            confCQLRequest: "",
+            confIssuesStatus: "",
 
             keywords: [],
 
             filters: [
-                { value: 'jira', label: 'JIRA' },
-                { value: 'ftp', label: 'FTP' }
-
+                "JIRA", 'FTP', 'CONFLUENCE'
             ],
-            validated: false,
 
-            checkboxChecked: false,
 
             checkedFilters: [],
-            checkedExtensions: []
+            sources: [
+                {
+                    source: 'JIRA',
+                    credentials: {
+                        id: 'https://jira'
+                    }
+                },
+                {
+                    source: 'CONFLUENCE',
+                    credentials: {
+                        id: 'https://conf'
+                    }
+                },
+                {
+                    source: 'FTP',
+                    credentials: {
+                        id: '21.21.21.1'
+                    }
+                },
+            ],
+            selectedSources: []
         };
     }
 
+    layout = {
+        labelCol: {
+            span: 2,
+        },
+        wrapperCol: {
+            span: 20,
+        },
+    };
+
+    selector = () => {
+        return (
+            <Form.Item>
+                <Select
+                    mode="multiple"
+                    allowClear
+                    style={{ width: "100%" }}
+                    placeholder="Please select"
+                    defaultValue={["a10", "c12"]}
+                    onChange={this.sourceChange}
+                >
+                    {this.state.sources.map((s, i) => {
+                        return <Option key={i.toString(36) + i} value={s}>
+                            {s.credentials.id}
+                        </Option>
+                    })}
+                </Select>
+            </Form.Item>
+        );
+    };
+
+    formRef = React.createRef();
+
+    onSourcesChange = (value) => {
+        const vs = value.map(e => { return JSON.parse(e) });
+        this.setState({ selectedSources: vs });
+        let filters = [];
+        vs.forEach(e => {
+            if (!filters.includes(e.source)) {
+                filters.push(e.source);
+            }
+        });
+        this.setState({ checkedFilters: filters });
+    };
+
     /**
-    * Send messages to kafka topic 'ui-search-requests'
+     * @param {*} filter state
+     * @returns JSX filters
+     */
+    shawFilters = (filter) => {
+        if (filter === this.state.filters[0]) {
+            return this.jiraFilters();
+        }
+
+        if (filter === this.state.filters[1]) {
+            return this.ftpFilters();
+        }
+
+        if (filter === this.state.filters[2]) {
+            return this.confFilters();
+        }
+    }
+
+    jiraFilters = () => {
+
+        if (this.state.jiraBoxChecked) {
+            return (
+                <>
+                    <Form.Item>
+                        <Divider>JIRA filters</Divider>
+                    </Form.Item>
+
+                    <Form.Item label='Use JQL'>
+                        <Switch
+                            checkedChildren={<CheckOutlined />}
+                            unCheckedChildren={<CloseOutlined />}
+                            defaultChecked={this.state.jiraBoxChecked}
+                            onChange={(e) => {
+                                this.setState({
+                                    jiraJQLRequest: '',
+                                    jiraBoxChecked: e
+                                })
+                            }}
+                        />
+                    </Form.Item>
+
+                    <Form.Item label='JQL request'>
+                        <Input
+                            placeholder='Enter JQL ...'
+                            onChange={e => {
+                                this.setState({ jiraJQLRequest: e.target.value });
+                            }} />
+                    </Form.Item>
+                </>);
+
+        } else {
+
+            return (
+                <>
+                    <Form.Item>
+                        <Divider>JIRA filters</Divider>
+                    </Form.Item>
+
+                    <Form.Item label='Use JQL'>
+                        <Switch
+                            checkedChildren={<CheckOutlined />}
+                            unCheckedChildren={<CloseOutlined />}
+                            defaultChecked={this.state.jiraBoxChecked}
+                            onChange={(e) => {
+                                this.setState({
+                                    jiraJQLRequest: '',
+                                    jiraBoxChecked: e
+                                })
+                            }}
+                        />
+                    </Form.Item>
+
+                    <Form.Item label='Date of issue'>
+                        <DatePicker
+                            placeholder='enter date'
+                            onChange={(value) => {
+                                if (!!value) {
+                                    this.setState({
+                                        jiraIssuesDate: value.format('YYYY-MM-DD')
+                                    });
+                                } else {
+                                    this.setState({
+                                        jiraIssuesDate: ''
+                                    });
+                                }
+                            }}
+                        />
+                    </Form.Item>
+
+                    <Form.Item label='Status of issue'>
+                        <Select
+                            placeholder='choose status'
+                            onChange={value => {
+                                this.setState({
+                                    jiraIssuesStatus: value
+                                });
+                            }}
+                        >
+                            <Option key='Open'>Open</Option>
+                            <Option key='In process'>In process</Option>
+                            <Option key='Done'>Done</Option>
+                            <Option key='To Do'>To Do</Option>
+                            <Option key='Cancelled'>Cancelled</Option>
+                            <Option key='Rejected'>Rejected</Option>
+                            <Option key='In Review'>In Review</Option>
+                            <Option key='Approved'>Approved</Option>
+                        </Select>
+                    </Form.Item>
+                </>
+            );
+        }
+    }
+
+    confFilters = () => {
+
+        if (this.state.confBoxChecked) {
+            return (
+                <>
+                    <Form.Item>
+                        <Divider>CONFLUENCE filters</Divider>
+                    </Form.Item>
+
+                    <Form.Item label='Use CQL'>
+                        <Switch
+                            checkedChildren={<CheckOutlined />}
+                            unCheckedChildren={<CloseOutlined />}
+                            defaultChecked={this.state.confBoxChecked}
+                            onChange={(e) => {
+                                this.setState({
+                                    confCQLRequest: '',
+                                    confBoxChecked: e
+                                })
+                            }}
+                        />
+                    </Form.Item>
+
+                    <Form.Item label='CQL request'>
+                        <Input
+                            placeholder='enter CQL ...'
+                            onChange={e => {
+                                this.setState({ confCQLRequest: e.target.value });
+                            }} />
+                    </Form.Item>
+                </>);
+
+        } else {
+
+            return (
+                <>
+                    <Form.Item>
+                        <Divider>CONFLUENCE filters</Divider>
+                    </Form.Item>
+
+                    <Form.Item label='Use CQL'>
+                        <Switch
+                            checkedChildren={<CheckOutlined />}
+                            unCheckedChildren={<CloseOutlined />}
+                            defaultChecked={this.state.confBoxChecked}
+                            onChange={(e) => {
+                                this.setState({
+                                    confJQLRequest: '',
+                                    confBoxChecked: e
+                                })
+                            }}
+                        />
+                    </Form.Item>
+
+                    <Form.Item label='Date of issue'>
+                        <DatePicker
+                            placeholder='enter date'
+                            onChange={(value) => {
+                                if (!!value) {
+                                    this.setState({
+                                        confIssuesDate: value.format('YYYY-MM-DD')
+                                    });
+                                } else {
+                                    this.setState({
+                                        confIssuesDate: ''
+                                    });
+                                }
+                            }}
+                        />
+                    </Form.Item>
+
+                    <Form.Item label='Status of issue'>
+                        <Select
+                            placeholder='choose status'
+                            onChange={value => {
+                                this.setState({
+                                    confIssuesStatus: value
+                                });
+                            }}
+                        >
+                            <Option key='Open'>Open</Option>
+                            <Option key='In process'>In process</Option>
+                            <Option key='Done'>Done</Option>
+                            <Option key='To Do'>To Do</Option>
+                            <Option key='Cancelled'>Cancelled</Option>
+                            <Option key='Rejected'>Rejected</Option>
+                            <Option key='In Review'>In Review</Option>
+                            <Option key='Approved'>Approved</Option>
+                        </Select>
+                    </Form.Item>
+                </>
+            );
+        }
+    }
+
+    /**
+    * @returns JSX for FTP filters
     */
-    newRequest = (e) => {
+    ftpFilters = () => {
+        return (
+
+            <>
+
+                <Form.Item>
+                    <Divider>FTP filters</Divider>
+                </Form.Item>
+
+                <Form.Item label='Extention' >
+                    <Select
+                        mode="multiple"
+                        placeholder='select file extention'
+                        onChange={value => {
+                            this.setState({ checkedExtensions: value });
+                        }}
+                        allowClear
+                    >
+                        <Option key='txt'>.txt</Option>
+                        <Option key='doc'>.doc</Option>
+                        <Option key='pdf'>.pdf</Option>
+                    </Select>
+                </Form.Item>
+
+                <Form.Item label='Choose file date'>
+                    <DatePicker
+                        placeholder='enter date'
+                        onChange={(value) => {
+                            if (!!value) {
+                                this.setState({
+                                    ftpDate: value.format('YYYY-MM-DD')
+                                });
+                            } else {
+                                this.setState({
+                                    ftpDate: ''
+                                });
+                            }
+                        }}
+                    />
+                </Form.Item>
+
+            </>
+
+
+
+
+        );
+    }
+
+    onFinish = (values) => {
         axios.post(`${config.url}/api/request/push`, {
 
             "jiraChecked": this.state.jiraChecked,
@@ -63,20 +385,27 @@ class AddSearch extends Component {
                 //Return states to begin
                 this.setState({
                     jiraChecked: false,
-                    jiraIssuesDate: '',
-                    jiraJQLRequest: '',
-                    jiraIssuesStatus: '',
+                    jiraBoxChecked: false,
+                    jiraIssuesDate: "",
+                    jiraJQLRequest: "",
+                    jiraIssuesStatus: "",
 
                     ftpChecked: false,
-                    ftpDirPath: '',
+                    ftpDirPath: "",
                     ftpExtention: [],
-                    ftpDate: '',
+                    ftpDate: "",
+                    checkedExtensions: [],
+
+                    confChecked: false,
+                    confBoxChecked: false,
+                    confIssuesDate: "",
+                    confCQLRequest: "",
+                    confIssuesStatus: "",
 
                     keywords: [],
-                    checkboxChecked: false,
 
                     checkedFilters: [],
-                    checkedExtensions: []
+                    selectedSources: []
                 })
                 alert('Request sended');
             }
@@ -84,255 +413,64 @@ class AddSearch extends Component {
                 alert('Anything went wrong!');
             }
         });
-    }
-
-    handleChange(e) {
-        this.setState({ checkedFilters: e })
-    }
-
-    /**
-     * Selector for sources JIRA and FTP
-     * @returns JSX selector
-     */
-    selector = () => {
-
-        return (
-            <Form.Group>
-                <Select
-                    closeMenuOnSelect={false}
-                    components={animatedComponents}
-                    options={this.state.filters}
-                    isMulti
-                    onChange={(e) => this.setState({ checkedFilters: e })}
-                />
-            </Form.Group>
-        );
-    }
-
-    /**
-     * @returns JSX for FTP filters
-     */
-    ftpFilters = () => {
-        const pp = [
-            { value: 'txt', label: '.txt' },
-            { value: 'pdf', label: '.pdf' },
-            { value: 'doc', label: '.doc' }
-        ];
-
-        return (
-
-            <Form.Group>
-
-                <Form.Label>FTP filters</Form.Label>
-
-                <Form.Group>
-                    <Form.Text className='text-muted'>Select file extention</Form.Text>
-                    <Select
-                        closeMenuOnSelect={false}
-                        options={pp}
-                        isMulti
-                        components={animatedComponents}
-                        onChange={(e) =>
-                            this.setState({ checkedExtensions: e })
-                        }
-                    />
-                </Form.Group>
-
-                <Form.Group className='required'>
-                    <Form.Text className='text-muted'>Choose file date</Form.Text>
-                    <Form.Control
-                        type='date'
-                        onChange={e => this.setState({
-                            ftpDate: new Date(e.target.value).toLocaleDateString()
-                        })}
-                        placeholder='Enter date...'
-                    />
-                </Form.Group>
-
-            </Form.Group>
-
-
-
-
-        );
-    }
-
-    /**
-     * @returns JSX for JIRA filters
-     */
-    jiraFilters = () => {
-
-        if (this.state.checkboxChecked) {
-            return (
-                <Form.Group>
-
-                    <Form.Group>
-                        <Form.Label>JIRA filters</Form.Label>
-                        <Form.Group>
-                            <Form.Check
-                                type='switch'
-                                id="custom-switch"
-                                defaultChecked={this.state.checkboxChecked}
-                                label='Use JQL'
-                                className='left'
-                                controlId="formBasicCheckbox"
-                                onChange={(e) => {
-                                    this.setState({
-                                        jiraJQLRequest: '',
-                                        checkboxChecked: e.target.checked
-                                    })
-                                }}
-
-                            />
-                        </Form.Group>
-                    </Form.Group>
-
-                    <Form.Text className='text-muted'>JQL request</Form.Text>
-                    <Form.Control
-                        type='text'
-                        placeholder='Enter JQL ...'
-                        onChange={e => {
-                            this.setState({ jiraJQLRequest: e.target.value });
-                        }}
-                    />
-                </Form.Group>);
-
-        } else {
-
-            return (
-                <Form.Group>
-
-                    <Form.Label>JIRA filters</Form.Label>
-
-                    <Form.Group>
-                        <Form.Check
-                            type='switch'
-                            id="custom-switch"
-                            label='Use JQL'
-                            className='left'
-                            controlId="formBasicCheckbox"
-                            onChange={(e) => {
-                                this.setState({
-                                    jiraIssuesStatus: '',
-                                    jiraIssuesDate: '',
-                                    checkboxChecked: e.target.checked
-                                })
-                            }}
-                        />
-                    </Form.Group>
-
-                    <Form.Group>
-                        <Form.Text className='text-muted'>Date of issue</Form.Text>
-                        <Form.Control
-                            type='date'
-                            onChange={e => {
-                                this.setState({
-                                    jiraIssuesDate: new Date(e.target.value).toLocaleDateString()
-                                });
-                            }}
-                        />
-                    </Form.Group>
-
-                    <Form.Group>
-                        <Form.Text className='text-muted'>Status of issue</Form.Text>
-                        <Form.Control
-                            as='select'
-                            onChange={e => {
-                                this.setState({
-                                    jiraIssuesStatus: e.target.value
-                                });
-                            }}
-                        >
-                            <option >None</option>
-                            <option >Open</option>
-                            <option >In process</option>
-                            <option >Done</option>
-                            <option >To Do</option>
-                            <option >Cancelled</option>
-                            <option >Rejected</option>
-                            <option >In Review</option>
-                            <option >Approved</option>
-                        </Form.Control>
-                    </Form.Group>
-                </Form.Group>
-            );
-        }
-    }
-
-    /**
-     * @param {*} filter state
-     * @returns JSX filters
-     */
-    shawFilters = (filter) => {
-        if (filter === this.state.filters[0].value) {
-            return this.jiraFilters();
-        }
-
-        if (filter === this.state.filters[1].value) {
-            return this.ftpFilters();
-        }
-    }
-
-    /**
-     * This method should send request and hide this modal window
-     * @param {*} event  
-     */
-    validation = (event) => {
-        const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-
-            event.preventDefault();
-            event.stopPropagation();
-        
-            return null;
-            
-        } else {
-            this.newRequest();
-        }
-
-        this.setState({ validated: true });
-        try{
-            this.props.onHide();
-
-        } catch(e){
-            console.log(`e: `, e)
-        }
     };
 
+    form = Form.useForm;
+
     render() {
-
         return (
+            <Form
+                layout='vertical'
+                ref={this.formRef}
+                name="control-ref"
+                onFinish={this.onFinish}
+            >
+                <Divider />
+                <Form.Item label="Sources">
+                    <Select
+                        mode="multiple"
+                        placeholder="Choose a sources"
+                        onChange={this.onSourcesChange}
+                        allowClear
+                    >
+                        {this.state.sources.map((s, i) => {
+                            return <Option key={i.toString(36) + i} value={JSON.stringify(s)}>
+                                {s.credentials.id}
+                            </Option>
+                        })}
+                    </Select>
+                </Form.Item>
 
-            <Form noValidate validated={this.state.validated} onSubmit={this.validation}>
-
-                <Form.Group controlId='formBasicEmail'>
-                    <Form.Label>Add filters</Form.Label>
-                    {this.selector()}
-                </Form.Group>
                 {this.state.checkedFilters === null ? '' : this.state.checkedFilters.map(v => this.shawFilters(v.value))}
 
-                <Form.Group>
-                    <Form.Label>Request</Form.Label>
-                    <Form.Control
-                        required
-                        type='text'
+                {this.state.checkedFilters === null
+                    ? ""
+                    : this.state.checkedFilters.map((e) => this.shawFilters(e))}
+
+                <Form.Item
+                    label="Request"
+                    name='reqKeywords'
+                    rules={[{
+                        required: true,
+                        message: 'Please input your request!'
+                    }]}
+                >
+                    <Input
                         placeholder='enter request'
                         onChange={e => {
                             this.setState({
                                 keywords: e.target.value.trim().split(" ")
-
                             });
                         }}
                     />
-                    <Form.Control.Feedback type='invalid'>
-                        Please write your request
-                    </Form.Control.Feedback>
-                </Form.Group>
-                <Form.Group>
-                    <Button type='submit'>Add</Button>
-                </Form.Group>
-            </Form>
+                </Form.Item>
 
+                <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                        Send
+                    </Button>
+                </Form.Item>
+            </Form>
         );
     }
 }

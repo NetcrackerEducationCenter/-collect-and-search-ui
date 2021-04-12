@@ -10,9 +10,9 @@ function UserInfo(props) {
             <p>First name: {keycloak.tokenParsed.given_name}</p>
             <p>Last name: {keycloak.tokenParsed.family_name}</p>
             <p>Email: {keycloak.tokenParsed.email}</p>
-            <div>Roles: {roles.map(v => {
+            <div><p>Roles:</p> {roles.map(v => {
                 return  <div key={v}>
-                            <p>{v}</p>
+                            <p>•{v}</p>
                         </div>
             })}
             </div>

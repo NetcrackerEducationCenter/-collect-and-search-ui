@@ -1,24 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { Container, Navbar, Nav, Button } from "react-bootstrap";
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import StatusButton from '../Components/StatusButton';
-import ModalRequests from './ModalRequests';
-import { config } from '../Config.js';
-
-//Logos
+// Logos
 import logo from '../assets/logo192.png';
 import userLogo from '../assets/user-logo.png';
 
-//Pages
+// Pages
 import Home from '../Pages/Home';
 import About from '../Pages/About';
 import History from '../Pages/History';
 import Profile from '../Pages/Profile';
 import WorkPage from '../Pages/WorkPage';
 import axios from "axios";
-import { keycloak } from "../index";
 
-// export let sources;
+// CSS
+import '../css/Layout.css';
+
+// Vars
+import React, { useState, useEffect } from "react";
+import { Container, Navbar, Nav, } from "react-bootstrap";
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import StatusButton from '../Components/StatusButton';
+import ModalRequests from './ModalRequests';
+import { config } from '../Config.js';
+import { keycloak } from "../index";
+import { Button } from "antd";
 
 function HeaderFunc(props) {
 
@@ -112,7 +115,7 @@ function HeaderFunc(props) {
                         <Nav.Link href='/workpage'>Workpage</Nav.Link>
                     </Nav>
 
-                    <Button variant="outline-info" onClick={changeState} >
+                    <Button ghost onClick={changeState} >
                         <StatusButton isEmpty={modalEmpty} />
                     </Button>
 
@@ -125,17 +128,14 @@ function HeaderFunc(props) {
                         />
                     </Button>
 
-                    <Button className='bg-transparent border-3' variant="outline-info"
+                    <Button ghost variant="outline-info"
                         onClick={() => keycloak.logout()}
                     >
                         Log Out
                     </Button>
 
-
                 </Container>
-
             </Navbar>
-
 
             <Router>
                 <Switch>

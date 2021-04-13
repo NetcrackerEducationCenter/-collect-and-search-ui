@@ -13,7 +13,7 @@ export default function WorkPage(props) {
                 setRequestId={props.setRequestId}
             />
             <Report report={props.report} />
-            <AddSearch />
+            {/* <AddSearch /> */}
         </div>
     );
 

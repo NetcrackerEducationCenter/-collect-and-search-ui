@@ -29,15 +29,15 @@ function AddSource(props) {
                 return (
                     <>
 
-                        <Form.Item label='URL' rules={[{ required: true, message: 'Please write JIRA URL' }]} >
+                        <Form.Item label='URL' name='jiraURL' rules={[{ required: true, message: 'Please write JIRA URL' }]} >
                             <Input placeholder='enter URL' defaultValue={props.sourceRecord.source} disabled />
                         </Form.Item>
 
-                        <Form.Item label='Login' rules={[{ required: true, message: 'Please write JIRA accaunt\'s login' }]}>
+                        <Form.Item label='Login' name='jiraLogin' rules={[{ required: true, message: 'Please write JIRA accaunt\'s login' }]}>
                             <Input placeholder='enter jira accaunts login' onChange={(e) => { jiraSource.login = e.target.value }} />
                         </Form.Item>
 
-                        <Form.Item label='Password' rules={[{ required: true, message: 'Please write JIRA accaunt\'s password' }]} >
+                        <Form.Item label='Password' name='jiraPassword' rules={[{ required: true, message: 'Please write JIRA accaunt\'s password' }]} >
                             <Input placeholder='enter password' onChange={(e) => { jiraSource.password = e.target.value }} />
                         </Form.Item>
                     </>
@@ -46,19 +46,19 @@ function AddSource(props) {
                 ftpSource.server = props.sourceRecord.source
                 return (
                     <>
-                        <Form.Item label='Server' rules={[{ required: true, message: 'Please write your FTP server' }]}>
+                        <Form.Item label='Server' name='ftpServer' rules={[{ required: true, message: 'Please write your FTP server' }]}>
                             <Input placeholder='enter FTP server ip address' defaultValue={props.sourceRecord.source} disabled />
                         </Form.Item>
 
-                        <Form.Item label='Port' rules={[{ required: true, message: 'Please write your FTP port' }]} >
+                        <Form.Item label='Port' name='ftpPort' rules={[{ required: true, message: 'Please write your FTP port' }]} >
                             <Input placeholder='enter port' onChange={(e) => { ftpSource.port = e.target.value }} />
                         </Form.Item>
 
-                        <Form.Item label='Login' rules={[{ required: true, message: 'Please write your FTP login' }]} >
+                        <Form.Item label='Login' name='ftpLogin' rules={[{ required: true, message: 'Please write your FTP login' }]} >
                             <Input placeholder='enter login' onChange={(e) => { ftpSource.login = e.target.value }} />
                         </Form.Item>
 
-                        <Form.Item label='Password' rules={[{ required: true, message: 'Please write your FTP password' }]} >
+                        <Form.Item label='Password' name='ftpPassword' rules={[{ required: true, message: 'Please write your FTP password' }]} >
                             <Input placeholder='enter password' onChange={(e) => { ftpSource.password = e.target.value }} />
                         </Form.Item>
                     </>
@@ -68,35 +68,36 @@ function AddSource(props) {
         if (sourceType === 'JIRA') {
             return (
                 <>
-                    <Form.Item label='Login' rules={[{ required: true, message: 'Please write JIRA accaunt\'s login' }]}>
+                    <Form.Item label='URL' name='jiraURL' rules={[{ required: true, message: 'Please write JIRA URL' }]} >
+                        <Input placeholder='enter URL' onChange={(e) => { jiraSource.id = 'https://'+e.target.value }} addonBefore='https://' />
+                    </Form.Item>
+
+                    <Form.Item label='Login' name='jiraLogin' rules={[{ required: true, message: 'Please write JIRA accaunt\'s login' }]}>
                         <Input placeholder='enter jira accaunts login' onChange={(e) => { jiraSource.login = e.target.value }} />
                     </Form.Item>
 
-                    <Form.Item label='Password' rules={[{ required: true, message: 'Please write JIRA accaunt\'s password' }]} >
+                    <Form.Item label='Password' name='jiraPassword' rules={[{ required: true, message: 'Please write JIRA accaunt\'s password' }]} >
                         <Input placeholder='enter password' onChange={(e) => { jiraSource.password = e.target.value }} />
                     </Form.Item>
 
-                    <Form.Item label='URL' rules={[{ required: true, message: 'Please write JIRA URL' }]} >
-                        <Input placeholder='enter URL' onChange={(e) => { jiraSource.id = 'https://'+e.target.value }} addonBefore='https://' />
-                    </Form.Item>
                 </>
             );
         } else if (sourceType === 'FTP') {
             return (
                 <>
-                    <Form.Item label='Server' rules={[{ required: true, message: 'Please write your FTP server' }]}>
+                    <Form.Item label='Server'  name='ftpServer' rules={[{ required: true, message: 'Please write your FTP server' }]}>
                         <Input placeholder='enter FTP server ip address' onChange={(e) => { ftpSource.id = e.target.value }} />
                     </Form.Item>
 
-                    <Form.Item label='Port' rules={[{ required: true, message: 'Please write your FTP port' }]} >
+                    <Form.Item label='Port'  name='ftpPort' rules={[{ required: true, message: 'Please write your FTP port' }]} >
                         <Input placeholder='enter port' onChange={(e) => { ftpSource.port = e.target.value }} />
                     </Form.Item>
 
-                    <Form.Item label='Login' rules={[{ required: true, message: 'Please write your FTP login' }]} >
+                    <Form.Item label='Login'  name='ftpLogin' rules={[{ required: true, message: 'Please write your FTP login' }]} >
                         <Input placeholder='enter login' onChange={(e) => { ftpSource.login = e.target.value }} />
                     </Form.Item>
 
-                    <Form.Item label='Password' rules={[{ required: true, message: 'Please write your FTP password' }]} >
+                    <Form.Item label='Password'  name='ftpPassword' rules={[{ required: true, message: 'Please write your FTP password' }]} >
                         <Input placeholder='enter password' onChange={(e) => { ftpSource.password = e.target.value }} />
                     </Form.Item>
                 </>
@@ -104,22 +105,6 @@ function AddSource(props) {
         } else return null;
 
     }
-    // const validation = (event) => {
-    //     console.log(`jiraSource `, jiraSource)
-    //     const form = event.currentTarget;
-    //     if (form.checkValidity() === false) {
-    //         event.preventDefault();
-    //         // return null;
-    //         // event.stopPropagation();
-    //     } else {
-    //         addSourceRequest();
-    //         props.onHide();
-    //     }
-
-    //     setvalidated(true);
-
-
-    // }
 
     const addSourceRequest = () => {
         let msg = {

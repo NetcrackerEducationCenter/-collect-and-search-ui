@@ -1,6 +1,7 @@
 // Logos
 import logo from '../assets/logo192.png';
 import userLogo from '../assets/user-logo.png';
+import { LogoutOutlined } from '@ant-design/icons';
 
 // Pages
 import Home from '../Pages/Home';
@@ -21,16 +22,19 @@ import StatusButton from '../Components/StatusButton';
 import ModalRequests from './ModalRequests';
 import { config } from '../Config.js';
 import { keycloak } from "../index";
-import { Button } from "antd";
+import { Button, Modal, Form } from "antd";
+import AddSearch from './ForWorkpage/AddSearch';
 
 function HeaderFunc(props) {
 
     const [modalActive, setModalActive] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [reqStatuses, setReqStatuses] = useState([]);
     const [sources, setSources] = useState([]);
     const [modalEmpty, setModalEmpty] = useState(true);
     const [report, setReport] = useState('');
     const [reqId, setReqId] = useState('');
+    const [form] = Form.useForm();
 
 
 
@@ -54,6 +58,11 @@ function HeaderFunc(props) {
             console.log(JSON.stringify(res.data));
             setSources(res.data);
         })
+    }
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+        form.resetFields();
     }
 
     /**
@@ -115,6 +124,10 @@ function HeaderFunc(props) {
                         <Nav.Link href='/workpage'>Workpage</Nav.Link>
                     </Nav>
 
+                    <Button ghost onClick={() => setIsModalVisible(true)} >
+                        New request 
+                    </Button>
+
                     <Button ghost onClick={changeState} >
                         <StatusButton isEmpty={modalEmpty} />
                     </Button>
@@ -128,8 +141,9 @@ function HeaderFunc(props) {
                         />
                     </Button>
 
-                    <Button ghost variant="outline-info"
+                    <Button danger type='text'
                         onClick={() => keycloak.logout()}
+                        icon={<LogoutOutlined />}
                     >
                         Log Out
                     </Button>
@@ -164,6 +178,11 @@ function HeaderFunc(props) {
                 </Switch>
             </Router>
 
+            <Modal title="New request" visible={isModalVisible} onCancel={handleCancel}>
+                <AddSearch />
+                modal antd
+            </Modal>
+
             <Container >
                 <ModalRequests
                     show={modalActive}
@@ -173,6 +192,8 @@ function HeaderFunc(props) {
                     setRequestId={getReport}
                     onHide={() => setModalActive(false)}
                 />
+
+
             </Container>
         </div>
     );

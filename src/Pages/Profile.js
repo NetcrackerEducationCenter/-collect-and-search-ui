@@ -44,7 +44,7 @@ function Profile(props) {
         < >
 
             <Row >
-                <Col sm={12} xs={24} style={{ backgroundColor: 'blueviolet' }}>
+                <Col sm={12} xs={24} style={{ backgroundColor: '' }}>
                     <UserInfo />
                 </Col >
 
@@ -53,7 +53,7 @@ function Profile(props) {
                 </Col> */}
 
 
-                <Col sm={12} xs={24} style={{ backgroundColor: 'blue' }} >
+                <Col sm={12} xs={24} style={{ backgroundColor: '' }} >
                     <Sources {...props} showDrawer={setShowDrawer} crud={crud} />
                 </Col>
             </Row>

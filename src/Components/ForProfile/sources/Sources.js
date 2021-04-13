@@ -37,8 +37,8 @@ function Sources(props) {
                             block
                             type='primary'
                             ghost
-                        //     onClick={() => props.crud('add')}
-                            onClick={()=>handleShow(config.ADD)}
+                            //     onClick={() => props.crud('add')}
+                            onClick={() => handleShow(config.ADD)}
                         >
                             <PlusOutlined />Add Source
                         </Button>
@@ -54,13 +54,13 @@ function Sources(props) {
                             Edit Users
                         </Button>
                     </Col>
-                    
+
                 </Row>
             );
         }
     }
 
-    console.log(roles.includes('UIadminROLE')+' !!!!!!!!!!!');
+    console.log('He is ADMIN ' + roles.includes('UIadminROLE'));
 
     if (Array.isArray(props.sources) && props.sources.length) {
 
@@ -86,7 +86,7 @@ function Sources(props) {
                 key: 'operations',
                 render: (text, record) =>
                     <Space size='middle'>
-                        <Button type='primary' onClick={()=>{
+                        <Button type='primary' onClick={() => {
                             props.crud(record, config.UPDATE);
                         }}> update </Button>
                         <Button

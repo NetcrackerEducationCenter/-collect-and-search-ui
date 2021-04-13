@@ -21,8 +21,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import StatusButton from '../Components/StatusButton';
 import ModalRequests from './ModalRequests';
 import { config } from '../Config.js';
-import { keycloak } from "../index";
-import { Button, Modal, Form } from "antd";
+import { keycloak, webSocket } from "../index";
+import { Button, Modal, Form, message } from "antd";
 import AddSearch from './ForWorkpage/AddSearch';
 
 function HeaderFunc(props) {
@@ -37,21 +37,25 @@ function HeaderFunc(props) {
     const [form] = Form.useForm();
 
 
-
     const MINUTE_MS = 10000;
 
-    useEffect(() => {
-        getRequestStatuses();
-        getSources();
-        const interval = setInterval(() => {
-            getRequestStatuses();
-            getSources();
+    
+   
 
-        }, MINUTE_MS);
-        return () => {
-            clearInterval(interval);
-        }
-    }, []);
+    // useEffect(() => {
+    //     webSocket.send(JSON.stringify({give: 'statuses'}));
+
+    //     getRequestStatuses();
+    //     getSources();
+    //     const interval = setInterval(() => {
+    //         getRequestStatuses();
+    //         getSources();
+
+    //     }, MINUTE_MS);
+    //     return () => {
+    //         clearInterval(interval);
+    //     }
+    // }, []);
 
     const getSources = async () => {
         axios.post(config.url + '/api/sources/get').then(res => {

@@ -3,6 +3,7 @@ import { Form, Input, Button, Select, Switch, DatePicker, Divider } from "antd";
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import axios from "axios";
 import { config } from "../../Config";
+import { keycloak } from "../..";
 
 const { Option } = Select;
 
@@ -377,9 +378,15 @@ class AddSearch extends React.Component {
             "ftpExtention": this.state.ftpExtention,
             "ftpDate": this.state.ftpDate,
 
-            "keywords": this.state.keywords
+            "confChecked": this.state.confChecked,
+            "confBoxChecked": this.state.confBoxChecked,
+            "confIssuesDate": this.state.confIssuesDate,
+            "confCQLRequest": this.state.confCQLRequest,
+            "confIssuesStatus": this.state.confIssuesStatus,
 
-            // "userId": '123212321323'
+            "keywords": this.state.keywords,
+            "userId": keycloak.tokenParsed.preferred_username,
+            "selectedSources": this.state.selectedSources
         }).then(res => {
             if (res.status === 200) {
                 //Return states to begin

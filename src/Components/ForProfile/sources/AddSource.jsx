@@ -10,6 +10,7 @@ function AddSource(props) {
     const [validated, setvalidated] = useState(false);
     const [jiraSource, setjiraSource] = useState({});
     const [ftpSource, setftpSource] = useState({});
+    const [confSource, setconfSource] = useState({});
 
     const onFinish = () => {
         addSourceRequest();
@@ -111,7 +112,8 @@ function AddSource(props) {
             action: props.action,
             source: sourceType,
             ftpSource,
-            jiraSource
+            jiraSource,
+            confSource
         }
         message.info(JSON.stringify(msg));
         axios.post(`${config.url}/api/sources/push`, msg).then(res => {

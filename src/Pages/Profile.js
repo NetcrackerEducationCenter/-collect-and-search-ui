@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import Avatar from '../Components/ForProfile/Avatar';
 import UserInfo from '../Components/ForProfile/UserInfo';
-import Users from '../Components/ForProfile/Users';
 
-import { Container } from 'react-bootstrap';
-import { Button, Col, Drawer, Form, message, Row } from 'antd';
-import AddSourceModal from '../Components/ForProfile/sources/AddSourceModal';
+import { Button, Col, Form, message, Row } from 'antd';
 import Sources from '../Components/ForProfile/sources/Sources';
 import AddSource from '../Components/ForProfile/sources/AddSource';
 import { config } from '../Config';
+import Modal from 'antd/lib/modal/Modal';
+import { Content } from 'antd/lib/layout/layout';
 
 function Profile(props) {
 
@@ -41,7 +39,14 @@ function Profile(props) {
     }
 
     return (
-        < >
+        <Content
+            style={{
+                marginTop: '3%',
+                marginLeft: '10%',
+                marginRight: '10%',
+                fontFamily: 'Geneva, Arial, Helvetica, sans-serif'
+            }}
+        >
 
             <Row >
                 <Col sm={12} xs={24} style={{ backgroundColor: '' }}>
@@ -65,10 +70,11 @@ function Profile(props) {
 
             /> */}
 
-            <Drawer
+            <Modal
                 title="Create a new source"
                 width='70%'
-                onClose={onClose}
+                centered
+                onCancel={onClose}
                 visible={showDrawer}
                 bodyStyle={{ paddingBottom: 80 }}
             >
@@ -79,8 +85,8 @@ function Profile(props) {
                     sourceRecord={sourceRecord}
                     doRequest={doRequest}
                 />
-            </Drawer>
-        </>
+            </Modal>
+        </Content>
     );
 }
 

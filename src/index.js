@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 
 import Keycloak from 'keycloak-js';
 import { config } from './Config';
+
+import './css/index.css';
 
 export let keycloak = Keycloak('./resources/keycloak.json');
 

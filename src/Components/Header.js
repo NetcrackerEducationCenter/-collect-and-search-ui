@@ -5,14 +5,13 @@ import { LogoutOutlined } from '@ant-design/icons';
 
 // Pages
 import Home from '../Pages/Home';
-import About from '../Pages/About';
 import History from '../Pages/History';
 import Profile from '../Pages/Profile';
 import WorkPage from '../Pages/WorkPage';
 import axios from "axios";
 
 // CSS
-import '../css/Layout.css';
+// import '../css/Layout.css';
 
 // Vars
 import React, { useState, useEffect } from "react";
@@ -39,23 +38,23 @@ function HeaderFunc(props) {
 
     const MINUTE_MS = 10000;
 
-    
-   
 
-    // useEffect(() => {
-    //     webSocket.send(JSON.stringify({give: 'statuses'}));
 
-    //     getRequestStatuses();
-    //     getSources();
-    //     const interval = setInterval(() => {
-    //         getRequestStatuses();
-    //         getSources();
 
-    //     }, MINUTE_MS);
-    //     return () => {
-    //         clearInterval(interval);
-    //     }
-    // }, []);
+    useEffect(() => {
+        webSocket.send(JSON.stringify({ give: 'statuses' }));
+
+        getRequestStatuses();
+        getSources();
+        const interval = setInterval(() => {
+            getRequestStatuses();
+            getSources();
+
+        }, MINUTE_MS);
+        return () => {
+            clearInterval(interval);
+        }
+    }, []);
 
     const getSources = async () => {
         axios.post(config.url + '/api/sources/get').then(res => {
@@ -64,10 +63,7 @@ function HeaderFunc(props) {
         })
     }
 
-    const handleCancel = () => {
-        setIsModalVisible(false);
-        form.resetFields();
-    }
+
 
     /**
      * Get report from kafka
@@ -128,8 +124,14 @@ function HeaderFunc(props) {
                         <Nav.Link href='/workpage'>Workpage</Nav.Link>
                     </Nav>
 
-                    <Button ghost onClick={() => setIsModalVisible(true)} >
-                        New request 
+                    <Button ghost
+                        style={{
+                            color: "rgb(126, 254, 57)",
+                            borderColor: "rgb(126, 254, 57)",
+                            marginRight: '2%'
+                        }}
+                        onClick={() => setIsModalVisible(true)} >
+                        New request
                     </Button>
 
                     <Button ghost onClick={changeState} >
@@ -145,9 +147,9 @@ function HeaderFunc(props) {
                         />
                     </Button>
 
-                    <Button danger type='text'
+                    <Button danger type='primary' ghost
                         onClick={() => keycloak.logout()}
-                        icon={<LogoutOutlined />}
+                    // icon={<LogoutOutlined />}
                     >
                         Log Out
                     </Button>
@@ -159,7 +161,6 @@ function HeaderFunc(props) {
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/history" component={History} />
-                    <Route exact path="/about" component={About} />
                     {/* <Route exact path="/profile" component={Profile} /> */}
                     <Route exact path="/profile" render={(props) =>
                         <Profile
@@ -182,10 +183,13 @@ function HeaderFunc(props) {
                 </Switch>
             </Router>
 
-            <Modal title="New request" visible={isModalVisible} onCancel={handleCancel}>
-                <AddSearch />
-                modal antd
-            </Modal>
+
+            <AddSearch
+                form={form}
+                isModalVisible={isModalVisible}
+                setIsModalVisible={setIsModalVisible}
+
+            />
 
             <Container >
                 <ModalRequests

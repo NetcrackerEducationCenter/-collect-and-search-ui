@@ -4,6 +4,7 @@ import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import axios from "axios";
 import { config } from "../../Config";
 import { keycloak } from "../..";
+import Modal from "antd/lib/modal/Modal";
 
 const { Option } = Select;
 
@@ -25,9 +26,8 @@ class AddSearch extends React.Component {
 
             confChecked: false,
             confBoxChecked: false,
-            confIssuesDate: "",
-            confCQLRequest: "",
-            confIssuesStatus: "",
+            confPagesDate: "",
+            cql: "",
 
             keywords: [],
 
@@ -68,27 +68,6 @@ class AddSearch extends React.Component {
         wrapperCol: {
             span: 20,
         },
-    };
-
-    selector = () => {
-        return (
-            <Form.Item>
-                <Select
-                    mode="multiple"
-                    allowClear
-                    style={{ width: "100%" }}
-                    placeholder="Please select"
-                    defaultValue={["a10", "c12"]}
-                    onChange={this.sourceChange}
-                >
-                    {this.state.sources.map((s, i) => {
-                        return <Option key={i.toString(36) + i} value={s}>
-                            {s.credentials.id}
-                        </Option>
-                    })}
-                </Select>
-            </Form.Item>
-        );
     };
 
     formRef = React.createRef();
@@ -132,7 +111,7 @@ class AddSearch extends React.Component {
                         <Divider>JIRA filters</Divider>
                     </Form.Item>
 
-                    <Form.Item label='Use JQL'>
+                    <Form.Item label='Use JQL' name='jiraJQLCheckbox'>
                         <Switch
                             checkedChildren={<CheckOutlined />}
                             unCheckedChildren={<CloseOutlined />}
@@ -146,7 +125,7 @@ class AddSearch extends React.Component {
                         />
                     </Form.Item>
 
-                    <Form.Item label='JQL request'>
+                    <Form.Item label='JQL request' name='jiraJQL'>
                         <Input
                             placeholder='Enter JQL ...'
                             onChange={e => {
@@ -163,7 +142,7 @@ class AddSearch extends React.Component {
                         <Divider>JIRA filters</Divider>
                     </Form.Item>
 
-                    <Form.Item label='Use JQL'>
+                    <Form.Item label='Use JQL' name='jiraJQLCheck'>
                         <Switch
                             checkedChildren={<CheckOutlined />}
                             unCheckedChildren={<CloseOutlined />}
@@ -177,7 +156,7 @@ class AddSearch extends React.Component {
                         />
                     </Form.Item>
 
-                    <Form.Item label='Date of issue'>
+                    <Form.Item label='Date of issue' name='jiraIssueDate'>
                         <DatePicker
                             placeholder='enter date'
                             onChange={(value) => {
@@ -194,7 +173,7 @@ class AddSearch extends React.Component {
                         />
                     </Form.Item>
 
-                    <Form.Item label='Status of issue'>
+                    <Form.Item label='Status of issue' name='jiraIssueStatus'>
                         <Select
                             placeholder='choose status'
                             onChange={value => {
@@ -227,25 +206,25 @@ class AddSearch extends React.Component {
                         <Divider>CONFLUENCE filters</Divider>
                     </Form.Item>
 
-                    <Form.Item label='Use CQL'>
+                    <Form.Item label='Use CQL' name='confPageCQL'>
                         <Switch
                             checkedChildren={<CheckOutlined />}
                             unCheckedChildren={<CloseOutlined />}
                             defaultChecked={this.state.confBoxChecked}
                             onChange={(e) => {
                                 this.setState({
-                                    confCQLRequest: '',
+                                    cql: '',
                                     confBoxChecked: e
                                 })
                             }}
                         />
                     </Form.Item>
 
-                    <Form.Item label='CQL request'>
+                    <Form.Item label='CQL request' name='confCQL'>
                         <Input
                             placeholder='enter CQL ...'
                             onChange={e => {
-                                this.setState({ confCQLRequest: e.target.value });
+                                this.setState({ cql: e.target.value });
                             }} />
                     </Form.Item>
                 </>);
@@ -265,7 +244,7 @@ class AddSearch extends React.Component {
                             defaultChecked={this.state.confBoxChecked}
                             onChange={(e) => {
                                 this.setState({
-                                    confJQLRequest: '',
+                                    cql: '',
                                     confBoxChecked: e
                                 })
                             }}
@@ -278,35 +257,15 @@ class AddSearch extends React.Component {
                             onChange={(value) => {
                                 if (!!value) {
                                     this.setState({
-                                        confIssuesDate: value.format('YYYY-MM-DD')
+                                        confPagesDate: value.format('YYYY-MM-DD')
                                     });
                                 } else {
                                     this.setState({
-                                        confIssuesDate: ''
+                                        confPagesDate: ''
                                     });
                                 }
                             }}
                         />
-                    </Form.Item>
-
-                    <Form.Item label='Status of issue'>
-                        <Select
-                            placeholder='choose status'
-                            onChange={value => {
-                                this.setState({
-                                    confIssuesStatus: value
-                                });
-                            }}
-                        >
-                            <Option key='Open'>Open</Option>
-                            <Option key='In process'>In process</Option>
-                            <Option key='Done'>Done</Option>
-                            <Option key='To Do'>To Do</Option>
-                            <Option key='Cancelled'>Cancelled</Option>
-                            <Option key='Rejected'>Rejected</Option>
-                            <Option key='In Review'>In Review</Option>
-                            <Option key='Approved'>Approved</Option>
-                        </Select>
                     </Form.Item>
                 </>
             );
@@ -325,7 +284,7 @@ class AddSearch extends React.Component {
                     <Divider>FTP filters</Divider>
                 </Form.Item>
 
-                <Form.Item label='Extention' >
+                <Form.Item label='Extention' name='ftpFileExt' >
                     <Select
                         mode="multiple"
                         placeholder='select file extention'
@@ -340,7 +299,7 @@ class AddSearch extends React.Component {
                     </Select>
                 </Form.Item>
 
-                <Form.Item label='Choose file date'>
+                <Form.Item label='Choose file date' name='ftpfileDate'>
                     <DatePicker
                         placeholder='enter date'
                         onChange={(value) => {
@@ -390,31 +349,9 @@ class AddSearch extends React.Component {
         }).then(res => {
             if (res.status === 200) {
                 //Return states to begin
-                this.setState({
-                    jiraChecked: false,
-                    jiraBoxChecked: false,
-                    jiraIssuesDate: "",
-                    jiraJQLRequest: "",
-                    jiraIssuesStatus: "",
-
-                    ftpChecked: false,
-                    ftpDirPath: "",
-                    ftpExtention: [],
-                    ftpDate: "",
-                    checkedExtensions: [],
-
-                    confChecked: false,
-                    confBoxChecked: false,
-                    confIssuesDate: "",
-                    confCQLRequest: "",
-                    confIssuesStatus: "",
-
-                    keywords: [],
-
-                    checkedFilters: [],
-                    selectedSources: []
-                })
+                this.resetFieldsData();
                 alert('Request sended');
+                this.props.form.resetFields();
             }
             else {
                 alert('Anything went wrong!');
@@ -422,62 +359,101 @@ class AddSearch extends React.Component {
         });
     };
 
-    form = Form.useForm;
+    resetFieldsData = () => {
+        this.setState({
+            jiraChecked: false,
+            jiraBoxChecked: false,
+            jiraIssuesDate: "",
+            jiraJQLRequest: "",
+            jiraIssuesStatus: "",
+
+            ftpChecked: false,
+            ftpDirPath: "",
+            ftpExtention: [],
+            ftpDate: "",
+            checkedExtensions: [],
+
+            confChecked: false,
+            confBoxChecked: false,
+            confPagesDate: "",
+            cql: "",
+
+            keywords: [],
+
+            checkedFilters: [],
+            selectedSources: []
+        });
+    }
+
+    handleCancel = () => {
+        this.resetFieldsData();
+        this.props.setIsModalVisible(false);
+        this.props.form.resetFields();
+    }
 
     render() {
         return (
-            <Form
-                layout='vertical'
-                ref={this.formRef}
-                name="control-ref"
-                onFinish={this.onFinish}
-            >
-                <Divider />
-                <Form.Item label="Sources">
-                    <Select
-                        mode="multiple"
-                        placeholder="Choose a sources"
-                        onChange={this.onSourcesChange}
-                        allowClear
-                    >
-                        {this.state.sources.map((s, i) => {
-                            return <Option key={i.toString(36) + i} value={JSON.stringify(s)}>
-                                {s.credentials.id}
-                            </Option>
-                        })}
-                    </Select>
-                </Form.Item>
+            <Modal title="New request" visible={this.props.isModalVisible} onCancel={this.handleCancel} footer={[
+                <Button key='back'
+                    onClick={this.handleCancel}>
+                    Cancel
+                </Button>,
+                <Button key='Ok' type="primary" onClick={this.onFinish}>
+                    Send
+                </Button>
+            ]}>
 
-                {this.state.checkedFilters === null ? '' : this.state.checkedFilters.map(v => this.shawFilters(v.value))}
-
-                {this.state.checkedFilters === null
-                    ? ""
-                    : this.state.checkedFilters.map((e) => this.shawFilters(e))}
-
-                <Form.Item
-                    label="Request"
-                    name='reqKeywords'
-                    rules={[{
-                        required: true,
-                        message: 'Please input your request!'
-                    }]}
+                <Form
+                    layout='vertical'
+                    form={this.props.form}
+                    name="control-ref"
+                    onFinish={this.onFinish}
                 >
-                    <Input
-                        placeholder='enter request'
-                        onChange={e => {
-                            this.setState({
-                                keywords: e.target.value.trim().split(" ")
-                            });
-                        }}
-                    />
-                </Form.Item>
+                    <Divider />
+                    <Form.Item label="Sources" name='sourceSelector'>
+                        <Select
+                            mode="multiple"
+                            placeholder="Choose a sources"
+                            onChange={this.onSourcesChange}
+                            allowClear
+                        >
+                            {this.state.sources.map((s, i) => {
+                                return <Option key={i.toString(36) + i} value={JSON.stringify(s)}>
+                                    {s.credentials.id}
+                                </Option>
+                            })}
+                        </Select>
+                    </Form.Item>
 
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                        Send
-                    </Button>
-                </Form.Item>
-            </Form>
+                    {this.state.checkedFilters === null ? '' : this.state.checkedFilters.map(v => this.shawFilters(v.value))}
+
+                    {this.state.checkedFilters === null
+                        ? ""
+                        : this.state.checkedFilters.map((e) => this.shawFilters(e))}
+
+                    <Form.Item
+                        label="Request"
+                        name='reqKeywords'
+                        rules={[{
+                            required: true,
+                            message: 'Please input your request!'
+                        }]}
+                    >
+                        <Input
+                            placeholder='enter request'
+                            onChange={e => {
+                                this.setState({
+                                    keywords: e.target.value.trim().split(" ")
+                                });
+                            }}
+                        />
+                    </Form.Item>
+
+                    <Form.Item>
+
+                    </Form.Item>
+                </Form>
+            </Modal>
         );
     }
 }

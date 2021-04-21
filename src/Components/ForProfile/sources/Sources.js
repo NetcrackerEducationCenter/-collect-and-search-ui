@@ -31,24 +31,19 @@ function Sources(props) {
     const isAdmin = () => {
         if (roles.includes('UIadminROLE')) {
             return (
-                <Row>
+                <Row style={{ marginTop: '5%' }}>
                     <Col xs={8} offset={4}>
-                        <Button
-                            block
+                        <Button block ghost
                             type='primary'
-                            ghost
-                            //     onClick={() => props.crud('add')}
                             onClick={() => handleShow(config.ADD)}
                         >
-                            <PlusOutlined />Add Source
+                            Add Source
                         </Button>
                     </Col>
 
                     <Col xs={8} >
-                        <Button
-                            block
+                        <Button block ghost
                             type='primary'
-                            ghost
                             href='https://netcracker-collect-and-search.tk:8443/auth/'
                         >
                             Edit Users
@@ -86,7 +81,7 @@ function Sources(props) {
                 key: 'operations',
                 render: (text, record) =>
                     <Space size='middle'>
-                        <Button type='primary' onClick={() => {
+                        <Button type='primary' ghost onClick={() => {
                             props.crud(record, config.UPDATE);
                         }}> update </Button>
                         <Button
@@ -119,7 +114,7 @@ function Sources(props) {
         const tableData = props.sources.map((s, i) => {
             return {
                 key: i,
-                source: s.credentials.id,
+                source: s.credentials.url,
                 type: s.source
             }
         });

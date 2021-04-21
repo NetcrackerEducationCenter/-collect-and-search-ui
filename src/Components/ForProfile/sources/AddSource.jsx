@@ -2,65 +2,88 @@ import axios from 'axios';
 import { config } from '../../../Config';
 import React, { useState } from "react";
 import { Button, Form, Input, message, Select } from 'antd'
-import { Option } from 'antd/lib/mentions';
+import Modal from 'antd/lib/modal/Modal';
 
 function AddSource(props) {
+    let source = '';
+    // if (props.action === config.UPDATE) {
+    //     source = props.sourceRecord.type.toUpperCase();
+    // }
 
-    const [sourceType, setSourceType] = useState('JIRA');
-    const [validated, setvalidated] = useState(false);
-    const [jiraSource, setjiraSource] = useState({});
-    const [ftpSource, setftpSource] = useState({});
-    const [confSource, setconfSource] = useState({});
+    const [sourceType, setSourceType] = useState(source);
+
+    // const [sourceType, setSourceType] = useState(props.sourceRecord.type.toUpperCase());
+    const [credentials, setcredentials] = useState({});
+    const [form] = Form.useForm();
 
     const onFinish = () => {
-        addSourceRequest();
-        props.form.resetFields();
+        let formData = form.getFieldsValue();
+        addSourceRequest(formData);
+        onClose();
+        // props.form.resetFields();
     }
 
     const onFinishUpdate = () => {
-        setSourceType(props.sourceRecord.type);
+        setSourceType(props.sourceRecord.type.toUpperCase());
         addSourceRequest();
-        props.form.resetFields();
+        // props.form.resetFields();
+        onClose();
     }
 
     const getCurrentSourceFildes = () => {
+
         if (props.action === config.UPDATE) {
+            // setSourceType(props.sourceRecord.type.toUpperCase());
+            let sourceType = props.sourceRecord.type.toUpperCase();
             if (sourceType === 'JIRA') {
-                jiraSource.url = props.sourceRecord.source
+                credentials.url = props.sourceRecord.source
                 return (
                     <>
 
-                        <Form.Item label='URL' name='jiraURL' rules={[{ required: true, message: 'Please write JIRA URL' }]} >
-                            <Input placeholder='enter URL' defaultValue={props.sourceRecord.source} disabled />
+                        <Form.Item label='URL' name='url' >
+                            <Input placeholder='enter URL' />
                         </Form.Item>
 
-                        <Form.Item label='Login' name='jiraLogin' rules={[{ required: true, message: 'Please write JIRA accaunt\'s login' }]}>
-                            <Input placeholder='enter jira accaunts login' onChange={(e) => { jiraSource.login = e.target.value }} />
+                        <Form.Item label='Login' name='login' rules={[{ required: true, message: 'Please write JIRA accaunt\'s login' }]}>
+                            <Input placeholder='enter jira accaunts login' onChange={(e) => { credentials.login = e.target.value }} />
                         </Form.Item>
 
-                        <Form.Item label='Password' name='jiraPassword' rules={[{ required: true, message: 'Please write JIRA accaunt\'s password' }]} >
-                            <Input placeholder='enter password' onChange={(e) => { jiraSource.password = e.target.value }} />
+                        <Form.Item label='Password' name='password' rules={[{ required: true, message: 'Please write JIRA accaunt\'s password' }]} >
+                            <Input placeholder='enter password' onChange={(e) => { credentials.password = e.target.value }} />
                         </Form.Item>
                     </>
                 );
             } else if (sourceType === 'FTP') {
-                ftpSource.server = props.sourceRecord.source
+                credentials.server = props.sourceRecord.source
                 return (
                     <>
-                        <Form.Item label='Server' name='ftpServer' rules={[{ required: true, message: 'Please write your FTP server' }]}>
-                            <Input placeholder='enter FTP server ip address' defaultValue={props.sourceRecord.source} disabled />
+                        <Form.Item label='Server' name='server'>
+                            <Input placeholder='enter FTP server ip address' />
                         </Form.Item>
 
-                        <Form.Item label='Port' name='ftpPort' rules={[{ required: true, message: 'Please write your FTP port' }]} >
-                            <Input placeholder='enter port' onChange={(e) => { ftpSource.port = e.target.value }} />
+                        <Form.Item label='Port' name='port' rules={[{ required: true, message: 'Please write your FTP port' }]} >
+                            <Input placeholder='enter port' onChange={(e) => { credentials.port = e.target.value }} />
                         </Form.Item>
 
-                        <Form.Item label='Login' name='ftpLogin' rules={[{ required: true, message: 'Please write your FTP login' }]} >
-                            <Input placeholder='enter login' onChange={(e) => { ftpSource.login = e.target.value }} />
+                        <Form.Item label='Login' name='login' rules={[{ required: true, message: 'Please write your FTP login' }]} >
+                            <Input placeholder='enter login' onChange={(e) => { credentials.login = e.target.value }} />
                         </Form.Item>
 
-                        <Form.Item label='Password' name='ftpPassword' rules={[{ required: true, message: 'Please write your FTP password' }]} >
-                            <Input placeholder='enter password' onChange={(e) => { ftpSource.password = e.target.value }} />
+                        <Form.Item label='Password' name='password' rules={[{ required: true, message: 'Please write your FTP password' }]} >
+                            <Input placeholder='enter password' onChange={(e) => { credentials.password = e.target.value }} />
+                        </Form.Item>
+                    </>
+                );
+            } else if (sourceType === 'CONFLUENCE') {
+                credentials.url = props.sourceRecord.source
+                return (
+                    <>
+                        <Form.Item label='URL' name='url'>
+                            <Input placeholder='enter URL' />
+                        </Form.Item>
+
+                        <Form.Item label='Token' name='token' rules={[{ required: true, message: 'Please write your Confluence token' }]}>
+                            <Input placeholder='enter Confluence token' onChange={(e) => { credentials.password = e.target.value }} />
                         </Form.Item>
                     </>
                 );
@@ -69,16 +92,16 @@ function AddSource(props) {
         if (sourceType === 'JIRA') {
             return (
                 <>
-                    <Form.Item label='URL' name='jiraURL' rules={[{ required: true, message: 'Please write JIRA URL' }]} >
-                        <Input placeholder='enter URL' onChange={(e) => { jiraSource.id = 'https://' + e.target.value }} addonBefore='https://' />
+                    <Form.Item label='URL' name='url' rules={[{ required: true, message: 'Please write JIRA URL' }]} >
+                        <Input placeholder='enter URL' onChange={(e) => { credentials.url = e.target.value }} />
                     </Form.Item>
 
-                    <Form.Item label='Login' name='jiraLogin' rules={[{ required: true, message: 'Please write JIRA accaunt\'s login' }]}>
-                        <Input placeholder='enter jira accaunts login' onChange={(e) => { jiraSource.login = e.target.value }} />
+                    <Form.Item label='Login' name='login' rules={[{ required: true, message: 'Please write JIRA accaunt\'s login' }]}>
+                        <Input placeholder='enter jira accaunts login' onChange={(e) => { credentials.login = e.target.value }} />
                     </Form.Item>
 
-                    <Form.Item label='Password' name='jiraPassword' rules={[{ required: true, message: 'Please write JIRA accaunt\'s password' }]} >
-                        <Input placeholder='enter password' onChange={(e) => { jiraSource.password = e.target.value }} />
+                    <Form.Item label='Password' name='password' rules={[{ required: true, message: 'Please write JIRA accaunt\'s password' }]} >
+                        <Input placeholder='enter password' onChange={(e) => { credentials.password = e.target.value }} />
                     </Form.Item>
 
                 </>
@@ -86,20 +109,34 @@ function AddSource(props) {
         } else if (sourceType === 'FTP') {
             return (
                 <>
-                    <Form.Item label='Server' name='ftpServer' rules={[{ required: true, message: 'Please write your FTP server' }]}>
-                        <Input placeholder='enter FTP server ip address' onChange={(e) => { ftpSource.id = e.target.value }} />
+                    <Form.Item label='Server' name='server' rules={[{ required: true, message: 'Please write your FTP server' }]}>
+                        <Input placeholder='enter FTP server ip address' onChange={(e) => { credentials.server = e.target.value }} />
                     </Form.Item>
 
-                    <Form.Item label='Port' name='ftpPort' rules={[{ required: true, message: 'Please write your FTP port' }]} >
-                        <Input placeholder='enter port' onChange={(e) => { ftpSource.port = e.target.value }} />
+                    <Form.Item label='Port' name='port' rules={[{ required: true, message: 'Please write your FTP port' }]} >
+                        <Input placeholder='enter port' onChange={(e) => { credentials.port = e.target.value }} />
                     </Form.Item>
 
-                    <Form.Item label='Login' name='ftpLogin' rules={[{ required: true, message: 'Please write your FTP login' }]} >
-                        <Input placeholder='enter login' onChange={(e) => { ftpSource.login = e.target.value }} />
+                    <Form.Item label='Login' name='login' rules={[{ required: true, message: 'Please write your FTP login' }]} >
+                        <Input placeholder='enter login' onChange={(e) => { credentials.login = e.target.value }} />
                     </Form.Item>
 
-                    <Form.Item label='Password' name='ftpPassword' rules={[{ required: true, message: 'Please write your FTP password' }]} >
-                        <Input placeholder='enter password' onChange={(e) => { ftpSource.password = e.target.value }} />
+                    <Form.Item label='Password' name='password' rules={[{ required: true, message: 'Please write your FTP password' }]} >
+                        <Input placeholder='enter password' onChange={(e) => { credentials.password = e.target.value }} />
+                    </Form.Item>
+                </>
+            );
+        } else if (sourceType === 'CONFLUENCE') {
+            return (
+                <>
+                    <Form.Item label='URL' name='url' rules={[{ required: true, message: 'Please write Confluence URL' }]} >
+                        <Input placeholder='enter URL' onChange={(e) => { credentials.url = e.target.value }} />
+                    </Form.Item>
+
+                    <Form.Item label='Token' name='token' rules={[{ required: true, message: 'Please write your Confluence token' }]}
+                        onChange={(e) => { credentials.id = 'https://' + e.target.value }}
+                    >
+                        <Input placeholder='enter Confluence token' />
                     </Form.Item>
                 </>
             );
@@ -107,88 +144,141 @@ function AddSource(props) {
 
     }
 
-    const addSourceRequest = () => {
-        let msg = {
-            action: props.action,
-            source: sourceType,
-            ftpSource,
-            jiraSource,
-            confSource
+    const onClose = () => {
+        setSourceType('');
+        setcredentials({});
+        form.resetFields();
+        props.setShowModal(false);
+
+
+        // props.setSourceRecord({});
+    }
+
+    const addSourceRequest = (formData) => {
+        let msg;
+        if (props.action === config.ADD) {
+            msg = {
+                action: props.action,
+                source: sourceType.toUpperCase(),
+                credentials: {
+                    url: 'https://' + formData.url,
+                    server: formData.server,
+                    port: formData.port,
+                    login: formData.login,
+                    password: formData.password,
+                    token: formData.token
+                }
+            }
+        } else {
+            msg = {
+                action: props.action,
+                source: props.sourceRecord.type.toUpperCase(),
+                credentials: {
+                    url: 'https://' + formData.url,
+                    server: formData.server,
+                    port: formData.port,
+                    login: formData.login,
+                    password: formData.password,
+                    token: formData.token
+                }
+            }
         }
         message.info(JSON.stringify(msg));
         axios.post(`${config.url}/api/sources/push`, msg).then(res => {
             //TODO Написать обработчик или валидацию
-            props.showDrawer(false);
         });
+
     }
 
     if (props.action === config.ADD) {
         return (
-            <Form
-                layout='vertical'
-                form={props.form}
-                name="control-ref"
-                onFinish={onFinish}
+            <Modal
+                title="Create a new source"
+                width='70%'
+                centered
+                onCancel={onClose}
+                visible={props.showModal}
+                bodyStyle={{ paddingBottom: 80 }}
             >
+                <Form
+                    layout='vertical'
+                    form={form}
+                    name="control-ref"
+                    onFinish={onFinish}
+                >
 
-                <Form.Item label='Source type' name='selector' rules={[{ required: true, message: `Select what kind of source you want to ${props.type}` }]}>
-                    <Select
-                        defaultValue='JIRA'
-                        placeholder="Choose a sources"
-                        onChange={(value) => {
-                            setSourceType(value);
-                        }}
-                        allowClear
-                    >
-                        <Option key='JIRA' >JIRA</Option>
-                        <Option key='FTP' >FTP</Option>
-                        <Option key='CONFLUENCE' >CONFLUENCE</Option>
-                    </Select>
-                </Form.Item>
+                    <Form.Item label='Source type' name='selector' rules={[{ required: true, message: `Select what kind of source you want to ${props.action}` }]}>
+                        <Select
+                            placeholder="Choose a sources"
+                            onChange={(value) => {
+                                setSourceType(value);
+                            }}
+                            allowClear
+                        >
+                            <Select.Option value='JIRA' >JIRA</Select.Option>
+                            <Select.Option value='FTP' >FTP</Select.Option>
+                            <Select.Option value='CONFLUENCE' >CONFLUENCE</Select.Option>
+                        </Select>
+                    </Form.Item>
 
-                {getCurrentSourceFildes()}
+                    {getCurrentSourceFildes()}
 
-                <Form.Item>
-                    <Button type='primary' htmlType='submit' >Add Source</Button>
-                </Form.Item>
+                    <Form.Item>
+                        <Button type='primary' htmlType='submit' >Add Source</Button>
+                    </Form.Item>
 
-            </Form>
+                </Form>
+            </Modal>
         );
     }
 
     if (props.action === config.UPDATE) {
         return (
-            <Form
-                layout='vertical'
-                form={props.form}
-                name="control-ref"
-                onFinish={onFinishUpdate}
+            <Modal
+                title="Create a new source"
+                width='70%'
+                centered
+                onCancel={onClose}
+                visible={props.showModal}
+                bodyStyle={{ paddingBottom: 80 }}
             >
+                <Form
+                    layout='vertical'
+                    form={form}
+                    name="control-ref"
+                    onFinish={onFinishUpdate}
+                    initialValues={{
+                        selector: props.sourceRecord.type.toUpperCase(),
+                        url: props.sourceRecord.source,
+                        server: props.sourceRecord.source
+                    }}
+                >
 
-                <Form.Item label='Source type' rules={[{ required: true, message: `Select what kind of source you want to ${props.action}` }]}>
-                    <Select
-                        placeholder="Choose a sources"
-                        onChange={(value) => {
-                            setSourceType(value);
-                        }}
-                        defaultValue={props.sourceRecord.type}
-                        disabled
-                    >
-                        <Option key='JIRA' >JIRA</Option>
-                        <Option key='FTP' >FTP</Option>
-                        <Option key='CONFLUENCE' >CONFLUENCE</Option>
-                    </Select>
-                </Form.Item>
+                    <Form.Item label='Source type' name='selector'>
+                        <Select
+                            placeholder="Choose a sources"
+                            onChange={(value) => {
+                                message.info(value);
+                            }}
+                            disabled
+                        >
+                            <Select.Option value='JIRA' >JIRA</Select.Option>
+                            <Select.Option value='FTP' >FTP</Select.Option>
+                            <Select.Option value='CONFLUENCE' >CONFLUENCE</Select.Option>
+                        </Select>
+                    </Form.Item>
 
-                {getCurrentSourceFildes()}
+                    {getCurrentSourceFildes()}
 
-                <Form.Item>
-                    <Button type='primary' htmlType='submit' >Update Source</Button>
-                </Form.Item>
+                    <Form.Item>
+                        <Button type='primary' htmlType='submit' >Update Source</Button>
+                    </Form.Item>
 
-            </Form>
+                </Form>
+            </Modal>
         );
     }
 }
+
 
 export default AddSource;

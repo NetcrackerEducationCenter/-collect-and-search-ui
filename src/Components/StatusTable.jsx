@@ -1,122 +1,146 @@
 import React, { useState } from 'react'
-import { Container, Nav, Pagination, Row, Tab, Table } from 'react-bootstrap';
+import { Table, Input, Button, Space, Tag } from 'antd';
+import Highlighter from 'react-highlight-words';
+import { SearchOutlined } from '@ant-design/icons';
+import Text from 'antd/lib/typography/Text';
+import { Link } from 'react-router-dom';
 
 function StatusTable(props) {
 
     const statusList = ['NOT_STARTED', 'IN_PROCESS', 'COMPLETED'];
 
     const [active, setactive] = useState(0);
+    const [searchedColumn, setsearchedColumn] = useState('');
+    const [searchText, setsearchText] = useState('');
+    let searchInput;
 
-    const getContent = (i, v) => {
-        return (
-            <>
-                <td>{i + 1}</td>
-                <td>{v.keywords.map(e => { return ' ' + e })}</td>
-                <td>{v.date}</td>
-                <td>{v.status}</td>
-            </>
-        )
-    }
-
-    const createTable = (i, n) => {
-        return (
-
-            <Table responsive="sm">
-                <thead>
-                    <tr>
-                        <th>№</th>
-                        <th>Request</th>
-                        <th>Date added</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {
-                        props.statuses.slice(i, n).map(v => {
-                            if (v.message.status === statusList[2]) {
-
-                                if (props.requestId === v.message.requestId) {
-                                    return (
-                                        <tr style={{ border: 4, borderColor: 'blue', backgroundColor: 'RGB(0, 136, 255)' }} key={v.message.requestId}
-                                            onClick={async () => { props.setRequestId(v.message.requestId, 'first') }} >
-                                            {getContent(i++, v.message)}
-                                        </tr>
-                                    );
-                                }
-
-                                else {
-                                    return (
-                                        <tr style={{ backgroundColor: 'RGB(187, 223, 255)' }} key={v.message.requestId}
-                                            onClick={async () => { props.setRequestId(v.message.requestId, 'first') }} >
-                                            {getContent(i++, v.message)}
-                                        </tr>
-                                    );
-                                }
-
-                            } else {
-                                return (
-                                    <tr className='table-borderless' key={v.message.requestId} >
-                                        {getContent(i++, v.message)}
-                                    </tr>
-                                );
-                            }
-                        })
-                    }
-                </tbody>
-
-            </Table>
-        );
-    }
-
-    let tabCount = parseInt(props.statuses.length / 5) + 1;
-    let items = [];
-    let tabItem = [];
-    for (let i = 0; i < tabCount; i++) {
-        tabItem.push(i);
-    }
-    for (let i = 1; i <= tabCount; i++) {
-        items.push(
-            <Nav.Item key={i}>
-                <Nav.Link eventKey={i} onClick={()=>setactive(i)}>
-                    <Pagination.Item
-                        key={i}
-                        active={i === active}
+    const getColumnSearchProps = dataIndex => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+            <div style={{ padding: 8 }}>
+                <Input
+                    ref={node => {
+                        searchInput = node;
+                    }}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                    style={{ width: 188, marginBottom: 8, display: 'block' }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{ width: 90 }}
+                        ghost
                     >
-                        {i}
-                    </Pagination.Item>
-                </Nav.Link>
-            </Nav.Item>
-        );
-    }
-    return (
-        <Container >
-            <Tab.Container id="left-tabs-example" defaultActiveKey="first" >
+                        Search
+              </Button>
+                    <Button onClick={() => handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+                        Reset
+              </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            confirm({ closeDropdown: false });
+                            setsearchText(selectedKeys[0]);
+                            setsearchedColumn(dataIndex);
+                        }}
+                    >
+                        Filter
+              </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+        onFilter: (value, record) =>
+            record[dataIndex]
+                ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+                : '',
+        // onFilterDropdownVisibleChange: visible => {
+        //     if (visible) {
+        //         setTimeout(() => searchInput.select(), 100);
+        //     }
+        // },
+        render: text =>
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                text
+            ),
+    });
 
-                <Row className='justify-content-center'>
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+        setsearchText(selectedKeys[0]);
+        setsearchedColumn(dataIndex);
+    };
 
-                    <Tab.Content>
-                        {tabItem.map((item, index) => {
-                            return (
-                                <Tab.Pane key={index} eventKey={item+1}>
-                                    {createTable(item * 5, item * 5 + 5)}
-                                </Tab.Pane>
-                            );
-                        })}
-                    </Tab.Content>
+    const handleReset = clearFilters => {
+        clearFilters();
+        setsearchText('');
+    };
 
-                </Row>
-                
-                <Row className='justify-content-center'>
-                    <Nav variant="tabs" className="flex-column">
-                        <Pagination>
-                            {items}
-                        </Pagination>
-                    </Nav>
-                </Row>
-            </Tab.Container>
-        </Container>
-    );
+
+    const columns = [
+        {
+            width: 150,
+            title: 'Request',
+            dataIndex: 'request',
+            key: 'request'
+        },
+        {
+            width: 150,
+            title: 'Keywords',
+            dataIndex: 'keywords',
+            key: 'keywords',
+            ...getColumnSearchProps('keywords'),
+            render: (text, record) => <Text>{record.keywords}</Text>
+        },
+        {
+            width: 150,
+            title: 'Added date',
+            dataIndex: 'date',
+            key: 'date',
+            sorter: (a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf(),
+            sortDirections: ['descend', 'ascend'],
+        },
+        {
+            width: 150,
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: (text, record) => {
+                if (record.status === 'COMPLETED') {
+                    return (
+                        <Tag color='green'><Link to={`/workpage/${record.request}`} >{record.status}</Link></Tag>
+                    );
+                } else {
+                    return <Tag color='blue'>{record.status}</Tag>
+                }
+            }
+        },
+    ];
+
+    const tableData = props.statuses.map((s, i) => {
+        return {
+            key: i,
+            request: s.message.requestId,
+            status: s.message.status,
+            keywords: s.message.keywords.map((v, i) => { return v + ' ' }),
+            date: s.message.date
+        }
+    })
+
+    return <Table pagination={{ pageSize: props.pageSize, hideOnSinglePage: true, position: ['bottomCenter'] }} size={props.size} scroll={{ x: 500 }} columns={columns} dataSource={tableData} />
 }
 
 export default StatusTable;

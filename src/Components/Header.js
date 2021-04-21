@@ -16,13 +16,15 @@ import axios from "axios";
 // Vars
 import React, { useState, useEffect } from "react";
 import { Container, Navbar, Nav, } from "react-bootstrap";
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import StatusButton from '../Components/StatusButton';
 import ModalRequests from './ModalRequests';
 import { config } from '../Config.js';
 import { keycloak, webSocket } from "../index";
 import { Button, Modal, Form, message } from "antd";
 import AddSearch from './ForWorkpage/AddSearch';
+import StatusTable from './StatusTable';
+import Text from 'antd/lib/typography/Text';
 
 function HeaderFunc(props) {
 
@@ -65,23 +67,7 @@ function HeaderFunc(props) {
 
 
 
-    /**
-     * Get report from kafka
-     * @param {*} id report Id
-     */
-    const getReport = (id, time) => {
-        axios.post(`${config.url}/api/report/get`, {
-            requestId: id,
-            time: time
-        }).then(res => {
-            if (!res.data) {
-                getReport(id, 'second');
-            } else {
-                setReqId(res.data.requestId);
-                setReport(res.data);
-            }
-        });
-    }
+
 
     const getRequestStatuses = async () => {
         axios.post(`${config.url}/api/status/get`).then((res) => {
@@ -110,18 +96,20 @@ function HeaderFunc(props) {
             <Navbar expand="md" bg="dark" variant="dark"> {/* foxed='top' */}
                 <Container>
 
-                    <Navbar.Brand href="/">
-                        <img
-                            src={logo}
-                            height="30"
-                            width="30"
-                            className="d-inline-block align-top"
-                            alt="Logo"
-                        />Collect and Search
+                    <Navbar.Brand>
+                        <Link to='/'>
+
+                            <img
+                                src={logo}
+                                height="30"
+                                width="30"
+                                className="d-inline-block align-top"
+                                alt="Logo"
+                            /><Text style={{ color: 'white' }}>Collect and Search</Text>
+                        </Link>
                     </Navbar.Brand>
 
                     <Nav className="mr-auto">
-                        <Nav.Link href='/workpage'>Workpage</Nav.Link>
                     </Nav>
 
                     <Button ghost
@@ -135,16 +123,19 @@ function HeaderFunc(props) {
                     </Button>
 
                     <Button ghost onClick={changeState} >
-                        <StatusButton isEmpty={modalEmpty} />
+                        Requestes
                     </Button>
 
-                    <Button variant="outline-info" href="/profile" className='bg-transparent border-0' >
-                        <img
-                            src={userLogo}
-                            alt="user"
-                            height="30"
-                            width="30"
-                        />
+                    <Button variant="outline-info" className='bg-transparent border-0' >
+                        <Link to='/profile'>
+
+                            <img
+                                src={userLogo}
+                                alt="user"
+                                height="30"
+                                width="30"
+                            />
+                        </Link>
                     </Button>
 
                     <Button danger type='primary' ghost
@@ -157,31 +148,35 @@ function HeaderFunc(props) {
                 </Container>
             </Navbar>
 
-            <Router>
-                <Switch>
-                    <Route exact path="/" component={Home} />
-                    <Route exact path="/history" component={History} />
-                    {/* <Route exact path="/profile" component={Profile} /> */}
-                    <Route exact path="/profile" render={(props) =>
-                        <Profile
-                            sources={sources}
-                        />
-                    }
 
+            <Switch>
+                <Route exact path="/" component={Home} />
+                <Route exact path="/history" component={History} />
+                <Route exact path="/profile" render={(props) =>
+                    <Profile
+                        {...props}
+                        report={report}
+                        statuses={reqStatuses}
+                        requestId={reqId}
+                        // setRequestId={getReport}
+                        sources={sources}
                     />
-                    <Route exact path="/workpage" render={(props) =>
-                        <WorkPage
-                            {...props}
-                            report={report}
-                            statuses={reqStatuses}
-                            requestId={reqId}
-                            setRequestId={getReport}
-                            sources={sources}
-                        />
-                    }
+                }
+
+                />
+                <Route exact path="/workpage/:requestId" render={(props) =>
+                    <WorkPage
+                        {...props}
+                        report={report}
+                        statuses={reqStatuses}
+                        requestId={reqId}
+                        // setRequestId={getReport}
+                        sources={sources}
                     />
-                </Switch>
-            </Router>
+                }
+                />
+            </Switch>
+
 
 
             <AddSearch
@@ -191,18 +186,19 @@ function HeaderFunc(props) {
 
             />
 
-            <Container >
-                <ModalRequests
-                    show={modalActive}
-                    setActive={setActive}
+            <Modal
+                width='70%'
+                title='Last requestes'
+                visible={modalActive}
+                footer={false}
+                onCancel={() => setModalActive(false)}
+            >
+                <StatusTable {...props}
+                    pageSize='5'
+                    size='small'
                     statuses={reqStatuses}
-                    requestId={report.requestId}
-                    setRequestId={getReport}
-                    onHide={() => setModalActive(false)}
                 />
-
-
-            </Container>
+            </Modal>
         </div>
     );
 }

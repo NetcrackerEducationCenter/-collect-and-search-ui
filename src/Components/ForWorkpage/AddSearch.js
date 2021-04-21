@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Button, Select, Switch, DatePicker, Divider } from "antd";
+import { Form, Input, Button, Select, Switch, DatePicker, Divider, message } from "antd";
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import axios from "axios";
 import { config } from "../../Config";
@@ -73,7 +73,13 @@ class AddSearch extends React.Component {
     formRef = React.createRef();
 
     onSourcesChange = (value) => {
-        const vs = value.map(e => { return JSON.parse(e) });
+        const vs = value.map(e => { 
+            let data = {
+                source: JSON.parse(e).source,
+                id: JSON.parse(e).credentials.id
+            }
+            return   data;
+        });
         this.setState({ selectedSources: vs });
         let filters = [];
         vs.forEach(e => {
@@ -350,7 +356,7 @@ class AddSearch extends React.Component {
             if (res.status === 200) {
                 //Return states to begin
                 this.resetFieldsData();
-                alert('Request sended');
+                message.info('Request sended');
                 this.props.form.resetFields();
             }
             else {
@@ -393,15 +399,17 @@ class AddSearch extends React.Component {
 
     render() {
         return (
-            <Modal title="New request" visible={this.props.isModalVisible} onCancel={this.handleCancel} footer={[
-                <Button key='back'
-                    onClick={this.handleCancel}>
-                    Cancel
+            <Modal title="New request" visible={this.props.isModalVisible} onCancel={this.handleCancel}
+                footer={[
+                    <Button key='back' danger ghost
+                        onClick={this.handleCancel}>
+                        Cancel
                 </Button>,
-                <Button key='Ok' type="primary" onClick={this.onFinish}>
-                    Send
+                    <Button key='Ok' type="primary" ghost onClick={this.onFinish}>
+                        Send
                 </Button>
-            ]}>
+                ]}
+            >
 
                 <Form
                     layout='vertical'

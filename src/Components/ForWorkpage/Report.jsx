@@ -45,7 +45,7 @@ function Report(props) {
                             placement='top'
                             overlay={
                                 <Popover id={i}>
-                                    <Popover.Title as="h3">Founded from</Popover.Title>
+                                    <Popover.Title as="h3">Found in</Popover.Title>
                                     <Popover.Content>
                                         <a href={v.dataSource}>
                                             {v.dataSource}
@@ -61,7 +61,7 @@ function Report(props) {
                         </OverlayTrigger>
                     );
                 })}
-                <Button type='primary' onClick={downloadTxtFile} >Download text</Button>
+                <Button type='primary' ghost onClick={downloadTxtFile} >Download text</Button>
             </Container>
         );
     } else if (!!props.requestId) {

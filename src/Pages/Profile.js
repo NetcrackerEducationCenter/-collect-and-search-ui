@@ -1,41 +1,37 @@
 import React, { useState } from 'react';
 import UserInfo from '../Components/ForProfile/UserInfo';
+// Icons
+import { HistoryOutlined, SlidersOutlined } from '@ant-design/icons';
 
-import { Button, Col, Form, message, Row } from 'antd';
+import { Button, Col, Form, message, Row, Tabs } from 'antd';
 import Sources from '../Components/ForProfile/sources/Sources';
 import AddSource from '../Components/ForProfile/sources/AddSource';
 import { config } from '../Config';
 import Modal from 'antd/lib/modal/Modal';
 import { Content } from 'antd/lib/layout/layout';
+import StatusTable from '../Components/StatusTable';
+
+
+const { TabPane } = Tabs;
 
 function Profile(props) {
 
-    const [showDrawer, setShowDrawer] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [action, setAction] = useState(config.ADD);
     const [sourceRecord, setSourceRecord] = useState({});
-    const [form] = Form.useForm();
-
 
     const crud = (record, action) => {
         message.info('CRUD operation >> ' + action);
 
         if (action === config.ADD) {
-            setShowDrawer(true);
+            setShowModal(true);
             setAction(action);
         } else {
-            setShowDrawer(true);
-            setAction(action);
             setSourceRecord(record);
+            setAction(action);
+            setShowModal(true);
         }
-    }
-
-    const onClose = () => {
-        form.resetFields();
-        setShowDrawer(false);
-    }
-
-    const doRequest = (action, id) => {
-
+        // setSourceRecord({});
     }
 
     return (
@@ -44,24 +40,40 @@ function Profile(props) {
                 marginTop: '3%',
                 marginLeft: '10%',
                 marginRight: '10%',
-                fontFamily: 'Geneva, Arial, Helvetica, sans-serif'
+                fontFamily: 'Comfortaa, cursive'
             }}
         >
+            <Tabs
+                defaultActiveKey='general'
+                tabPosition='left'
+                style={{ height: '100%' }}
+            >
 
-            <Row >
-                <Col sm={12} xs={24} style={{ backgroundColor: '' }}>
-                    <UserInfo />
-                </Col >
+                <TabPane tab={<span>
+                    <SlidersOutlined />
+          General info
+        </span>} key='general'>
+                    <Row >
+                        <Col xl={12} md={24} style={{ backgroundColor: '' }}>
+                            <UserInfo />
+                        </Col >
 
-                {/* <Col md={12}>
-                    <Avatar />
-                </Col> */}
+                        <Col xl={12} md={24} style={{ backgroundColor: '' }} >
+                            <Sources {...props} showDrawer={setShowModal} crud={crud} />
+                        </Col>
+                    </Row>
+                </TabPane>
 
+                <TabPane tab={<span><HistoryOutlined />Request history</span>} key='history'>
+                    <StatusTable
+                        // size='default'
+                        statuses={props.statuses}
+                        requestId={props.requestId}
+                        // setRequestId={props.setRequestId}
+                    />
+                </TabPane>
 
-                <Col sm={12} xs={24} style={{ backgroundColor: '' }} >
-                    <Sources {...props} showDrawer={setShowDrawer} crud={crud} />
-                </Col>
-            </Row>
+            </Tabs>
 
             {/* <AddSourceModal
                 type={type}
@@ -70,22 +82,14 @@ function Profile(props) {
 
             /> */}
 
-            <Modal
-                title="Create a new source"
-                width='70%'
-                centered
-                onCancel={onClose}
-                visible={showDrawer}
-                bodyStyle={{ paddingBottom: 80 }}
-            >
-                <AddSource
-                    form={form}
-                    showDrawer={setShowDrawer}
-                    action={action}
-                    sourceRecord={sourceRecord}
-                    doRequest={doRequest}
-                />
-            </Modal>
+
+            <AddSource
+                setSourceRecord={setSourceRecord}
+                setShowModal={setShowModal}
+                showModal={showModal}
+                action={action}
+                sourceRecord={sourceRecord}
+            />
         </Content>
     );
 }

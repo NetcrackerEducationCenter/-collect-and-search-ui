@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'react-bootstrap';
+import { Modal } from 'antd';
 
 import StatusTable from './StatusTable';
 
@@ -9,17 +9,9 @@ function ModalRequests(props) {
     return (
         <Modal
             {...props}
-
+            title='Last request statuses'
         >
-            <Modal.Header>
-                <Modal.Title>
-                    Request statuses
-                    </Modal.Title>
-            </Modal.Header>
-
-            <Modal.Body>
-                <StatusTable {...props} />
-            </Modal.Body>
+                <StatusTable pageSize='5' {...props} />
         </Modal>
     );
 }

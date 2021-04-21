@@ -3,7 +3,6 @@ import { Content } from 'antd/lib/layout/layout';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import Report from '../Components/ForWorkpage/Report'
-import StatusTable from '../Components/StatusTable';
 import { config } from '../Config';
 
 import '../css/loading.css';
@@ -26,16 +25,14 @@ export default function WorkPage(props) {
             }
         });
     }
+    
     useEffect(() => {
         message.info(props.match.params.requestId);
         getReport(props.match.params.requestId, 'first');
-    }, []);
+    });
 
-    if (loading) {
+    if (!!loading) {
         return <div className="lds-ring">
-            {/* <div>
-
-            </div>
             <div>
 
             </div>
@@ -44,7 +41,10 @@ export default function WorkPage(props) {
             </div>
             <div>
 
-            </div> */}
+            </div>
+            <div>
+
+            </div>
         </div>
     } else {
         return (
@@ -54,7 +54,7 @@ export default function WorkPage(props) {
                     fontFamily: 'Geneva, Arial, Helvetica, sans-serif'
                 }}
             >
-                <Report report={props.report} />
+                <Report report={report} />
             </Content>
         );
     }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Table, Input, Button, Space, Tag } from 'antd';
+import { Table, Input, Button, Space, Tag, Badge } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 import Text from 'antd/lib/typography/Text';
@@ -7,20 +7,13 @@ import { Link } from 'react-router-dom';
 
 function StatusTable(props) {
 
-    const statusList = ['NOT_STARTED', 'IN_PROCESS', 'COMPLETED'];
-
-    const [active, setactive] = useState(0);
     const [searchedColumn, setsearchedColumn] = useState('');
     const [searchText, setsearchText] = useState('');
-    let searchInput;
 
     const getColumnSearchProps = dataIndex => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
             <div style={{ padding: 8 }}>
                 <Input
-                    ref={node => {
-                        searchInput = node;
-                    }}
                     placeholder={`Search ${dataIndex}`}
                     value={selectedKeys[0]}
                     onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
@@ -60,11 +53,6 @@ function StatusTable(props) {
             record[dataIndex]
                 ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
                 : '',
-        // onFilterDropdownVisibleChange: visible => {
-        //     if (visible) {
-        //         setTimeout(() => searchInput.select(), 100);
-        //     }
-        // },
         render: text =>
             searchedColumn === dataIndex ? (
                 <Highlighter
@@ -121,10 +109,10 @@ function StatusTable(props) {
             render: (text, record) => {
                 if (record.status === 'COMPLETED') {
                     return (
-                        <Tag color='green'><Link to={`/workpage/${record.request}`} >{record.status}</Link></Tag>
+                        <Tag color='green' style={{cursor: 'pointer'}}><Link to={`/workpage/${record.request}`} >{record.status}</Link></Tag>
                     );
                 } else {
-                    return <Tag color='blue'>{record.status}</Tag>
+                    return <Badge status="processing" text={record.status} />
                 }
             }
         },

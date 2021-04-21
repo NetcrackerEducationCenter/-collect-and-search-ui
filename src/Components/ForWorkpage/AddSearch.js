@@ -73,12 +73,12 @@ class AddSearch extends React.Component {
     formRef = React.createRef();
 
     onSourcesChange = (value) => {
-        const vs = value.map(e => { 
+        const vs = value.map(e => {
             let data = {
-                source: JSON.parse(e).source,
-                id: JSON.parse(e).credentials.id
+                source: JSON.parse(e).sourceType,
+                id: JSON.parse(e).id
             }
-            return   data;
+            return data;
         });
         this.setState({ selectedSources: vs });
         let filters = [];
@@ -305,6 +305,20 @@ class AddSearch extends React.Component {
                     </Select>
                 </Form.Item>
 
+                <Form.Item
+                    label="Path to dir"
+                    name='path'
+                >
+                    <Input
+                        placeholder='enter files path'
+                        onChange={e => {
+                            this.setState({
+                                ftpDirPath: e.target.value
+                            });
+                        }}
+                    />
+                </Form.Item>
+
                 <Form.Item label='Choose file date' name='ftpfileDate'>
                     <DatePicker
                         placeholder='enter date'
@@ -398,71 +412,83 @@ class AddSearch extends React.Component {
     }
 
     render() {
-        return (
-            <Modal title="New request" visible={this.props.isModalVisible} onCancel={this.handleCancel}
-                footer={[
-                    <Button key='back' danger ghost
-                        onClick={this.handleCancel}>
-                        Cancel
-                </Button>,
-                    <Button key='Ok' type="primary" ghost onClick={this.onFinish}>
-                        Send
-                </Button>
-                ]}
-            >
-
-                <Form
-                    layout='vertical'
-                    form={this.props.form}
-                    name="control-ref"
-                    onFinish={this.onFinish}
+        if (!!this.props.allSources) {
+            return (
+                <Modal width='70%' title="New request"
+                    visible={this.props.isModalVisible}
+                    onCancel={this.handleCancel}
+                    bodyStyle={{ paddingBottom: 1 }}
+                    footer={[
+                        <Button key='back' danger ghost
+                            onClick={this.handleCancel}>
+                            Cancel
+                        </Button>,
+                        <Button key='Ok' type="primary" ghost onClick={this.onFinish}>
+                            Send
+                        </Button>
+                    ]}
                 >
-                    <Divider />
-                    <Form.Item label="Sources" name='sourceSelector'>
-                        <Select
-                            mode="multiple"
-                            placeholder="Choose a sources"
-                            onChange={this.onSourcesChange}
-                            allowClear
-                        >
-                            {this.state.sources.map((s, i) => {
-                                return <Option key={i.toString(36) + i} value={JSON.stringify(s)}>
-                                    {s.credentials.id}
-                                </Option>
-                            })}
-                        </Select>
-                    </Form.Item>
 
-                    {this.state.checkedFilters === null ? '' : this.state.checkedFilters.map(v => this.shawFilters(v.value))}
+                    <Form
+                        layout='vertical'
+                        form={this.props.form}
+                        name="control-ref"
+                        onFinish={this.onFinish}
+                        style={{
+                            border: 0,
+                            boxShadow: 'none'
+                        }}
 
-                    {this.state.checkedFilters === null
-                        ? ""
-                        : this.state.checkedFilters.map((e) => this.shawFilters(e))}
-
-                    <Form.Item
-                        label="Request"
-                        name='reqKeywords'
-                        rules={[{
-                            required: true,
-                            message: 'Please input your request!'
-                        }]}
                     >
-                        <Input
-                            placeholder='enter request'
-                            onChange={e => {
-                                this.setState({
-                                    keywords: e.target.value.trim().split(" ")
-                                });
-                            }}
-                        />
-                    </Form.Item>
+                        <Divider />
+                        <Form.Item label="Sources" name='sourceSelector'>
+                            <Select
+                                mode="multiple"
+                                placeholder="Choose a sources"
+                                onChange={this.onSourcesChange}
+                                allowClear
+                            >
+                                {this.props.allSources.map((s, i) => {
+                                    return <Option key={i.toString(36) + i} value={JSON.stringify(s)}>
+                                        {s.id}
+                                    </Option>
+                                })}
+                            </Select>
+                        </Form.Item>
 
-                    <Form.Item>
+                        {this.state.checkedFilters === null ? '' : this.state.checkedFilters.map(v => this.shawFilters(v.value))}
 
-                    </Form.Item>
-                </Form>
-            </Modal>
-        );
+                        {this.state.checkedFilters === null
+                            ? ""
+                            : this.state.checkedFilters.map((e) => this.shawFilters(e))}
+
+                        <Form.Item
+                            label="Request"
+                            name='reqKeywords'
+                            rules={[{
+                                required: true,
+                                message: 'Please input your request!'
+                            }]}
+                        >
+                            <Input
+                                placeholder='enter request'
+                                onChange={e => {
+                                    this.setState({
+                                        keywords: e.target.value.trim().split(" ")
+                                    });
+                                }}
+                            />
+                        </Form.Item>
+
+                        <Form.Item>
+
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            );
+        } else {
+            return null;
+        }
     }
 }
 

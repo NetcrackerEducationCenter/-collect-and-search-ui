@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import UserInfo from '../Components/ForProfile/UserInfo';
 // Icons
 import { HistoryOutlined, SlidersOutlined } from '@ant-design/icons';
 
-import { Button, Col, Form, message, Row, Tabs } from 'antd';
+import React, { useState } from 'react';
+import UserInfo from '../Components/ForProfile/UserInfo';
+import { Col, message, Row, Tabs } from 'antd';
 import Sources from '../Components/ForProfile/sources/Sources';
 import AddSource from '../Components/ForProfile/sources/AddSource';
 import { config } from '../Config';
-import Modal from 'antd/lib/modal/Modal';
 import { Content } from 'antd/lib/layout/layout';
 import StatusTable from '../Components/StatusTable';
 
@@ -31,7 +30,6 @@ function Profile(props) {
             setAction(action);
             setShowModal(true);
         }
-        // setSourceRecord({});
     }
 
     return (
@@ -54,11 +52,11 @@ function Profile(props) {
           General info
         </span>} key='general'>
                     <Row >
-                        <Col xl={12} md={24} style={{ backgroundColor: '' }}>
+                        <Col xl={10} md={24} style={{ backgroundColor: '' }}>
                             <UserInfo />
                         </Col >
 
-                        <Col xl={12} md={24} style={{ backgroundColor: '' }} >
+                        <Col xl={14} md={24} style={{ backgroundColor: '' }} >
                             <Sources {...props} showDrawer={setShowModal} crud={crud} />
                         </Col>
                     </Row>
@@ -66,22 +64,12 @@ function Profile(props) {
 
                 <TabPane tab={<span><HistoryOutlined />Request history</span>} key='history'>
                     <StatusTable
-                        // size='default'
                         statuses={props.statuses}
                         requestId={props.requestId}
-                        // setRequestId={props.setRequestId}
                     />
                 </TabPane>
 
             </Tabs>
-
-            {/* <AddSourceModal
-                type={type}
-                show={showModal}
-                onHide={() => setShowModal(false)}
-
-            /> */}
-
 
             <AddSource
                 setSourceRecord={setSourceRecord}

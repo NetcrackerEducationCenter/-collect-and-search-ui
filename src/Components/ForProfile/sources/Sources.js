@@ -1,11 +1,9 @@
 import { Table, Button, Space, Modal, message, Empty, Divider, Row, Col } from 'antd';
 import axios from 'axios';
-import React, { useState } from 'react'
 import { config } from '../../../Config';
 import { keycloak } from '../../../index';
 
-import { ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import AddSource from './AddSource';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 const { confirm } = Modal;
 
@@ -15,7 +13,6 @@ function Sources(props) {
 
     const handleShow = (action) => {
         props.crud(0, action);
-        // setcurrentid(id);
     };
 
     const handleDelete = (id) => {
@@ -30,9 +27,11 @@ function Sources(props) {
 
     const isAdmin = () => {
         if (roles.includes('UIadminROLE')) {
+            console.log('He is ADMIN ' + roles.includes('UIadminROLE'));
+
             return (
                 <Row style={{ marginTop: '5%' }}>
-                    <Col xs={8} offset={4}>
+                    <Col xs={8} offset={3}>
                         <Button block ghost
                             type='primary'
                             onClick={() => handleShow(config.ADD)}
@@ -41,7 +40,7 @@ function Sources(props) {
                         </Button>
                     </Col>
 
-                    <Col xs={8} >
+                    <Col xs={8} offset={1}>
                         <Button block ghost
                             type='primary'
                             href='https://netcracker-collect-and-search.tk:8443/auth/'
@@ -55,73 +54,91 @@ function Sources(props) {
         }
     }
 
-    console.log('He is ADMIN ' + roles.includes('UIadminROLE'));
+    let columns;
 
     if (Array.isArray(props.sources) && props.sources.length) {
 
-        const columns = [
-            {
-                title: 'Source',
-                dataIndex: 'source',
-                width: 100,
-                key: 'source',
-                fixed: 'left',
-            },
-            {
-                title: 'Type',
-                width: 250,
-                dataIndex: 'type',
-                key: 'type',
-                fixed: 'left',
-            },
-            {
-                title: 'Actions',
-                width: 20,
-                fixed: 'right',
-                key: 'operations',
-                render: (text, record) =>
-                    <Space size='middle'>
-                        <Button type='primary' ghost onClick={() => {
-                            props.crud(record, config.UPDATE);
-                        }}> update </Button>
-                        <Button
-                            danger
-                            type='ghost'
-                            onClick={() => {
-                                confirm({
-                                    title: 'Are you sure delete ' + record.source,
-                                    icon: <ExclamationCircleOutlined />,
-                                    content: 'Some descriptions',
-                                    okText: 'Yes',
-                                    okType: 'danger',
-                                    cancelText: 'No',
-                                    onOk() {
-                                        handleDelete(record.source);
-                                    },
-                                    onCancel() {
-                                        message.info('Canceled');
-                                    },
-                                });
-                            }}
-                        >
-                            Delete
-                        </Button>
-                    </Space>
+        if (roles.includes('UIadminROLE')) {
 
-            }
-        ];
+            columns = [
+                {
+                    width: '20%',
+                    title: 'Source',
+                    dataIndex: 'source',
+                    key: 'source',
+                    fixed: 'left',
+                },
+                {
+                    width: '20%',
+                    title: 'Type',
+                    dataIndex: 'type',
+                    key: 'type',
+                    fixed: 'right',
+                },
+                {
+                    width: '30%',
+                    title: 'Actions',
+                    fixed: 'right',
+                    key: 'operations',
+                    render: (text, record) =>
+                        <Space size='middle'>
+                            <Button type='primary' ghost onClick={() => {
+                                props.crud(record, config.UPDATE);
+                            }}> update </Button>
+                            <Button
+                                danger
+                                type='ghost'
+                                onClick={() => {
+                                    confirm({
+                                        title: 'Are you sure delete ' + record.source,
+                                        icon: <ExclamationCircleOutlined />,
+                                        content: 'Some descriptions',
+                                        okText: 'Yes',
+                                        okType: 'danger',
+                                        cancelText: 'No',
+                                        onOk() {
+                                            handleDelete(record.source);
+                                        },
+                                        onCancel() {
+                                            message.info('Canceled');
+                                        },
+                                    });
+                                }}
+                            >
+                                Delete
+                        </Button>
+                        </Space>
+
+                }
+            ];
+        } else {
+            columns = [
+                {
+                    title: 'Source',
+                    dataIndex: 'source',
+                    key: 'source',
+                    fixed: 'left',
+                },
+                {
+                    title: 'Type',
+                    dataIndex: 'type',
+                    key: 'type',
+                    fixed: 'right',
+                }
+            ];
+        }
 
         const tableData = props.sources.map((s, i) => {
             return {
                 key: i,
-                source: s.credentials.url,
-                type: s.source
+                source: s.id,
+                type: s.sourceType
             }
         });
 
         return (
             <div >
-                <Table columns={columns} dataSource={tableData} pagination={false} />
+                <Table columns={columns} dataSource={tableData} scroll={{ x: 200 }} pagination={false} />
                 {isAdmin()}
             </div >
         );

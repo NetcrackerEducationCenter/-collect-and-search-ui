@@ -1,27 +1,20 @@
 // Logos
 import logo from '../assets/logo192.png';
 import userLogo from '../assets/user-logo.png';
-import { LogoutOutlined } from '@ant-design/icons';
 
 // Pages
 import Home from '../Pages/Home';
-import History from '../Pages/History';
 import Profile from '../Pages/Profile';
 import WorkPage from '../Pages/WorkPage';
 import axios from "axios";
 
-// CSS
-// import '../css/Layout.css';
-
 // Vars
 import React, { useState, useEffect } from "react";
 import { Container, Navbar, Nav, } from "react-bootstrap";
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import StatusButton from '../Components/StatusButton';
-import ModalRequests from './ModalRequests';
+import { Switch, Route, Link } from 'react-router-dom';
 import { config } from '../Config.js';
-import { keycloak, webSocket } from "../index";
-import { Button, Modal, Form, message } from "antd";
+import { keycloak } from "../index";
+import { Button, Modal, Form } from "antd";
 import AddSearch from './ForWorkpage/AddSearch';
 import StatusTable from './StatusTable';
 import Text from 'antd/lib/typography/Text';
@@ -32,9 +25,6 @@ function HeaderFunc(props) {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [reqStatuses, setReqStatuses] = useState([]);
     const [sources, setSources] = useState([]);
-    const [modalEmpty, setModalEmpty] = useState(true);
-    const [report, setReport] = useState('');
-    const [reqId, setReqId] = useState('');
     const [form] = Form.useForm();
 
 
@@ -44,7 +34,6 @@ function HeaderFunc(props) {
 
 
     useEffect(() => {
-        webSocket.send(JSON.stringify({ give: 'statuses' }));
 
         getRequestStatuses();
         getSources();
@@ -74,7 +63,6 @@ function HeaderFunc(props) {
             console.log('getRequestStatuses(): ' + JSON.parse(JSON.stringify(res.data)));
             let st = JSON.parse(JSON.stringify(res.data));
             setReqStatuses(st.reverse());
-            setModalEmpty(false);
         });
     }
 
@@ -87,13 +75,9 @@ function HeaderFunc(props) {
         }
     }
 
-    const setActive = (activeted) => {
-        setModalActive(activeted);
-    }
-
     return (
         <div>
-            <Navbar expand="md" bg="dark" variant="dark"> {/* foxed='top' */}
+            <Navbar expand="md" bg="dark" variant="dark">
                 <Container>
 
                     <Navbar.Brand>
@@ -140,7 +124,6 @@ function HeaderFunc(props) {
 
                     <Button danger type='primary' ghost
                         onClick={() => keycloak.logout()}
-                    // icon={<LogoutOutlined />}
                     >
                         Log Out
                     </Button>
@@ -150,31 +133,29 @@ function HeaderFunc(props) {
 
 
             <Switch>
-                <Route exact path="/" component={Home} />
-                <Route exact path="/history" component={History} />
+                <Route exact path="/" render={(props) =>
+                    <Home
+                        {...props}
+                        allSources={sources}
+                    />
+                } />
+
                 <Route exact path="/profile" render={(props) =>
                     <Profile
                         {...props}
-                        report={report}
                         statuses={reqStatuses}
-                        requestId={reqId}
-                        // setRequestId={getReport}
                         sources={sources}
                     />
-                }
+                } />
 
-                />
-                <Route exact path="/workpage/:requestId" render={(props) =>
+                <Route path="/workpage/:requestId" render={(props) =>
                     <WorkPage
                         {...props}
-                        report={report}
                         statuses={reqStatuses}
-                        requestId={reqId}
-                        // setRequestId={getReport}
                         sources={sources}
                     />
-                }
-                />
+                } />
+
             </Switch>
 
 
@@ -183,7 +164,7 @@ function HeaderFunc(props) {
                 form={form}
                 isModalVisible={isModalVisible}
                 setIsModalVisible={setIsModalVisible}
-
+                allSources={sources}
             />
 
             <Modal

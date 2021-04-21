@@ -1,6 +1,6 @@
 import React from 'react';
-import { Container, OverlayTrigger, Popover, Spinner } from 'react-bootstrap';
-import {Button} from 'antd';
+import { Container, OverlayTrigger, Popover } from 'react-bootstrap';
+import { Button } from 'antd';
 
 function Report(props) {
     const downloadTxtFile = () => {
@@ -37,7 +37,7 @@ function Report(props) {
     if (!props.report) {
         return (
             <Container fluid>
-                {simpleReport.dataModels.map((v, i) => {
+                {props.report.dataModels.map((v, i) => {
                     return (
                         <OverlayTrigger
                             trigger="click"
@@ -64,17 +64,35 @@ function Report(props) {
                 <Button type='primary' ghost onClick={downloadTxtFile} >Download text</Button>
             </Container>
         );
-    } else if (!!props.requestId) {
-        return (
-            <div className="text-center" >
-                <Spinner animation='border' role='status' variant='primary'>
-                    <span className="sr-only">Loading...</span>
-                </Spinner>
-            </div>
-        );
     } else {
         return (
-            null
+            <Container fluid>
+                {simpleReport.dataModels.map((v, i) => {
+                    return (
+                        <OverlayTrigger
+                            trigger="click"
+                            key={i}
+                            placement='top'
+                            overlay={
+                                <Popover id={i}>
+                                    <Popover.Title as="h3">Found in</Popover.Title>
+                                    <Popover.Content>
+                                        <a href={v.dataSource}>
+                                            {v.dataSource}
+                                        </a>
+                                    </Popover.Content>
+                                </Popover>
+                            }
+                        >
+                            <p>
+                                {v.text}
+                            </p>
+
+                        </OverlayTrigger>
+                    );
+                })}
+                <Button type='primary' ghost onClick={downloadTxtFile} >Download text</Button>
+            </Container>
         );
     }
 }

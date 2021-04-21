@@ -3,7 +3,6 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { Button, Form } from 'antd';
 
 //Pictures
-import AddSearchModal from '../Components/AddSearchModal';
 import jiraLogo from '../assets/jira.png';
 import ftpLogo from '../assets/ftp.png';
 
@@ -67,7 +66,7 @@ function Home(props) {
                 <Col>
                     <p>
                         Add as source your FTP server, and we can use it to find any documents like *.txt *.doc *.pdf.
-</p>
+                    </p>
                     <p> Use date or extensions filters for more accurate searching. </p>
                     <br />
                     <Button block type='primary' ghost onClick={() => setIsModalVisible(true)}>
@@ -78,16 +77,13 @@ function Home(props) {
             </Row>
 
             <AddSearch
+                {...props}
                 form={form}
                 isModalVisible={isModalVisible}
                 setIsModalVisible={setIsModalVisible}
-
             />
-
         </Container>
-
     );
-
 }
 
 export default Home;

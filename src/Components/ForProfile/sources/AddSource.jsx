@@ -6,13 +6,7 @@ import Modal from 'antd/lib/modal/Modal';
 
 function AddSource(props) {
     let source = '';
-    // if (props.action === config.UPDATE) {
-    //     source = props.sourceRecord.type.toUpperCase();
-    // }
-
     const [sourceType, setSourceType] = useState(source);
-
-    // const [sourceType, setSourceType] = useState(props.sourceRecord.type.toUpperCase());
     const [credentials, setcredentials] = useState({});
     const [form] = Form.useForm();
 
@@ -20,20 +14,17 @@ function AddSource(props) {
         let formData = form.getFieldsValue();
         addSourceRequest(formData);
         onClose();
-        // props.form.resetFields();
     }
 
     const onFinishUpdate = () => {
         setSourceType(props.sourceRecord.type.toUpperCase());
         addSourceRequest();
-        // props.form.resetFields();
         onClose();
     }
 
     const getCurrentSourceFildes = () => {
 
         if (props.action === config.UPDATE) {
-            // setSourceType(props.sourceRecord.type.toUpperCase());
             let sourceType = props.sourceRecord.type.toUpperCase();
             if (sourceType === 'JIRA') {
                 credentials.url = props.sourceRecord.source
@@ -141,7 +132,6 @@ function AddSource(props) {
                 </>
             );
         } else return null;
-
     }
 
     const onClose = () => {
@@ -149,9 +139,6 @@ function AddSource(props) {
         setcredentials({});
         form.resetFields();
         props.setShowModal(false);
-
-
-        // props.setSourceRecord({});
     }
 
     const addSourceRequest = (formData) => {
@@ -198,9 +185,13 @@ function AddSource(props) {
                 centered
                 onCancel={onClose}
                 visible={props.showModal}
-                bodyStyle={{ paddingBottom: 80 }}
+                bodyStyle={{ paddingBottom: 10 }}
             >
                 <Form
+                    style={{
+                        border: 0,
+                        boxShadow: 'none'
+                    }}
                     layout='vertical'
                     form={form}
                     name="control-ref"

@@ -47,4 +47,4 @@ jobs:
           docker tag docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest netcracker/reactimage:latest
           # -d means that container starts in detached mode or in the background
 
-          docker run -d --name reactimage  -v nginx/nginx.conf:/etc/nginx/conf.d -p 7070:7070 --network=docker-network netcracker/reactimage:latest
+          docker run -d --name reactimage -v /nginx/nginx.conf:/etc/nginx/conf.d -p 7070:7070 --network=docker-network netcracker/reactimage:latest

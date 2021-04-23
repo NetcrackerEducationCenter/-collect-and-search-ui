@@ -65,35 +65,7 @@ function Report(props) {
             </Container>
         );
     } else {
-        return (
-            <Container fluid>
-                {simpleReport.dataModels.map((v, i) => {
-                    return (
-                        <OverlayTrigger
-                            trigger="click"
-                            key={i}
-                            placement='top'
-                            overlay={
-                                <Popover id={i}>
-                                    <Popover.Title as="h3">Found in</Popover.Title>
-                                    <Popover.Content>
-                                        <a href={v.dataSource}>
-                                            {v.dataSource}
-                                        </a>
-                                    </Popover.Content>
-                                </Popover>
-                            }
-                        >
-                            <p>
-                                {v.text}
-                            </p>
-
-                        </OverlayTrigger>
-                    );
-                })}
-                <Button type='primary' ghost onClick={downloadTxtFile} >Download text</Button>
-            </Container>
-        );
+        return null;
     }
 }
 

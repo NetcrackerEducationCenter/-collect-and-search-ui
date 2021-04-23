@@ -33,7 +33,6 @@ function Report(props) {
             }
         ]
     }
-    console.log(props.requestId);
     if (!props.report) {
         return (
             <Container fluid>

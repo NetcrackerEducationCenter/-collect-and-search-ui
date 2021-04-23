@@ -27,7 +27,6 @@ function Sources(props) {
 
     const isAdmin = () => {
         if (roles.includes('UIadminROLE')) {
-            console.log('He is ADMIN ' + roles.includes('UIadminROLE'));
 
             return (
                 <Row style={{ marginTop: '5%' }}>

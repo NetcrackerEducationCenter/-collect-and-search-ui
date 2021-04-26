@@ -1,65 +1,68 @@
-import React, { useState, useEffect } from "react";
-import { Container, Navbar, Nav, Button } from "react-bootstrap";
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import StatusButton from '../Components/StatusButton';
-import ModalRequests from './ModalRequests';
-import { config } from '../Config.js';
-
-//Logos
+// Logos
 import logo from '../assets/logo192.png';
 import userLogo from '../assets/user-logo.png';
 
-//Pages
+// Pages
 import Home from '../Pages/Home';
-import About from '../Pages/About';
-import History from '../Pages/History';
 import Profile from '../Pages/Profile';
 import WorkPage from '../Pages/WorkPage';
 import axios from "axios";
 
+// Vars
+import React, { useState, useEffect } from "react";
+import { Container, Navbar, Nav, } from "react-bootstrap";
+import { Switch, Route, Link } from 'react-router-dom';
+import { config } from '../Config.js';
+import { keycloak } from "../index";
+import { Button, Modal, Form } from "antd";
+import AddSearch from './ForWorkpage/AddSearch';
+import StatusTable from './StatusTable';
+import Text from 'antd/lib/typography/Text';
+
 function HeaderFunc(props) {
 
     const [modalActive, setModalActive] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [reqStatuses, setReqStatuses] = useState([]);
-    const [modalEmpty, setModalEmpty] = useState(true);
-    const [report, setReport] = useState('');
-    const [reqId, setReqId] = useState('');
+    const [sources, setSources] = useState([]);
+    const [form] = Form.useForm();
+
 
     const MINUTE_MS = 10000;
 
+
+
+
     useEffect(() => {
+
         getRequestStatuses();
+        getSources();
         const interval = setInterval(() => {
             getRequestStatuses();
+            getSources();
+
         }, MINUTE_MS);
         return () => {
             clearInterval(interval);
         }
     }, []);
 
-    /**
-     * Get report from kafka
-     * @param {*} id report Id
-     */
-    const getReport = (id) => {
-        console.log(id);
-        axios.post(`${config.url}/api/report/get`, {
-            requestId: id
-        }).then(res => {
-            if (!res.data) {
-                getReport(id);
-            } else {
-                setReqId(res.data.requestId);
-                setReport(res.data);
-            }
-        });
+    const getSources = async () => {
+        axios.post(config.url + '/api/sources/get').then(res => {
+            console.log(JSON.stringify(res.data));
+            setSources(res.data);
+        })
     }
+
+
+
+
 
     const getRequestStatuses = async () => {
         axios.post(`${config.url}/api/status/get`).then((res) => {
             console.log('getRequestStatuses(): ' + JSON.parse(JSON.stringify(res.data)));
-            setReqStatuses(JSON.parse(JSON.stringify(res.data)));
-            setModalEmpty(false);
+            let st = JSON.parse(JSON.stringify(res.data));
+            setReqStatuses(st.reverse());
         });
     }
 
@@ -72,83 +75,111 @@ function HeaderFunc(props) {
         }
     }
 
-    const setActive = (activeted) => {
-        setModalActive(activeted);
-    }
-
     return (
         <div>
-            <Navbar expand="md" bg="dark" variant="dark"> {/* foxed='top' */}
+            <Navbar expand="md" bg="dark" variant="dark">
                 <Container>
 
-                    <Navbar.Brand href="/">
-                        <img
-                            src={logo}
-                            height="30"
-                            width="30"
-                            className="d-inline-block align-top"
-                            alt="Logo"
-                        />Collect and Search
+                    <Navbar.Brand>
+                        <Link to='/'>
+
+                            <img
+                                src={logo}
+                                height="30"
+                                width="30"
+                                className="d-inline-block align-top"
+                                alt="Logo"
+                            /><Text style={{ color: 'white' }}>Collect and Search</Text>
+                        </Link>
                     </Navbar.Brand>
 
                     <Nav className="mr-auto">
-                        <Nav.Link href='/workpage/'>Workpage</Nav.Link>
                     </Nav>
-                    {/* <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                    <Navbar.Collapse id="responsive-navbar-nav">
-                        <Nav className="mr-auto">
-                            <Nav.Link href='/workpage'>Workpage</Nav.Link>
-                        </Nav>
-                
-                    </Navbar.Collapse>  */}
-                    <Button variant="outline-info" onClick={changeState} >
-                        <StatusButton isEmpty={modalEmpty} />
+
+                    <Button ghost
+                        style={{
+                            color: "rgb(126, 254, 57)",
+                            borderColor: "rgb(126, 254, 57)",
+                            marginRight: '2%'
+                        }}
+                        onClick={() => setIsModalVisible(true)} >
+                        New request
                     </Button>
 
-                    <Button variant="outline-info" href="/profile" className='bg-transparent border-0' >
-                        <img
-                            src={userLogo}
-                            alt="user"
-                            height="30"
-                            width="30"
-                        />
+                    <Button ghost onClick={changeState} >
+                        Requestes
+                    </Button>
+
+                    <Button variant="outline-info" className='bg-transparent border-0' >
+                        <Link to='/profile'>
+
+                            <img
+                                src={userLogo}
+                                alt="user"
+                                height="30"
+                                width="30"
+                            />
+                        </Link>
+                    </Button>
+
+                    <Button danger type='primary' ghost
+                        onClick={() => keycloak.logout()}
+                    >
+                        Log Out
                     </Button>
 
                 </Container>
-
             </Navbar>
 
 
-            <Router>
-                <Switch>
-                    <Route exact path="/" component={Home} />
-                    <Route exact path="/history" component={History} />
-                    <Route exact path="/profile" component={Profile} />
-                    <Route exact path="/about" component={About} />
-                    {/* <Route exact path="/workpage" component={WorkPage} /> */}
-                    <Route path="/workpage" render={(props) =>
-                        <WorkPage
-                            {...props}
-                            report={report}
-                            statuses={reqStatuses}
-                            requestId={reqId}
-                            setRequestId={getReport}
-                        />
-                    }
+            <Switch>
+                <Route exact path="/" render={(props) =>
+                    <Home
+                        {...props}
+                        allSources={sources}
                     />
-                </Switch>
-            </Router>
+                } />
 
-            <Container >
-                <ModalRequests
-                    show={modalActive}
-                    setActive={setActive}
+                <Route exact path="/profile" render={(props) =>
+                    <Profile
+                        {...props}
+                        statuses={reqStatuses}
+                        sources={sources}
+                    />
+                } />
+
+                <Route path="/workpage/:requestId" render={(props) =>
+                    <WorkPage
+                        {...props}
+                        statuses={reqStatuses}
+                        sources={sources}
+                    />
+                } />
+
+            </Switch>
+
+
+
+            <AddSearch
+                form={form}
+                isModalVisible={isModalVisible}
+                setIsModalVisible={setIsModalVisible}
+                allSources={sources}
+            />
+
+            <Modal
+                width='70%'
+                title='Last requestes'
+                visible={modalActive}
+                footer={false}
+                onCancel={() => setModalActive(false)}
+            >
+                <StatusTable {...props}
+                    pageSize='5'
+                    size='small'
                     statuses={reqStatuses}
-                    requestId={report.requestId}
-                    setRequestId={getReport}
-                    onHide={() => setModalActive(false)}
                 />
-            </Container>
+            </Modal>
         </div>
     );
 }

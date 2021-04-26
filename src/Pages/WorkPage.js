@@ -1,50 +1,63 @@
-import React, { Component } from 'react'
-import AddSearch from '../Components/ForWorkpage/AddSearch';
+import { message } from 'antd';
+import { Content } from 'antd/lib/layout/layout';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
 import Report from '../Components/ForWorkpage/Report'
-import StatusTable from '../Components/StatusTable';
+import { config } from '../Config';
 
-import karandashi from '../assets/karandashi.jpg';
+import '../css/loading.css';
 
+export default function WorkPage(props) {
+    const [report, setReport] = useState({});
+    const [loading, setloading] = useState(true);
 
-export default class WorkPage extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            modalActive: false,
-            issues: [],
-            shawIssues: false,
-            download: false
-        }
+    const getReport = (id, time) => {
+        setloading(true);
+        axios.post(`${config.url}/api/report/get`, {
+            requestId: id,
+            time: time
+        }).then(res => {
+            if (!res.data) {
+                getReport(id, 'second');
+            } else {
+                setReport(res.data);
+                setloading(false);
+            }
+        });
     }
+    
+    useEffect(() => {
+        message.info(props.match.params.requestId);
+        getReport(props.match.params.requestId, 'first');
+    });
 
-    shawModal = (activeted) => {
-        this.setState(() => { return { modalActive: activeted } })
-    }
+    if (!!loading) {
+        return <div className="lds-ring">
+            <div>
 
-    shawIssuesActive = (activeted) => {
-        this.setState({ shawIssues: activeted })
-    }
-
-    setIssues = (newIssues) => {
-        this.setState({ issues: newIssues });
-    }
-
-    shawDownload = (value) => {
-        this.setState(() => { return { download: value } });
-    }
-
-    render() {
-        return (
-            <div >
-                <StatusTable
-                    statuses={this.props.statuses}
-                    requestId={this.props.requestId}
-                    setRequestId={this.props.setRequestId}
-                />
-                <Report report={this.props.report} />
-                <AddSearch onHide={() => { }} />
             </div>
-        );
+            <div>
 
+            </div>
+            <div>
+
+            </div>
+            <div>
+
+            </div>
+        </div>
+    } else {
+        return (
+            <Content
+                style={{
+                    padding: '0 20%',
+                    fontFamily: 'Geneva, Arial, Helvetica, sans-serif'
+                }}
+            >
+                <Report report={report} />
+            </Content>
+        );
     }
+
+
 }

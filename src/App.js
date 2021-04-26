@@ -2,13 +2,15 @@ import React from 'react';
 import Header from './Components/Header';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'antd/dist/antd.css';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-const App = () => {
+const App = (props) => {
 
   return (
-    <div>
-      <Header />
-    </div>
+    <Router>
+      <Header {...props} />
+    </Router>
   );
 }
 

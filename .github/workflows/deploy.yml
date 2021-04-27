@@ -37,7 +37,7 @@ jobs:
         username: ${{secrets.SSH_USERNAME}}
         passphrase: ${{secrets.PASSPHRASE}}
         script: |
-          cd netcracker/collect-and-search/collect-and-search-ui
+          cd netcracker/nginx
           docker login https://docker.pkg.github.com -u ${{github.repository_owner}} -p ${{secrets.GITHUB_TOKEN}}
           docker container stop $(docker ps -aqf "name=reactimage")
           docker container rm $(docker ps -aqf "name=reactimage")
@@ -45,6 +45,4 @@ jobs:
           docker image rm docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage
           docker pull docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest
           docker tag docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest netcracker/reactimage:latest
-          # -d means that container starts in detached mode or in the background
-
-          docker run -d --name reactimage -p 7070:7070 --network=docker-network netcracker/reactimage:latest
+          docker-compose up -d

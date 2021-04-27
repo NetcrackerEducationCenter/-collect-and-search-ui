@@ -359,9 +359,8 @@ class AddSearch extends React.Component {
 
             "confChecked": this.state.confChecked,
             "confBoxChecked": this.state.confBoxChecked,
-            "confIssuesDate": this.state.confIssuesDate,
-            "confCQLRequest": this.state.confCQLRequest,
-            "confIssuesStatus": this.state.confIssuesStatus,
+            "confPagesDate": this.state.confPagesDate,
+            "cql": this.state.cql,
 
             "keywords": this.state.keywords,
             "userId": keycloak.tokenParsed.preferred_username,

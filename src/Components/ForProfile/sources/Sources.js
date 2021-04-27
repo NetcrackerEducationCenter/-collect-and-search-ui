@@ -16,9 +16,14 @@ function Sources(props) {
     };
 
     const handleDelete = (id) => {
+        let source = props.sources.map((s) => {
+            if (s.id === id) {
+                return s;
+            }
+        })
         axios.post(config.url + '/api/sources/push', {
             action: config.DELETE,
-            id
+            source
         }).then(res => {
             alert('Successfully deleted!');
         });

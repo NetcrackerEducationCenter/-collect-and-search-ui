@@ -23,6 +23,7 @@ function Sources(props) {
         })
         axios.post(config.url + '/api/sources/push', {
             action: config.DELETE,
+            id,
             source
         }).then(res => {
             alert('Successfully deleted!');

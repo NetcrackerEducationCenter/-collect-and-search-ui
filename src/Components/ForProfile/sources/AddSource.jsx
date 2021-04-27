@@ -18,7 +18,8 @@ function AddSource(props) {
 
     const onFinishUpdate = () => {
         setSourceType(props.sourceRecord.type.toUpperCase());
-        addSourceRequest();
+        let formData = form.getFieldsValue();
+        addSourceRequest(formData);
         onClose();
     }
 

@@ -1,0 +1,17 @@
+version: '3.0'
+
+services:
+  nginx:
+    image: docker.pkg.github.com/netcracker-education-center/collect-and-search-ui/reactimage:latest
+    ports:
+      - 7070:7070
+      - 443:443
+    volumes:
+      - ./certs:/certs
+      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+    networks:
+      - "docker-network"
+
+networks:
+  docker-network:
+    external: true

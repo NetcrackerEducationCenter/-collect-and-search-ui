@@ -15,16 +15,11 @@ function Sources(props) {
         props.crud(0, action);
     };
 
-    const handleDelete = (id) => {
-        let source = props.sources.map((s) => {
-            if (s.id === id) {
-                return s;
-            }
-        })
+    const handleDelete = (record) => {
         axios.post(config.url + '/api/sources/push', {
             action: config.DELETE,
-            id,
-            source
+            id: record.source,
+            sourceType: record.type
         }).then(res => {
             alert('Successfully deleted!');
         });
@@ -102,7 +97,7 @@ function Sources(props) {
                                         okType: 'danger',
                                         cancelText: 'No',
                                         onOk() {
-                                            handleDelete(record.source);
+                                            handleDelete(record);
                                         },
                                         onCancel() {
                                             message.info('Canceled');

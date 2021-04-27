@@ -125,7 +125,7 @@ function AddSource(props) {
                     </Form.Item>
 
                     <Form.Item label='Token' name='token' rules={[{ required: true, message: 'Please write your Confluence token' }]}
-                        onChange={(e) => { credentials.id = 'https://' + e.target.value }}
+                        onChange={(e) => { credentials.id = e.target.value }}
                     >
                         <Input placeholder='enter Confluence token' />
                     </Form.Item>
@@ -148,7 +148,7 @@ function AddSource(props) {
                 action: props.action,
                 source: sourceType.toUpperCase(),
                 credentials: {
-                    url: 'https://' + formData.url,
+                    url: formData.url,
                     server: formData.server,
                     port: formData.port,
                     login: formData.login,
@@ -161,7 +161,7 @@ function AddSource(props) {
                 action: props.action,
                 source: props.sourceRecord.type.toUpperCase(),
                 credentials: {
-                    url: 'https://' + formData.url,
+                    url: formData.url,
                     server: formData.server,
                     port: formData.port,
                     login: formData.login,

@@ -33,7 +33,7 @@ function AddSource(props) {
                     <>
 
                         <Form.Item label='URL' name='url' >
-                            <Input placeholder='enter URL' />
+                            <Input placeholder='enter URL' disabled />
                         </Form.Item>
 
                         <Form.Item label='Login' name='login' rules={[{ required: true, message: 'Please write JIRA accaunt\'s login' }]}>
@@ -50,7 +50,7 @@ function AddSource(props) {
                 return (
                     <>
                         <Form.Item label='Server' name='server'>
-                            <Input placeholder='enter FTP server ip address' />
+                            <Input placeholder='enter FTP server ip address' disabled />
                         </Form.Item>
 
                         <Form.Item label='Port' name='port' rules={[{ required: true, message: 'Please write your FTP port' }]} >
@@ -71,7 +71,7 @@ function AddSource(props) {
                 return (
                     <>
                         <Form.Item label='URL' name='url'>
-                            <Input placeholder='enter URL' />
+                            <Input placeholder='enter URL' disabled />
                         </Form.Item>
 
                         <Form.Item label='Token' name='token' rules={[{ required: true, message: 'Please write your Confluence token' }]}>

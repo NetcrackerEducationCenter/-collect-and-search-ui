@@ -5,7 +5,7 @@ import { Button, Empty } from 'antd';
 function Report(props) {
     const downloadTxtFile = () => {
         const element = document.createElement("a");
-        const file = new Blob([props.report.text],
+        const file = new Blob([props.report.dataModels.map(v=>{return v.text + '\n'})],
             { type: 'text/plain;charset=utf-8' });
         element.href = URL.createObjectURL(file);
         element.download = `Report_${props.report.requestId}.txt`;
@@ -56,6 +56,7 @@ function Report(props) {
                         >
                             <p>
                                 {v.text}
+                                <br />
                             </p>
 
                         </OverlayTrigger>

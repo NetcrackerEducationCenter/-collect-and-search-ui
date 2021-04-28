@@ -65,7 +65,9 @@ function Report(props) {
                     </>
                 );
             })}
-            <Button type='primary' ghost onClick={downloadTxtFile} >Download text</Button>
+            <br />
+            <br />
+            <Button type='primary' size='large' ghost onClick={downloadTxtFile} >Download text</Button>
         </Container >
     );
     // } else {

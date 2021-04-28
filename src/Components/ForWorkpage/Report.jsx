@@ -55,8 +55,9 @@ function Report(props) {
                             }
                         >
                             <p>
-                                {v.text}
                                 <br />
+                                <br />
+                                {v.text}
                             </p>
 
                         </OverlayTrigger>

@@ -109,7 +109,7 @@ function StatusTable(props) {
             render: (text, record) => {
                 if (record.status === 'COMPLETED') {
                     return (
-                        <Tag color='green' style={{cursor: 'pointer'}}><Link to={`/workpage/${record.request}`} >{record.status}</Link></Tag>
+                        <Tag color='green' style={{cursor: 'pointer'}} onClick={()=> props.getReport(record.request, 'first')}><Link to={`/workpage`} >{record.status}</Link></Tag>
                     );
                 } else {
                     return <Badge status="processing" text={record.status} />

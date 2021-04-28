@@ -26,12 +26,28 @@ function HeaderFunc(props) {
     const [reqStatuses, setReqStatuses] = useState([]);
     const [sources, setSources] = useState([]);
     const [form] = Form.useForm();
+    const [report, setReport] = useState({});
+    const [loading, setloading] = useState(false);
 
 
     const MINUTE_MS = 10000;
 
 
-
+    const getReport = async (id, time) => {
+        setloading(true);
+        await axios.post(`${config.url}/api/report/get`, {
+            requestId: id,
+            time: time
+        }).then(res => {
+            console.log('req data: ' + res.data);
+            if (JSON.stringify(res.data) === 'null') {
+                getReport(id, 'second');
+            } else {
+                setReport(res.data);
+                setloading(false);
+            }
+        });
+    }
 
     useEffect(() => {
 
@@ -145,13 +161,16 @@ function HeaderFunc(props) {
                         {...props}
                         statuses={reqStatuses}
                         sources={sources}
+                        getReport={getReport}
                     />
                 } />
 
-                <Route path="/workpage/:requestId" render={(props) =>
+                <Route path="/workpage" render={(props) =>
                     <WorkPage
                         {...props}
                         statuses={reqStatuses}
+                        report={report}
+                        loading={loading}
                         sources={sources}
                     />
                 } />
@@ -178,6 +197,7 @@ function HeaderFunc(props) {
                     pageSize='5'
                     size='small'
                     statuses={reqStatuses}
+                    getReport={getReport}
                 />
             </Modal>
         </div>

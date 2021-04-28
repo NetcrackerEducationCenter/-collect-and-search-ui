@@ -66,6 +66,7 @@ function Profile(props) {
                     <StatusTable
                         statuses={props.statuses}
                         requestId={props.requestId}
+                        getReport={props.getReport}
                     />
                 </TabPane>
 

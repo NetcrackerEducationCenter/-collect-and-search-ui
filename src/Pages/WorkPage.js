@@ -8,30 +8,8 @@ import { config } from '../Config';
 import '../css/loading.css';
 
 export default function WorkPage(props) {
-    const [report, setReport] = useState({});
-    const [loading, setloading] = useState(true);
 
-    const getReport = (id, time) => {
-        setloading(true);
-        axios.post(`${config.url}/api/report/get`, {
-            requestId: id,
-            time: time
-        }).then(res => {
-            if (!res.data) {
-                getReport(id, 'second');
-            } else {
-                setReport(res.data);
-                setloading(false);
-            }
-        });
-    }
-    
-    useEffect(() => {
-        message.info(props.match.params.requestId);
-        getReport(props.match.params.requestId, 'first');
-    });
-
-    if (!!loading) {
+    if (props.loading) {
         return <div className="lds-ring">
             <div>
 
@@ -54,7 +32,7 @@ export default function WorkPage(props) {
                     fontFamily: 'Geneva, Arial, Helvetica, sans-serif'
                 }}
             >
-                <Report report={report} />
+                <Report report={props.report} />
             </Content>
         );
     }

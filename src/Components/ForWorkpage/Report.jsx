@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, OverlayTrigger, Popover } from 'react-bootstrap';
-import { Button } from 'antd';
+import { Button, Empty } from 'antd';
 
 function Report(props) {
     const downloadTxtFile = () => {
@@ -33,7 +33,8 @@ function Report(props) {
             }
         ]
     }
-    if (!props.report) {
+    // if (props.report && Array.isArray(props.report.dataModels) && props.report.dataModels.length === 0) {
+        console.log('Show report: sgdg');
         return (
             <Container fluid>
                 {props.report.dataModels.map((v, i) => {
@@ -63,9 +64,9 @@ function Report(props) {
                 <Button type='primary' ghost onClick={downloadTxtFile} >Download text</Button>
             </Container>
         );
-    } else {
-        return null;
-    }
+    // } else {
+        return <Empty />;
+    // }
 }
 
 export default Report;

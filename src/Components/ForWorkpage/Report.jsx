@@ -5,7 +5,7 @@ import { Button, Empty } from 'antd';
 function Report(props) {
     const downloadTxtFile = () => {
         const element = document.createElement("a");
-        const file = new Blob([props.report.dataModels.map(v=>{return v.text + '\n'})],
+        const file = new Blob([props.report.dataModels.map(v => { return v.text + '\n' })],
             { type: 'text/plain;charset=utf-8' });
         element.href = URL.createObjectURL(file);
         element.download = `Report_${props.report.requestId}.txt`;
@@ -34,11 +34,14 @@ function Report(props) {
         ]
     }
     // if (props.report && Array.isArray(props.report.dataModels) && props.report.dataModels.length === 0) {
-        console.log('Show report: sgdg');
-        return (
-            <Container fluid>
-                {props.report.dataModels.map((v, i) => {
-                    return (
+    console.log('Show report: sgdg');
+    return (
+        <Container fluid>
+            {props.report.dataModels.map((v, i) => {
+                return (
+                    <>
+                        <br />
+                        <br />
                         <OverlayTrigger
                             trigger="click"
                             key={i}
@@ -55,19 +58,18 @@ function Report(props) {
                             }
                         >
                             <p>
-                                <br />
-                                <br />
                                 {v.text}
                             </p>
 
                         </OverlayTrigger>
-                    );
-                })}
-                <Button type='primary' ghost onClick={downloadTxtFile} >Download text</Button>
-            </Container>
-        );
+                    </>
+                );
+            })}
+            <Button type='primary' ghost onClick={downloadTxtFile} >Download text</Button>
+        </Container >
+    );
     // } else {
-        return <Empty />;
+    return <Empty />;
     // }
 }
 

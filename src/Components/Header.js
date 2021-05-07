@@ -105,7 +105,7 @@ function HeaderFunc(props) {
                                 width="30"
                                 className="d-inline-block align-top"
                                 alt="Logo"
-                            /><Text style={{ color: 'white' }}>Collect and Search</Text>
+                            /><Text style={{ color: 'white' }}>Data Collector</Text>
                         </Link>
                     </Navbar.Brand>
 
@@ -119,11 +119,11 @@ function HeaderFunc(props) {
                             marginRight: '2%'
                         }}
                         onClick={() => setIsModalVisible(true)} >
-                        New request
+                        Search
                     </Button>
 
                     <Button ghost onClick={changeState} >
-                        Requestes
+                        History
                     </Button>
 
                     <Button variant="outline-info" className='bg-transparent border-0' >

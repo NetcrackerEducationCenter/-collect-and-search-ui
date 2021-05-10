@@ -75,7 +75,8 @@ function HeaderFunc(props) {
 
 
     const getRequestStatuses = async () => {
-        axios.post(`${config.url}/api/status/get`,{
+
+        axios.post(`${config.url}/api/status/get`, {
             userId: keycloak.tokenParsed.preferred_username
         }).then((res) => {
             console.log('getRequestStatuses(): ' + JSON.parse(JSON.stringify(res.data)));

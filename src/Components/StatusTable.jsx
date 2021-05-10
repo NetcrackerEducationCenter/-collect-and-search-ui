@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Table, Input, Button, Space, Tag, Badge } from 'antd';
+import { Table, Input, Button, Space, Tag, Badge, Empty } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
 import Text from 'antd/lib/typography/Text';
@@ -77,58 +77,64 @@ function StatusTable(props) {
         setsearchText('');
     };
 
+    if (Array.isArray(props.statuses) && props.statuses.length) {
 
-    const columns = [
-        {
-            width: 150,
-            title: 'Request',
-            dataIndex: 'request',
-            key: 'request'
-        },
-        {
-            width: 150,
-            title: 'Keywords',
-            dataIndex: 'keywords',
-            key: 'keywords',
-            ...getColumnSearchProps('keywords'),
-            render: (text, record) => <Text>{record.keywords}</Text>
-        },
-        {
-            width: 150,
-            title: 'Added date',
-            dataIndex: 'date',
-            key: 'date',
-            sorter: (a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf(),
-            sortDirections: ['descend', 'ascend'],
-        },
-        {
-            width: 150,
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
-            render: (text, record) => {
-                if (record.status === 'COMPLETED') {
-                    return (
-                        <Tag color='green' style={{cursor: 'pointer'}} onClick={()=> props.getReport(record.request, 'first')}><Link to={`/workpage`} >{record.status}</Link></Tag>
-                    );
-                } else {
-                    return <Badge status="processing" text={record.status} />
+        console.log(props.statuses);
+        
+        const columns = [
+            {
+                width: 150,
+                title: 'Request',
+                dataIndex: 'request',
+                key: 'request'
+            },
+            {
+                width: 150,
+                title: 'Keywords',
+                dataIndex: 'keywords',
+                key: 'keywords',
+                ...getColumnSearchProps('keywords'),
+                render: (text, record) => <Text>{record.keywords}</Text>
+            },
+            {
+                width: 150,
+                title: 'Added date',
+                dataIndex: 'date',
+                key: 'date',
+                sorter: (a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf(),
+                sortDirections: ['descend', 'ascend'],
+            },
+            {
+                width: 150,
+                title: 'Status',
+                dataIndex: 'status',
+                key: 'status',
+                render: (text, record) => {
+                    if (record.status === 'COMPLETED') {
+                        return (
+                            <Tag color='green' style={{ cursor: 'pointer' }} onClick={() => props.getReport(record.request, 'first')}><Link to={`/workpage`} >{record.status}</Link></Tag>
+                        );
+                    } else {
+                        return <Badge status="processing" text={record.status} />
+                    }
                 }
+            },
+        ];
+
+        const tableData = props.statuses.map((s, i) => {
+            return {
+                key: i,
+                request: s.message.requestId,
+                status: s.message.status,
+                keywords: s.message.keywords.map((v, i) => { return v + ' ' }),
+                date: s.message.date
             }
-        },
-    ];
+        })
 
-    const tableData = props.statuses.map((s, i) => {
-        return {
-            key: i,
-            request: s.message.requestId,
-            status: s.message.status,
-            keywords: s.message.keywords.map((v, i) => { return v + ' ' }),
-            date: s.message.date
-        }
-    })
-
-    return <Table pagination={{ pageSize: props.pageSize, hideOnSinglePage: true, position: ['bottomCenter'] }} size={props.size} scroll={{ x: 500 }} columns={columns} dataSource={tableData} />
+        return <Table pagination={{ pageSize: props.pageSize, hideOnSinglePage: true, position: ['bottomCenter'] }} size={props.size} scroll={{ x: 500 }} columns={columns} dataSource={tableData} />
+    } else {
+        return <Empty description="No statuses" />
+    }
 }
 
 export default StatusTable;

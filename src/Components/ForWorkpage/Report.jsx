@@ -34,7 +34,7 @@ function Report(props) {
         ]
     }
     // if (props.report && Array.isArray(props.report.dataModels) && props.report.dataModels.length === 0) {
-    console.log('Show report: sgdg');
+    console.log('Show report:' + JSON.stringify(props.report));
     return (
         <Container fluid>
             {props.report.dataModels.map((v, i) => {

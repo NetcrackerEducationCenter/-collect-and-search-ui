@@ -20,7 +20,6 @@ function Profile(props) {
     const [sourceRecord, setSourceRecord] = useState({});
 
     const crud = (record, action) => {
-        message.info('CRUD operation >> ' + action);
 
         if (action === config.ADD) {
             setShowModal(true);

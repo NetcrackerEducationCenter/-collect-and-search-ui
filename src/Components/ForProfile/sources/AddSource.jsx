@@ -171,7 +171,6 @@ function AddSource(props) {
                 }
             }
         }
-        message.info(JSON.stringify(msg));
         axios.post(`${config.url}/api/sources/push`, msg).then(res => {
             //TODO Написать обработчик или валидацию
         });
@@ -250,7 +249,6 @@ function AddSource(props) {
                         <Select
                             placeholder="Choose a sources"
                             onChange={(value) => {
-                                message.info(value);
                             }}
                             disabled
                         >

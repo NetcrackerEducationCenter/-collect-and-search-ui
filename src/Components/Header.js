@@ -30,7 +30,7 @@ function HeaderFunc(props) {
     const [loading, setloading] = useState(false);
 
 
-    const MINUTE_MS = 10000;
+    const MINUTE_MS = 3000;
 
 
     const getReport = async (id, time) => {

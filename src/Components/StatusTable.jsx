@@ -80,7 +80,7 @@ function StatusTable(props) {
     if (Array.isArray(props.statuses) && props.statuses.length) {
 
         console.log(props.statuses);
-        
+
         const columns = [
             {
                 width: 150,
@@ -112,14 +112,21 @@ function StatusTable(props) {
                 render: (text, record) => {
                     if (record.status === 'COMPLETED') {
                         return (
-                            <Tag color='green' style={{ cursor: 'pointer' }} onClick={() => props.getReport(record.request, 'first')}><Link to={`/workpage`} >{record.status}</Link></Tag>
+                            <Tag color="#87d068" style={{ cursor: 'pointer' }} onClick={() => props.getReport(record.request, 'first')}><Link to={`/workpage`} >{record.status}</Link></Tag>
+                        );
+                    } else if (record.status === 'RESTORED') {
+                        return (
+                            <Tag color="#108ee9">{record.status}</Tag>
                         );
                     } else {
-                        return <Badge status="processing" text={record.status} />
+                        return (
+                            <Tag color="#c2be4a">IN PROGRESS</Tag>
+                        );
                     }
                 }
             },
         ];
+
 
         const tableData = props.statuses.map((s, i) => {
             return {

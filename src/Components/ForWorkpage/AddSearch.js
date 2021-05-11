@@ -369,7 +369,7 @@ class AddSearch extends React.Component {
             if (res.status === 200) {
                 //Return states to begin
                 this.resetFieldsData();
-                message.info('Request sended');
+                message.info('Request sent');
                 this.props.form.resetFields();
             }
             else {

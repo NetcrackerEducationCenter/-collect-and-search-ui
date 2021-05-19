@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, OverlayTrigger, Popover } from 'react-bootstrap';
-import { Button, Empty } from 'antd';
+import { Button, Descriptions, Empty, Tag } from 'antd';
 
 function Report(props) {
     const downloadTxtFile = () => {
@@ -11,6 +11,36 @@ function Report(props) {
         element.download = `Report_${props.report.requestId}.txt`;
         document.body.appendChild(element);
         element.click();
+    }
+
+    const renderStatus = () => {
+        if (props.report.status === 'COMPLETED') {
+            return (
+                <Tag color="#87d068">COMPLETED</Tag>
+            );
+        } else if (props.report.status === 'RESTORED') {
+            return (
+                <Tag color="#108ee9">RESTORED</Tag>
+            );
+        } else {
+            return (
+                <Tag color="#c2be4a">IN PROGRESS</Tag>
+            );
+        }
+    }
+    const getReportDescription = () => {
+        return (
+            <Descriptions bordered style={{
+                fontFamily: 'Comfortaa, cursive'
+            }}>
+                <Descriptions.Item label="Status" span={1}>
+                    {renderStatus()}
+                </Descriptions.Item>
+                <Descriptions.Item label="Created date" span={2}>{props.report.date}</Descriptions.Item>
+                <Descriptions.Item label="Keywords" span={3}>{props.report.keywords.map(v => { return ' ' + v })}</Descriptions.Item>
+                <Descriptions.Item label="Sources" span={3}>{props.report.sources.map(v=>{return <><br />{v}</>})}</Descriptions.Item>
+            </Descriptions>
+        );
     }
 
     let simpleReport = {
@@ -37,6 +67,8 @@ function Report(props) {
     console.log('Show report:' + JSON.stringify(props.report));
     return (
         <Container fluid>
+            <br />
+            {getReportDescription()}
             {props.report.dataModels.map((v, i) => {
                 return (
                     <>
@@ -70,9 +102,6 @@ function Report(props) {
             <Button type='primary' size='large' ghost onClick={downloadTxtFile} >Download text</Button>
         </Container >
     );
-    // } else {
-    return <Empty />;
-    // }
 }
 
 export default Report;

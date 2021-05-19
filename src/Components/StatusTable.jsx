@@ -116,7 +116,7 @@ function StatusTable(props) {
                         );
                     } else if (record.status === 'RESTORED') {
                         return (
-                            <Tag color="#108ee9">{record.status}</Tag>
+                            <Tag color="#108ee9"style={{ cursor: 'pointer' }} onClick={() => props.getReport(record.request, 'first')}><Link to={`/workpage`} >{record.status}</Link></Tag>
                         );
                     } else {
                         return (
@@ -131,10 +131,10 @@ function StatusTable(props) {
         const tableData = props.statuses.map((s, i) => {
             return {
                 key: i,
-                request: s.message.requestId,
-                status: s.message.status,
-                keywords: s.message.keywords.map((v, i) => { return v + ' ' }),
-                date: s.message.date
+                request: s.requestId,
+                status: s.status,
+                keywords: s.keywords.map((v, i) => { return v + ' ' }),
+                date: s.date
             }
         })
 

@@ -402,6 +402,7 @@ class AddSearch extends React.Component {
             checkedFilters: [],
             selectedSources: []
         });
+        this.props.setIsModalVisible(false);
     }
 
     handleCancel = () => {

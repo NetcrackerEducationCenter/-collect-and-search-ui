@@ -41,7 +41,7 @@ function Profile(props) {
             }}
         >
             <Tabs
-                defaultActiveKey='general'
+                defaultActiveKey='history'
                 tabPosition='left'
                 style={{ height: '100%' }}
             >
@@ -53,7 +53,7 @@ function Profile(props) {
                     <Row >
                         <Col xl={10} md={24} style={{ backgroundColor: '' }}>
                             <UserInfo />
-                        </Col >
+                        </Col>
 
                         <Col xl={14} md={24} style={{ backgroundColor: '' }} >
                             <Sources {...props} showDrawer={setShowModal} crud={crud} />

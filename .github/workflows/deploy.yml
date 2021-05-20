@@ -30,6 +30,8 @@ jobs:
         tags: latest
         tag_with_ref: true
     - name: Deploy package to digitalocean
+      env:
+        EMAIL: ${{ secrets.EMAIL }}
       uses: appleboy/ssh-action@v0.1.2
       with:
         host: ${{secrets.SSH_HOST}}

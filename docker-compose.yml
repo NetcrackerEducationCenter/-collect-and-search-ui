@@ -25,16 +25,14 @@ services:
       depends_on:
         - nginx
       command: certonly --webroot --webroot-path=/var/www/html --email ${EMAIL} --agree-tos --no-eff-email --staging -d netcracker-collect-and-search.tk -d www.netcracker-collect-and-search.tk
+    networks:
+      - "docker-network"
 
 volumes:
   certbot-etc:
   certbot-var:
   web-root:
     driver: local
-    driver_opts:
-      type: none
-      device: /home/netcracker/ui/
-      o: bind
 
 networks:
   docker-network:

@@ -35,6 +35,7 @@ function HeaderFunc(props) {
 
     const getReport = async (id, time) => {
         setloading(true);
+        setModalActive(false);
         await axios.post(`${config.url}/api/report/get`, {
             requestId: id,
             time: time
